@@ -1,0 +1,16 @@
+<?php namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class ussd_logs extends Model {
+
+    protected $table = 'ussd_logs';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['phone', 'text', 'session_id', 'service_code'];
+
+}
