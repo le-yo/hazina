@@ -16,11 +16,11 @@ class CreateSettingsTable extends Migration {
 		{
 			$table->increments('id');
 			$table->integer('productId');
-			$table->integer('minPrincipal');
-			$table->integer('maxPrincipal');
+            $table->integer('minPrincipal')->default(0);
+            $table->integer('maxPrincipal')->default(0);
 			$table->integer('minNumberOfRepayments');
 			$table->integer('maxNumberOfRepayments');
-			$table->integer('product_name');
+            $table->string('product_name', 255)->nullable();
 			$table->integer('loanTermFrequency');
 			$table->integer('loanTermFrequencyType');
 			$table->string('loanType');
