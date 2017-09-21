@@ -12,6 +12,6 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        //
+        	'ussd','rapidussd','user-activated','loan-approved', 'loan-disbursed', 'loan-extension', 'loan-repayment','getLoanId','getLoan'
     ];
 }
