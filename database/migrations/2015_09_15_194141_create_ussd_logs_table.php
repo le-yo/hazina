@@ -15,10 +15,10 @@ class CreateUssdLogsTable extends Migration {
 		Schema::create('ussd_logs', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->string('phone');
-			$table->string('text');
-			$table->string('session_id');
-			$table->string('service_code');
+			$table->string('phone')->nullable();
+			$table->string('text')->nullable();
+			$table->string('session_id')->nullable();
+			$table->string('service_code')->nullable();
 			$table->timestamps();
 		});
 	}

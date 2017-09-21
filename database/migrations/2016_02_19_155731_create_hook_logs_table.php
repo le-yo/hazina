@@ -15,7 +15,7 @@ class CreateHookLogsTable extends Migration
     {
         Schema::create('hook_logs', function (Blueprint $table) {
             $table->increments('id');
-            $table->text('details');
+            $table->text('details')->nullable();
             $table->timestamps();
         });
     }

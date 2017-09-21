@@ -15,9 +15,9 @@ class CreateUssdResponsesTable extends Migration {
 		Schema::create('ussd_responses', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->integer('user_id')->unsigned();
-			$table->integer('menu_id')->unsigned();
-			$table->integer('menu_item_id')->unsigned();
+			$table->integer('user_id')->unsigned()->nullable();
+			$table->integer('menu_id')->unsigned()->nullable();
+			$table->integer('menu_item_id')->unsigned()->nullable();
 			$table->string('response', 45);
 			$table->timestamps();
 		});

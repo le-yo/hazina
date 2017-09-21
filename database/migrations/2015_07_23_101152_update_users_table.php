@@ -14,7 +14,7 @@ class UpdateUsersTable extends Migration {
 	{
 		Schema::table('users', function(Blueprint $table)
 		{
-			$table->string('verification_code')->after('password');
+			$table->string('verification_code')->after('password')->nullable();
 			$table->boolean('confirmed')->default(0)->after('verification_code');
 		});
 	}

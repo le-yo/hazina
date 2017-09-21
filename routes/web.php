@@ -11,17 +11,17 @@ define('OVERDUE_URL', env('OVERDUE_URL'));
 
 //routes
 Route::get('/', 'WelcomeController@index');
-Route::resource('ussd', 'UssdController@index');
+Route::post('ussd', 'UssdController@index');
 
 Route::resource('dashboard', 'DashController');
 
 Route::get('emails/verified/{code}',
     'Auth\AuthController@activateAccount');
 
-Route::controllers([
-    'auth' => 'Auth\AuthController',
-    'password' => 'Auth\PasswordController',
-]);
+//Route::resource([
+//    'auth' => 'Auth\AuthController',
+//    'password' => 'Auth\PasswordController',
+//]);
 
 //Hook routes
 Route::post('user-activated', 'HooksController@user_activated_hook');
