@@ -129,11 +129,53 @@ class UssdController extends Controller
                     //Go back menu
                     $response = self::resetPIN($user, $message);
                     break;
+                case 6 :
+                    //accept terms and conditions
+                    $response = self::acceptTerms($user, $message);
+                    break;
                 default:
                     break;
             }
 
             self::sendResponse($response, 1, $user);
+        }
+
+
+    }
+
+    public function acceptTerms($user, $message){
+
+        switch ($user->progress) {
+
+            case 0 :
+                //neutral user
+                break;
+            case 1:
+                if (self::validationVariations($message, 1, "yes")) {
+                    //if confirmed
+                    $user->terms_accepted = 1;
+                    $user->terms_accepted_on = Carbon::now();
+                    $user->save();
+                    self::resetUser($user);
+                    //user authentication
+                    $message = '';
+                    $response = self::authenticateUser($user, $message);
+                    self::sendResponse($response, 1, $user);
+
+                } elseif (self::validationVariations($message, 2, "no")) {
+                    $response = "Thank you for using UniCredit.";
+                    self::sendResponse($response, 3);
+                } else {
+                    //not confirmed
+                    $response = "We could not understand your response";
+                    //restart the process
+                    $output = "By proceeding you agree to accept terms and condition as available at http://unicredit.com/terms".PHP_EOL."1. Yes".PHP_EOL."2. No";
+                    $response = $response . PHP_EOL . $output;
+                    return $response;
+                }
+                break;
+            default:
+                break;
         }
 
 
@@ -1371,11 +1413,23 @@ class UssdController extends Controller
     public function authenticateUser($user, $message)
     {
 
+        //has user accepted terms and conditions?
+        if(!self::has_user_accepted_terms($user)){
+            //process to accept terms and conditions
+            $output = "Welcome to UniCredit.".PHP_EOL."By proceeding you agree to accept terms and conditions available at http://unicredit.com/terms".PHP_EOL."1. Yes".PHP_EOL."2. No";
+            $user->session = 6;
+            $user->progress = 1;
+            $user->save();
+            header('Content-type: text/plain');
+            echo $output;
+            exit;
+        }
+
         if (self::is_user_pin_set($user)) {
 
             switch ($user->progress) {
                 case 0 :
-                    $response = "Enter your PIN";
+                    $response = "Welcome to UniCredit.".PHP_EOL."Enter your PIN";
                     $user->session = 1;
                     $user->progress = 1;
                     $user->menu_id = 1;
@@ -1435,6 +1489,7 @@ class UssdController extends Controller
 
             return $response;
         } else {
+
             $user = self::generateUserPIN($user);
 
             $response = "CON Your PIN has been generated and set to " . $user->pin . PHP_EOL . "Thanks for being a valued customer";
@@ -1498,6 +1553,15 @@ class UssdController extends Controller
     {
 
         if ($user->pin != 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+
+    }
+
+    public function has_user_accepted_terms($user){
+        if ($user->terms_accepted == 1) {
             return TRUE;
         } else {
             return FALSE;
