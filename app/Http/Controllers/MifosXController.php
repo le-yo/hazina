@@ -201,6 +201,7 @@ class MifosXController extends Controller {
      */
     public function getGroupInterestRate($clientId)
     {
+        return 7.5;
         // get the group id
         $groupId = self::getUserGroupId($clientId);
 
