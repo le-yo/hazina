@@ -80,6 +80,7 @@ class MifosXController extends Controller {
      */
     public function applyPCLLoan($user, $amount, $repaymentPeriods)
     {
+        $repaymentPeriods = 1;
         $loan_settings = setting::where('productId', PCL_ID)->first();
 
         $date = Carbon::now()->format('d M Y');
