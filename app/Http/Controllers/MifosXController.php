@@ -80,7 +80,7 @@ class MifosXController extends Controller {
      */
     public function applyPCLLoan($user, $amount, $repaymentPeriods)
     {
-        $repaymentPeriods = 1;
+//        $repaymentPeriods = 1;
         $loan_settings = setting::where('productId', PCL_ID)->first();
 
         $date = Carbon::now()->format('d M Y');
@@ -106,7 +106,8 @@ class MifosXController extends Controller {
         $loan_data['loanTermFrequency'] = $repaymentPeriods;
         $loan_data['loanTermFrequencyType'] = $loan_settings->loanTermFrequencyType;
         $loan_data['loanType'] = $loan_settings->loanType;
-        $loan_data['numberOfRepayments'] = $repaymentPeriods;
+//        $loan_data['numberOfRepayments'] = $repaymentPeriods;
+        $loan_data['numberOfRepayments'] = 1;
         $loan_data['repaymentEvery'] = $loan_settings->repaymentEvery;
         $loan_data['repaymentFrequencyType'] = $loan_settings->repaymentFrequencyType;
         $loan_data['interestRatePerPeriod'] = $interest;
