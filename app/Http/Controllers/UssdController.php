@@ -1416,7 +1416,7 @@ class UssdController extends Controller
         //has user accepted terms and conditions?
         if(!self::has_user_accepted_terms($user)){
             //process to accept terms and conditions
-            $output = "Welcome to UniCredit.".PHP_EOL."By proceeding you agree to accept terms and conditions available at http://unicredit.com/terms".PHP_EOL."1. Yes".PHP_EOL."2. No";
+            $output = "CON Welcome to UniCredit.".PHP_EOL."By proceeding you agree to accept terms and conditions available at http://unicredit.com/terms".PHP_EOL."1. Yes".PHP_EOL."2. No";
             $user->session = 6;
             $user->progress = 1;
             $user->save();
