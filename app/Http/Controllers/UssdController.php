@@ -702,7 +702,7 @@ class UssdController extends Controller
 
     public function getLoanLimit($id)
     {
-        return 0;
+//        return 0;
         $url = MIFOS_URL . "/datatables/user_loan_limit/" . $id . "?" . MIFOS_tenantIdentifier;
         $limit = Hooks::MifosGetTransaction($url);
         if (count($limit) > 0) {
