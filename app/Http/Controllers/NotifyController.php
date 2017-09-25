@@ -18,8 +18,8 @@ class NotifyController extends Controller {
 	 */
 		public function __construct()
 		{
-			$this->_username    = "mobidev";
-			$this->_apiKey      = "ad715ab00961f3f369d6b210deeb15025417efcaf56a904e9ab2bd2c7f8deb46";
+			$this->_username    = "unicredit";
+			$this->_apiKey      = "d79c444f09d5762a30f14a7afc0581898574bb4c5d384683ef9ae8e0f03840a1";
 
 		}
 
@@ -38,7 +38,7 @@ class NotifyController extends Controller {
 
 
 		Mail::send('emails.welcome', "", function ($message) {
-			$message->from('ussd@devs.mobi', 'Watu Credit');
+			$message->from('ussd@devs.mobi', 'test');
 
 			$message->to('lenykoskey@yahoo.com')->cc('lenykoskey@yahoo.com');
 		});
@@ -55,7 +55,7 @@ class NotifyController extends Controller {
 		try
 		{
 			// Thats it, hit send and we'll take care of the rest.
-            $results = $gateway->sendMessage($to, $message,'MOBIDEV');
+            $results = $gateway->sendMessage($to, $message,'UNI-LIMITED');
 //			foreach($results as $result) {
 //				// Note that only the Status "Success" means the message was sent
 //				echo " Number: " .$result->number;
