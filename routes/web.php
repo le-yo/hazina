@@ -8,6 +8,8 @@ define('PCL_ID', env('PCL_ID'));
 define('BLP_ID', env('BLP_ID'));
 define('ASF_ID', env('ASF_ID'));
 define('OVERDUE_URL', env('OVERDUE_URL'));
+define('recipients_PCL_URL', env('recipients_PCL_URL'));
+
 
 //routes
 Route::get('/', 'WelcomeController@index');
