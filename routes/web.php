@@ -35,6 +35,17 @@ Route::get('getPCLLoanId/{phone}', 'UssdController@getPCLLoanfromPhone');
 Route::get('getLoan/{phone}', 'UssdController@getLoanfromPhone');
 Route::get('schedule/{clientId}/{amount}/{loanProductId}/{repaymentPeriods}', 'MifosXController@calculateRepaymentSchedule');
 
+
+// Mpesa
+Route::post('payments/receiver', ['as' => 'payments.receiver', 'uses' => 'PaymentsController@receiver']);
+
+// Process Payments and Payments functions
+Route::get('makePayment/{note}/{id}/', 'PaymentsController@loanRepayment');
+Route::post('payments/comment/{id}', 'PaymentsController@getComment');
+Route::get('payments/calculator/{id}', 'PaymentsController@getOutstandingLoan');
+
+// Excel payments upload
+Route::post('payments/upload', 'PaymentsController@uploadPayments');
 /*
 |--------------------------------------------------------------------------
 | Web Routes
