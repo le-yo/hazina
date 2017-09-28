@@ -3,11 +3,14 @@
 namespace App\Jobs;
 
 use App\Hooks;
+use App\Http\Controllers\MifosXController;
+use App\Http\Controllers\NotifyController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\UssdController;
 use App\Jobs\Job;
 use App\Payment;
 use App\TransactionLog;
+use App\Ussduser;
 use Carbon\Carbon;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -130,7 +133,47 @@ class PaymentReceived extends Job implements ShouldQueue
             return false;
         } else {
             // update status column in payments table to processed
-            return true;
+            $no = substr($data['phone'], -9);
+
+            $user = Ussduser::where('phone_no', "0" . $no)->orWhere('phone_no', "254" . $no)->first();
+
+            if ($user) {
+
+
+                $url = MIFOS_URL . "/clients/" . $user->client_id . "/accounts?" . MIFOS_tenantIdentifier;
+                $account = Hooks::MifosGetTransaction($url);
+
+                $i = 0;
+                $loan_balance = array();
+                $loan_balance['amount'] = 0;
+                $loan_balance['message'] = "Your outstanding loan balance due on ";
+
+                $product_id = env('PCL_ID');
+                foreach ($account->loanAccounts as $loanAccount) {
+
+                    if (!empty($loanAccount->loanBalance) && ($loanAccount->status->code == 'loanStatusType.active') && ($loanAccount->productId == $product_id)) {
+                        $loan_balance['amount'] = $loan_balance['amount'] + $loanAccount->loanBalance;
+                        $loan_balance['message'] = $loan_balance['message'] . implode("/", array_reverse($loanAccount->timeline->expectedMaturityDate)) . " is Ksh " . number_format($loanAccount->loanBalance) . "." . PHP_EOL;
+                        //$loan_balance['raw'] = $loanAccount;
+                        $loan_id = $loanAccount->id;
+                        $i++;
+                    }
+                }
+
+                if(($loan_balance['amount']>0)){
+                    $hooks = new MifosXController();
+                    $next_payment = $hooks->checkNextInstallment($loanID);
+                    //$loan_balance['next_payment'] = $next_payment;
+                    $msg = $data['transaction_id']." confirmed. Your payment of KES ".$data['amount']." has been received. Loan balance: KES ".$next_payment['balance'].PHP_EOL."Next Installment: Ksh ".$next_payment['next_installment']." due on ".$next_payment['next_date'];
+
+                }else {
+                    $msg = $data['transaction_id']." confirmed. Your payment of KES " . $data['amount'] . " has been received. Your loan has been paid fully.";
+                }
+                $notify = new NotifyController();
+                $notify->sendSms($data['phone'],$msg);
+
+                 }
+                return true;
         }
     }
 }
