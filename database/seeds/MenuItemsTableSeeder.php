@@ -72,6 +72,55 @@ class MenuItemsTableSeeder extends Seeder
                 'step' => 1,
                 'confirmation_phrase' => 'Amount',
             ),
+            array(
+                'menu_id' => 9,
+                'description' => 'Welcome to Uni Limited.'.PHP_EOL.'By proceeding you agree to the terms and conditions provided at www.unicredit.com'.PHP_EOL.'1. Yes'.PHP_EOL.'2. No',
+                'next_menu_id' => 0,
+                'step' => 1,
+                'confirmation_phrase' => 'Amount',
+            ),
+            array(
+                'menu_id' => 9,
+                'description' => 'Welcome to Uni Limited.'.PHP_EOL.'By proceeding you agree to the terms and conditions provided at www.unicredit.com'.PHP_EOL.'1. Yes'.PHP_EOL.'2. No',
+                'next_menu_id' => 0,
+                'step' => 1,
+                'confirmation_phrase' => 'Terms',
+            ),
+            array(
+                'menu_id' => 9,
+                'description' => 'Enter Full Name as per national ID',
+                'next_menu_id' => 0,
+                'step' => 2,
+                'confirmation_phrase' => 'Name',
+            ),
+            array(
+                'menu_id' => 9,
+                'description' => 'Enter employer registered name',
+                'next_menu_id' => 0,
+                'step' => 3,
+                'confirmation_phrase' => 'Employer',
+            ),
+            array(
+                'menu_id' => 9,
+                'description' => 'Enter national ID Number',
+                'next_menu_id' => 0,
+                'step' => 4,
+                'confirmation_phrase' => 'Employer',
+            ),
+            array(
+                'menu_id' => 9,
+                'description' => 'Enter date of birth (DDMMYYYY)',
+                'next_menu_id' => 0,
+                'step' => 5,
+                'confirmation_phrase' => 'Employer',
+            ),
+            array(
+                'menu_id' => 9,
+                'description' => 'Enter Gross Salary (Kshs.)',
+                'next_menu_id' => 0,
+                'step' => 6,
+                'confirmation_phrase' => 'Employer',
+            ),
         ));
     }
 }

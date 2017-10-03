@@ -69,6 +69,12 @@ class UssdController extends Controller
             $user = self::verifyPhonefromMifos($no);
         }
         if (!$user) {
+
+            //trigger self registration
+
+
+
+
             //$response_ussd = "Watu Credit Short Term Loan".PHP_EOL."1. Loans: up-to Ksh 100,000.".PHP_EOL."2. Interest Rate: 10% pm.".PHP_EOL."3. Loan Term: 1 Month.".PHP_EOL."4. Disbursement: Within 24Hr.".PHP_EOL."5. Fees: None.".PHP_EOL."6. Option To Extend Loan.".PHP_EOL."Call 0790 000 999 For Registration";
             //$response_sms =  "Watu Credit Short Term Loan".PHP_EOL."1. Loans: up-to Ksh 100,000".PHP_EOL."2. Interest Rate: 10% pm".PHP_EOL."3. Loan Term: 1 Month".PHP_EOL."4. Disbursement: Within 24Hr".PHP_EOL."5. Fees: None".PHP_EOL."6. Option To Extend Loan".PHP_EOL."Requirements".PHP_EOL."1. ID: National ID".PHP_EOL."2. Group Size: Min. 5 Members".PHP_EOL."3. Guarantee: 4 Group Members".PHP_EOL."Call 0790 000 999 For Registration";
             $response_ussd = "Thank you for your interest in UniCredit loan products. Please call Customer Care on xxxx for registration information";
@@ -140,6 +146,43 @@ class UssdController extends Controller
             self::sendResponse($response, 1, $user);
         }
 
+
+    }
+
+    public function selfRegistration($user,$message){
+
+        switch ($user->progress) {
+
+            case 0 :
+                //neutral user
+                break;
+            case 1 :
+                //user authentication
+                $response = self::authenticateUser($user, $message);
+                break;
+            case 2 :
+                $response = self::continueUssdProgress($user, $message);
+                //echo "Main Menu";
+                break;
+            case 3 :
+                //confirm USSD Process
+                $response = self::confirmUssdProcess($user, $message);
+                break;
+            case 4 :
+                //Go back menu
+                $response = self::confirmGoBack($user, $message);
+                break;
+            case 5 :
+                //Go back menu
+                $response = self::resetPIN($user, $message);
+                break;
+            case 6 :
+                //accept terms and conditions
+                $response = self::acceptTerms($user, $message);
+                break;
+            default:
+                break;
+        }
 
     }
 
