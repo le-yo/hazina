@@ -1307,7 +1307,7 @@ class UssdController extends Controller
             }
             $amount = $response->response;
         }
-        if (($user->is_pcl_user == 1) && ($menu->id !=9)) {
+        if (($user->is_pcl_user == 1) && ($user->menu_id !="9")) {
             $response = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 00)->orderBy('id', 'DESC')->first();
             $MifosX = new MifosXController();
             $monthly_payment = $MifosX->calculateRepaymentSchedule($user->client_id,$amount,PCL_ID,$response->response);
