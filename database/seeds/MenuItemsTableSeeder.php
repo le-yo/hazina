@@ -77,14 +77,14 @@ class MenuItemsTableSeeder extends Seeder
                 'description' => 'Welcome to Uni Limited.'.PHP_EOL.'By proceeding you agree to the terms and conditions provided at www.unicredit.com'.PHP_EOL.'1. Yes'.PHP_EOL.'2. No',
                 'next_menu_id' => 0,
                 'step' => 1,
-                'confirmation_phrase' => 'Amount',
+                'confirmation_phrase' => 'IGNORE',
             ),
             array(
                 'menu_id' => 9,
                 'description' => 'Welcome to Uni Limited.'.PHP_EOL.'By proceeding you agree to the terms and conditions provided at www.unicredit.com'.PHP_EOL.'1. Yes'.PHP_EOL.'2. No',
                 'next_menu_id' => 0,
                 'step' => 1,
-                'confirmation_phrase' => 'Terms',
+                'confirmation_phrase' => 'IGNORE',
             ),
             array(
                 'menu_id' => 9,
@@ -105,21 +105,21 @@ class MenuItemsTableSeeder extends Seeder
                 'description' => 'Enter national ID Number',
                 'next_menu_id' => 0,
                 'step' => 4,
-                'confirmation_phrase' => 'Employer',
+                'confirmation_phrase' => 'ID',
             ),
             array(
                 'menu_id' => 9,
-                'description' => 'Enter date of birth (DDMMYYYY)',
+                'description' => 'Enter date of birth (DD-MM-YYYY)',
                 'next_menu_id' => 0,
                 'step' => 5,
-                'confirmation_phrase' => 'Employer',
+                'confirmation_phrase' => 'DOB',
             ),
             array(
                 'menu_id' => 9,
                 'description' => 'Enter Gross Salary (Kshs.)',
                 'next_menu_id' => 0,
                 'step' => 6,
-                'confirmation_phrase' => 'Employer',
+                'confirmation_phrase' => 'Salary',
             ),
         ));
     }

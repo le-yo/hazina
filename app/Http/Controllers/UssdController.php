@@ -68,22 +68,19 @@ class UssdController extends Controller
 //			exit;
             $user = self::verifyPhonefromMifos($no);
         }
-        if (!$user) {
-
-            //trigger self registration
-
-
-
-
-            //$response_ussd = "Watu Credit Short Term Loan".PHP_EOL."1. Loans: up-to Ksh 100,000.".PHP_EOL."2. Interest Rate: 10% pm.".PHP_EOL."3. Loan Term: 1 Month.".PHP_EOL."4. Disbursement: Within 24Hr.".PHP_EOL."5. Fees: None.".PHP_EOL."6. Option To Extend Loan.".PHP_EOL."Call 0790 000 999 For Registration";
-            //$response_sms =  "Watu Credit Short Term Loan".PHP_EOL."1. Loans: up-to Ksh 100,000".PHP_EOL."2. Interest Rate: 10% pm".PHP_EOL."3. Loan Term: 1 Month".PHP_EOL."4. Disbursement: Within 24Hr".PHP_EOL."5. Fees: None".PHP_EOL."6. Option To Extend Loan".PHP_EOL."Requirements".PHP_EOL."1. ID: National ID".PHP_EOL."2. Group Size: Min. 5 Members".PHP_EOL."3. Guarantee: 4 Group Members".PHP_EOL."Call 0790 000 999 For Registration";
-            $response_ussd = "Thank you for your interest in UniCredit loan products. Please call Customer Care on xxxx for registration information";
-            $response_sms = "Thank you for your interest in UniCredit loan products. Please call Customer Care on xxxx for registration information";
-            $notify = new NotifyController();
-            $notify->sendSms($phoneNumber, $response_sms);
-            self::sendResponse($response_ussd, 3, $user);
-            exit;
-        }
+//        if (!$user) {
+//
+//            //trigger self registration
+//
+//            //$response_ussd = "Watu Credit Short Term Loan".PHP_EOL."1. Loans: up-to Ksh 100,000.".PHP_EOL."2. Interest Rate: 10% pm.".PHP_EOL."3. Loan Term: 1 Month.".PHP_EOL."4. Disbursement: Within 24Hr.".PHP_EOL."5. Fees: None.".PHP_EOL."6. Option To Extend Loan.".PHP_EOL."Call 0790 000 999 For Registration";
+//            //$response_sms =  "Watu Credit Short Term Loan".PHP_EOL."1. Loans: up-to Ksh 100,000".PHP_EOL."2. Interest Rate: 10% pm".PHP_EOL."3. Loan Term: 1 Month".PHP_EOL."4. Disbursement: Within 24Hr".PHP_EOL."5. Fees: None".PHP_EOL."6. Option To Extend Loan".PHP_EOL."Requirements".PHP_EOL."1. ID: National ID".PHP_EOL."2. Group Size: Min. 5 Members".PHP_EOL."3. Guarantee: 4 Group Members".PHP_EOL."Call 0790 000 999 For Registration";
+//            $response_ussd = "Thank you for your interest in UniCredit loan products. Please call Customer Care on xxxx for registration information";
+//            $response_sms = "Thank you for your interest in UniCredit loan products. Please call Customer Care on xxxx for registration information";
+//            $notify = new NotifyController();
+//            $notify->sendSms($phoneNumber, $response_sms);
+//            self::sendResponse($response_ussd, 3, $user);
+//            exit;
+//        }
 
 
         if (self::user_is_starting($text)) {
@@ -150,39 +147,88 @@ class UssdController extends Controller
     }
 
     public function selfRegistration($user,$message){
-
+        $response = '';
         switch ($user->progress) {
 
             case 0 :
-                //neutral user
+                $menu = menu::find(9);
+                $response = self::nextMenuSwitch($user, $menu);
+                self::sendResponse($response,1);
                 break;
             case 1 :
-                //user authentication
-                $response = self::authenticateUser($user, $message);
+                //check terms and conditions acceptance
+                if (self::validationVariations($message, 1, "yes")) {
+
+                } elseif (self::validationVariations($message, 2, "no")) {
+                    $response = "Thank you for using UniCredit.";
+                    self::sendResponse($response, 3);
+                } else {
+                    //not confirmed
+                    $response = "We could not understand your response";
+                    //restart the process
+                    $output = "By proceeding you agree to accept terms and condition as available at http://unicredit.com/terms".PHP_EOL."1. Yes".PHP_EOL."2. No";
+                    $response = $response . PHP_EOL . $output;
+                    return $response;
+                }
                 break;
             case 2 :
-                $response = self::continueUssdProgress($user, $message);
-                //echo "Main Menu";
+                if(is_numeric($message)){
+                    $response = "Name should not contain numbers. ";
+                    $user->progress = $user->progress-1;
+                    $user->save();
+                }
                 break;
             case 3 :
-                //confirm USSD Process
-                $response = self::confirmUssdProcess($user, $message);
+                if(is_numeric($message)){
+                    $response = "Employer name should not contain numbers. ";
+                    $user->progress = $user->progress-1;
+                    $user->save();
+                }
                 break;
             case 4 :
-                //Go back menu
-                $response = self::confirmGoBack($user, $message);
+                if(!is_numeric($message)){
+                    $response = "ID number should be numeric. ";
+                    $user->progress = $user->progress-1;
+                    $user->save();
+                }
                 break;
             case 5 :
-                //Go back menu
-                $response = self::resetPIN($user, $message);
+                $date = explode("-",$message);
+
+                if(count($date) !=3){
+                    $response = "Invalid Date. ";
+                    $user->progress = $user->progress-1;
+                    $user->save();
+                }
                 break;
             case 6 :
-                //accept terms and conditions
-                $response = self::acceptTerms($user, $message);
+                if(!is_numeric($message)){
+                    $response = "Salary must be numeric. ";
+                    $user->progress = $user->progress-1;
+                    $user->save();
+                }
                 break;
             default:
+
                 break;
         }
+
+        $step = $user->progress + 1;
+
+        $menuItem = menu_items::whereMenuIdAndStep(9, $step)->first();
+        if ($menuItem) {
+
+            $user->menu_item_id = $menuItem->id;
+            $user->menu_id = 9;
+            $user->progress = $step;
+            $user->save();
+            return $response.$menuItem->description;
+        } else {
+            $response = self::confirmBatch($user, $menu);
+            return $response;
+
+        }
+
 
     }
 
@@ -930,6 +976,56 @@ class UssdController extends Controller
                     return true;
                 }
                 break;
+            case 9:
+
+                //get the loan being applied for
+                $full_name = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 10)->orderBy('id', 'DESC')->first()->response;
+                $employer = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 11)->orderBy('id', 'DESC')->first()->response;
+                $id = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 12)->orderBy('id', 'DESC')->first()->response;
+                $dob = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 13)->orderBy('id', 'DESC')->first()->response;
+                $salary = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 14)->orderBy('id', 'DESC')->first()->response;
+
+                $name = explode(" ",$full_name,2);
+                $reg_data = array();
+                if(count($name)>1){
+                $reg_data['firstname'] = $name[0];
+                $reg_data['lastname'] = $name[1];
+                }else{
+                $reg_data['fullname'] = $full_name;
+                }
+                $reg_data['officeId'] = 1;
+                $reg_data['externalId'] = $id;
+                $reg_data['dateFormat'] = "dd MMMM yyyy";
+                $reg_data['locale'] = "en";
+                $reg_data['active'] = false;
+                $reg_data['datatables'] = array(
+                    ["registeredTableName"=>"employer",
+                      "data" => array("employer"=>$employer)],
+                    ["registeredTableName"=>"gross_salary",
+                        "data" => array(
+                            "gross_salary"=>$salary,
+                            "locale"=>"en",
+                        )],
+                );
+                $reg_data['active'] = false;
+                $reg_data['mobileNo'] = "254".substr($user->phone_no,-9);
+
+                // url for posting the application details
+                $postURl = MIFOS_URL."/clients?".MIFOS_tenantIdentifier;
+                // post the encoded application details
+                $data = Hooks::MifosPostTransaction($postURl, json_encode($reg_data));
+                //datatables
+                if (empty($data->clientId)) {
+                    $error_msg = 'We had a problem processing your registration. Kindly retry or contact Customer Care';
+                } else {
+                    $user->client_id = $data->clientId;
+                    $user->terms_accepted = 1;
+                    $user->terms_accepted_on = Carbon::now();
+                    $user->save();
+                    self::resetUser($user);
+                    return true;
+                }
+                break;
 
             default :
                 return true;
@@ -1092,65 +1188,71 @@ class UssdController extends Controller
         }
 
     }
-
     public function continueSingleProcess($user, $message, $menu)
     {
 
 
-        //validate input to be numeric
-        $menuItem = menu_items::whereMenuIdAndStep($menu->id, $user->progress)->first();
-
-        $message = str_replace(",", "", $message);
-
-
-        if ($user->progress == 2) {
-            //verify stuff here:
-            if ((trim($message) < 4) && (trim($message) > 0)) {
-                self::storeUssdResponse($user, $message);
-                $response = self::confirmBatch($user, $menu);
-                return $response;
-                //confirm batch
-            } else {
-                $response = "Incorrect period." . PHP_EOL . "Select loan period:" . PHP_EOL . "1. 1 month" . PHP_EOL . "2. 2 months" . PHP_EOL . "3. 3 months";
-                $user->menu_item_id = 00;
-                $user->menu_id = $menu->id;
-                $user->progress = 2;
-                $user->save();
-                return $response;
-            }
+        if($menu->id == 9){
+            self::storeUssdResponse($user, $message);
+           $response = self::selfRegistration($user,$message);
+            self::sendResponse($response,1);
         }
 
-        if ((is_numeric(trim($message))) && (1000 <= $message)) {
-            self::storeUssdResponse($user, $message);
-            //get the real user
+
+            //validate input to be numeric
+            $menuItem = menu_items::whereMenuIdAndStep($menu->id, $user->progress)->first();
+
+            $message = str_replace(",", "", $message);
 
 
-            //get user specific loan limit
-            $limit = self::getLoanLimit($user->client_id);
-            //TODO::Check if $message is less than loan limit of the user
-            if (($message > $limit) && ($limit > 0)) {
-                $response = "Requested Loan amount must be less than your loan limit of Ksh " . number_format($limit);
-                self::sendResponse($response, 2, $user);
-                exit;
+            if ($user->progress == 2) {
+                //verify stuff here:
+                if ((trim($message) < 4) && (trim($message) > 0)) {
+                    self::storeUssdResponse($user, $message);
+                    $response = self::confirmBatch($user, $menu);
+                    return $response;
+                    //confirm batch
+                } else {
+                    $response = "Incorrect period." . PHP_EOL . "Select loan period:" . PHP_EOL . "1. 1 month" . PHP_EOL . "2. 2 months" . PHP_EOL . "3. 3 months";
+                    $user->menu_item_id = 00;
+                    $user->menu_id = $menu->id;
+                    $user->progress = 2;
+                    $user->save();
+                    return $response;
+                }
             }
-            //Get user loan limit, if it exists check the amount applied is less than this. If it doesn't exists, endelea or if it is 0
-            //return response with your loan
-            //save to the db
-            //check if user is a pcl user
+
+            if ((is_numeric(trim($message))) && (1000 <= $message)) {
+                self::storeUssdResponse($user, $message);
+                //get the real user
+
+
+                //get user specific loan limit
+                $limit = self::getLoanLimit($user->client_id);
+                //TODO::Check if $message is less than loan limit of the user
+                if (($message > $limit) && ($limit > 0)) {
+                    $response = "Requested Loan amount must be less than your loan limit of Ksh " . number_format($limit);
+                    self::sendResponse($response, 2, $user);
+                    exit;
+                }
+                //Get user loan limit, if it exists check the amount applied is less than this. If it doesn't exists, endelea or if it is 0
+                //return response with your loan
+                //save to the db
+                //check if user is a pcl user
 
 //            $pcl_status = self::isPclUser($user->client_id);
 ////			print_r($pcl_status);
 ////			exit;
 //            if ($pcl_status) {
 //                if ($pcl_status[0]->is_pcl_user == 'true') {
-                    $user->is_pcl_user = 1;
-                    //get some menu
-                    $response = "Select loan period:" . PHP_EOL . "1. 1 month" . PHP_EOL . "2. 2 months" . PHP_EOL . "3. 3 months";
-                    $user->menu_item_id = 00;
-                    $user->menu_id = $menu->id;
-                    $user->progress = 2;
-                    $user->save();
-                    return $response;
+                $user->is_pcl_user = 1;
+                //get some menu
+                $response = "Select loan period:" . PHP_EOL . "1. 1 month" . PHP_EOL . "2. 2 months" . PHP_EOL . "3. 3 months";
+                $user->menu_item_id = 00;
+                $user->menu_id = $menu->id;
+                $user->progress = 2;
+                $user->save();
+                return $response;
 //                } else {
 //                    $user->is_pcl_user = 0;
 //                    $user->save();
@@ -1159,7 +1261,9 @@ class UssdController extends Controller
 //                $user->is_pcl_user = 0;
 //                $user->save();
 //            }
-            //check if we have another step
+                //check if we have another step
+
+
             $step = $user->progress + 1;
             $menuItem = menu_items::whereMenuIdAndStep($menu->id, $step)->first();
             if ($menuItem) {
@@ -1174,7 +1278,7 @@ class UssdController extends Controller
                 return $response;
 
             }
-        } else {
+        }else {
             if ((trim($message) < 999) || (trim($message) > 100000)) {
 
                 $response = "Requested Loan amount must be from Ksh 1,000 to Ksh 100,000. Enter loan amount:";
@@ -1198,11 +1302,12 @@ class UssdController extends Controller
         foreach ($menu_items as $key => $value) {
 
             $response = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, $value->id)->orderBy('id', 'DESC')->first();
-
+            if( $value->confirmation_phrase !="IGNORE"){
             $confirmation = $confirmation . PHP_EOL . $value->confirmation_phrase . ": " . $response->response;
+            }
             $amount = $response->response;
         }
-        if ($user->is_pcl_user == 1) {
+        if ($user->is_pcl_user == 1 && $menu->id !=9) {
             $response = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 00)->orderBy('id', 'DESC')->first();
             $MifosX = new MifosXController();
             $monthly_payment = $MifosX->calculateRepaymentSchedule($user->client_id,$amount,PCL_ID,$response->response);
@@ -1287,7 +1392,7 @@ class UssdController extends Controller
                 $user->menu_id = $menu->id;
                 $user->menu_item_id = 0;
                 $user->progress = 0;
-                //$user->save();
+                $user->save();
                 //self::continueUssdMenu($user,$message,$menu);
                 break;
             case 2:
@@ -1458,14 +1563,10 @@ class UssdController extends Controller
 
         //has user accepted terms and conditions?
         if(!self::has_user_accepted_terms($user)){
-            //process to accept terms and conditions
-            $output = "CON Welcome to UniCredit.".PHP_EOL."By proceeding you agree to accept terms and conditions available at www.unicredit.com/terms".PHP_EOL."1. Yes".PHP_EOL."2. No";
-            $user->session = 6;
-            $user->progress = 1;
-            $user->save();
-            header('Content-type: text/plain');
-            echo $output;
-            exit;
+            $menu = menu::find(9);
+
+            $response = self::nextMenuSwitch($user, $menu);
+            self::sendResponse($response,1);
         }
 
         if (self::is_user_pin_set($user)) {

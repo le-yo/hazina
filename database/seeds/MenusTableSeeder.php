@@ -67,7 +67,7 @@ class MenusTableSeeder extends Seeder
             ),
             //menu 9
             array(
-                'title' => 'Self Registration:',
+                'title' => 'Register:',
                 'is_parent' => 0,
                 'type' => 2,
                 'confirmation_message' => "Thank you for your interest in our Salary Advance product, your registration request has been received and will be processed shortly. For further queries call our customer care line 0704 000 999",
