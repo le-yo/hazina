@@ -1014,9 +1014,17 @@ class UssdController extends Controller
                 $postURl = MIFOS_URL."/clients?".MIFOS_tenantIdentifier;
                 // post the encoded application details
                 $data = Hooks::MifosPostTransaction($postURl, json_encode($reg_data));
+//                print_r($data);
+//                exit;
                 //datatables
                 if (empty($data->clientId)) {
-                    $error_msg = 'We had a problem processing your registration. Kindly retry or contact Customer Care';
+
+                    if(strpos($data->defaultUserMessage,'already exists')){
+                        $error_msg = 'A user with similar details has already been registered. Kindly contact Customer Care on 0704 000 999';
+                    }else{
+                    $error_msg = 'We had a problem processing your registration. Kindly retry or contact Customer Care on 0704 000 999';
+                    }
+                    self::sendResponse($error_msg,3,$user);
                 } else {
                     $user->client_id = $data->clientId;
                     $user->terms_accepted = 1;
