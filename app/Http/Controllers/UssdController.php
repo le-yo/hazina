@@ -1031,7 +1031,12 @@ class UssdController extends Controller
                     $user->terms_accepted_on = Carbon::now();
                     $user->save();
                     self::resetUser($user);
-                    return true;
+                    $menu = menu::find(9);
+                    $response = $menu->confirmation_message;
+                    self::resetUser($user);
+                    $notify = new NotifyController();
+                    $notify->sendSms($user->phone_no, $response);
+                    self::sendResponse($response, 3, $user);
                 }
                 break;
 
