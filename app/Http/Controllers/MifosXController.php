@@ -131,9 +131,6 @@ class MifosXController extends Controller {
         // post the encoded application details
         $loanApplication = Hooks::MifosPostTransaction($postURl, json_encode($loan_data));
 //        $loanApplication = Hooks::MifosGetTransaction($postURl, json_encode($loan_data));
-
-        print_r($loanApplication);
-        exit;
         return $loanApplication;
     }
 
