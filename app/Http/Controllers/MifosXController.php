@@ -50,7 +50,7 @@ class MifosXController extends Controller {
 		$loan_data['repaymentFrequencyType'] = $loan_settings->repaymentFrequencyType;
 		$loan_data['interestRatePerPeriod'] = $loan_settings->interestRatePerPeriod;
 		$loan_data['amortizationType'] = $loan_settings->amortizationType;
-        $loan_data['interestType'] = 0;
+        $loan_data['interestType'] = 1;
 		$loan_data['interestCalculationPeriodType'] = $loan_settings->interestCalculationPeriodType;
 		$loan_data['transactionProcessingStrategyId'] = $loan_settings->transactionProcessingStrategyId;
 		$loan_data['expectedDisbursementDate'] = $disbursement_date;
@@ -103,16 +103,16 @@ class MifosXController extends Controller {
         $loan_data['clientId'] = $user;
         $loan_data['productId'] = $loan_settings->productId;
         $loan_data['principal'] = $amount;
-        $loan_data['loanTermFrequency'] = $repaymentPeriods;
+        $loan_data['loanTermFrequency'] = $loan_settings->loanTermFrequency;
         $loan_data['loanTermFrequencyType'] = $loan_settings->loanTermFrequencyType;
         $loan_data['loanType'] = $loan_settings->loanType;
         $loan_data['numberOfRepayments'] = $repaymentPeriods;
-//        $loan_data['numberOfRepayments'] = 1;
         $loan_data['repaymentEvery'] = $loan_settings->repaymentEvery;
         $loan_data['repaymentFrequencyType'] = $loan_settings->repaymentFrequencyType;
+//        $loan_data['repaymentFrequencyType'] = $repaymentPeriods;
         $loan_data['interestRatePerPeriod'] = $interest;
         $loan_data['amortizationType'] = $loan_settings->amortizationType;
-        $loan_data['interestType'] = 1;
+        $loan_data['interestType'] = 0;
         $loan_data['interestCalculationPeriodType'] = $loan_settings->interestCalculationPeriodType;
         $loan_data['transactionProcessingStrategyId'] = $loan_settings->transactionProcessingStrategyId;
         $loan_data['expectedDisbursementDate'] = $disbursement_date;
@@ -126,10 +126,14 @@ class MifosXController extends Controller {
 
         // url for posting the application details
         $postURl = MIFOS_URL."/loans?".MIFOS_tenantIdentifier;
+//        $postURl = MIFOS_URL."/loans/30?".MIFOS_tenantIdentifier;
 
         // post the encoded application details
         $loanApplication = Hooks::MifosPostTransaction($postURl, json_encode($loan_data));
+//        $loanApplication = Hooks::MifosGetTransaction($postURl, json_encode($loan_data));
 
+        print_r($loanApplication);
+        exit;
         return $loanApplication;
     }
 

@@ -29,6 +29,14 @@ class UssdController extends Controller
      */
     public function index()
     {
+//        $postURl = MIFOS_URL."/loans/36?".MIFOS_tenantIdentifier;
+//
+//        // post the encoded application details
+////        $loanApplication = Hooks::MifosPostTransaction($postURl, json_encode($loan_data));
+//        $loanApplication = Hooks::MifosGetTransaction($postURl);
+//
+//        print_r($loanApplication);
+//        exit;
 //$response = self::getLoan();
 //		$loan = self::isPclUser(35);
 //		$user = UssdUser::where('phone_no',"254728355429")->orWhere('phone_no',"0728355429")->first();
@@ -86,7 +94,10 @@ class UssdController extends Controller
         if (self::user_is_starting($text)) {
             //lets get the home menu
             //reset user
+            if($user){
+
             self::resetUser($user);
+            }
             //user authentication
             $message = '';
             $response = self::authenticateUser($user, $message);
@@ -1020,7 +1031,6 @@ class UssdController extends Controller
                 if (empty($data->clientId)) {
 
                     if(strpos($data->defaultUserMessage,'already exists')){
-                        $user->client_id = $data->clientId;
                         $user->terms_accepted = 1;
                         $user->terms_accepted_on = Carbon::now();
                         $user->save();
