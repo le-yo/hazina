@@ -11,7 +11,7 @@ class Ussduser extends Model {
      *
      * @var array
      */
-    protected $fillable = ['difficulty_level','name','office_id','client_id','phone_no','email','session','progress','pin','confirm_from','menu_item_id','is_pcl_user','terms_accepted','terms_accepted_on'];
+    protected $fillable = ['difficulty_level','name','office_id','client_id','phone_no','email','session','progress','pin','confirm_from','menu_item_id','is_pcl_user','terms_accepted','terms_accepted_on','active_status'];
 
 
 
