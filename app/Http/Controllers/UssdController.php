@@ -80,6 +80,8 @@ class UssdController extends Controller
         }
 //        if (!$user) {
 //
+//
+//
 //            //trigger self registration
 //
 //            //$response_ussd = "Watu Credit Short Term Loan".PHP_EOL."1. Loans: up-to Ksh 100,000.".PHP_EOL."2. Interest Rate: 10% pm.".PHP_EOL."3. Loan Term: 1 Month.".PHP_EOL."4. Disbursement: Within 24Hr.".PHP_EOL."5. Fees: None.".PHP_EOL."6. Option To Extend Loan.".PHP_EOL."Call 0790 000 999 For Registration";
@@ -789,6 +791,19 @@ class UssdController extends Controller
             }else{
             $user = Ussduser::create($usr);
             }
+        }else{
+            $usr = array();
+            $usr['name'] = "Another User";
+            $usr['client_id'] = 0;
+            $usr['office_id'] = 0;
+            $usr['phone_no'] = '254'.$no;
+            $usr['session'] = 0;
+            $usr['progress'] = 0;
+            $usr['email'] = '254'.$no;
+            $usr['confirm_from'] = 0;
+            $usr['menu_item_id'] = 0;
+            $usr['is_pcl_user'] = 1;
+            $user = Ussduser::create($usr);
         }
         return $user;
     }
@@ -991,7 +1006,7 @@ class UssdController extends Controller
                 break;
             case 9:
 
-                //get the loan being applied for
+                //get the user
                 $full_name = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 10)->orderBy('id', 'DESC')->first()->response;
                 $employer = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 11)->orderBy('id', 'DESC')->first()->response;
                 $id = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 12)->orderBy('id', 'DESC')->first()->response;
@@ -1043,6 +1058,7 @@ class UssdController extends Controller
                     self::sendResponse($error_msg,3,$user);
                 } else {
                     $user->client_id = $data->clientId;
+                    $user = self::verifyPhonefromMifos(substr($user->phone_no,-9));
                     $user->terms_accepted = 1;
                     $user->terms_accepted_on = Carbon::now();
                     $user->save();
@@ -1590,6 +1606,11 @@ class UssdController extends Controller
     public function authenticateUser($user, $message)
     {
 
+        if(!self::is_user_active($user)){
+            $response = "Your account has not been activated yet. Kindly retry later";
+            self::sendResponse($response,3);
+        }
+
         //has user accepted terms and conditions?
         if(!self::has_user_accepted_terms($user)){
             $menu = menu::find(9);
@@ -1732,7 +1753,14 @@ class UssdController extends Controller
         }
 
     }
+    public function is_user_active($user){
+        if ($user->active_status == 1) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
 
+    }
     public function has_user_accepted_terms($user){
         if ($user->terms_accepted == 1) {
             return TRUE;
