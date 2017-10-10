@@ -335,6 +335,7 @@ class MifosXController extends Controller {
         $loan_data['interestCalculationPeriodType'] = $loan_settings->interestCalculationPeriodType;
         $loan_data['expectedDisbursementDate'] = $disbursement_date;
         $loan_data['transactionProcessingStrategyId'] = $loan_settings->transactionProcessingStrategyId;
+        $loan_data['transactionProcessingStrategyId'] = 2;
         $loan_data['submittedOnDate'] = $date;
 
         // Get the url for calculating the loan schedule
