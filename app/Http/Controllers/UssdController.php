@@ -29,7 +29,7 @@ class UssdController extends Controller
      */
     public function index()
     {
-//        $postURl = MIFOS_URL."/loans/36?".MIFOS_tenantIdentifier;
+//        $postURl = MIFOS_URL."/loans/41?".MIFOS_tenantIdentifier;
 //
 //        // post the encoded application details
 ////        $loanApplication = Hooks::MifosPostTransaction($postURl, json_encode($loan_data));
@@ -37,6 +37,8 @@ class UssdController extends Controller
 //
 //        print_r($loanApplication);
 //        exit;
+
+
 //$response = self::getLoan();
 //		$loan = self::isPclUser(35);
 //		$user = UssdUser::where('phone_no',"254728355429")->orWhere('phone_no',"0728355429")->first();

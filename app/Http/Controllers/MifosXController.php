@@ -66,7 +66,6 @@ class MifosXController extends Controller {
 
         // post the encoded application details
         $loanApplication = Hooks::MifosPostTransaction($postURl, json_encode($loan_data));
-
 		return $loanApplication;
 	}
 
@@ -103,7 +102,7 @@ class MifosXController extends Controller {
         $loan_data['clientId'] = $user;
         $loan_data['productId'] = $loan_settings->productId;
         $loan_data['principal'] = $amount;
-        $loan_data['loanTermFrequency'] = $loan_settings->loanTermFrequency;
+        $loan_data['loanTermFrequency'] = $repaymentPeriods;
         $loan_data['loanTermFrequencyType'] = $loan_settings->loanTermFrequencyType;
         $loan_data['loanType'] = $loan_settings->loanType;
         $loan_data['numberOfRepayments'] = $repaymentPeriods;
@@ -114,7 +113,7 @@ class MifosXController extends Controller {
         $loan_data['amortizationType'] = $loan_settings->amortizationType;
         $loan_data['interestType'] = 0;
         $loan_data['interestCalculationPeriodType'] = $loan_settings->interestCalculationPeriodType;
-        $loan_data['transactionProcessingStrategyId'] = $loan_settings->transactionProcessingStrategyId;
+        $loan_data['transactionProcessingStrategyId'] = 2; // should be 2 for custom processing strategy
         $loan_data['expectedDisbursementDate'] = $disbursement_date;
         $loan_data['submittedOnDate'] = $date;
         $dData = array();
@@ -131,6 +130,8 @@ class MifosXController extends Controller {
         // post the encoded application details
         $loanApplication = Hooks::MifosPostTransaction($postURl, json_encode($loan_data));
 //        $loanApplication = Hooks::MifosGetTransaction($postURl, json_encode($loan_data));
+//        print_r($loanApplication);
+//        exit;
         return $loanApplication;
     }
 
