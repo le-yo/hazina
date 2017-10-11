@@ -24,6 +24,8 @@ class HooksController extends Controller
         $request->headers->set('content-type', 'application/json');
         $d = $request->all();
 
+//        HookLogsModel::create(['details' => json_encode($d)]);
+
         $client = self::getUser($d['clientId']);
 
         //get client
@@ -33,12 +35,12 @@ class HooksController extends Controller
             $loan_limit = self::getClientLimit($client->id);
             //Send message
             if ($loan_limit) {
-                $message = "Congratulations! You have been pre-approved for a credit limit of Ksh. ".number_format($loan_limit).". To apply for the loan please Dial *876# and follow the instructions.";
+                $message = "Dear {name}, you can now apply for a loan of up to {limit} through your phone. Dial *696# to generate your PIN , then use the PIN to access and apply for a loan. For further queries call our customer care line 0704 000 999";
             } else {
-                $message = "Congratulations! Welcome to WatuCredit. To apply for the loan please Dial *876# and follow the instructions.";
-
+                $message = "Dear {name}, you can now apply for a loan through your phone. Dial *696# to generate your PIN , then use the PIN to access and apply for a loan. For further queries call our customer care line 0704 000 999";
             }
-
+            $message = str_replace("{name}",$client->displayName,$message);
+            $message = str_replace("{limit}",$loan_limit,$message);
             self::sendMessage($client->mobileNo, $message);
 
         }

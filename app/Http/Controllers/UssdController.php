@@ -758,6 +758,8 @@ class UssdController extends Controller
             }
         }
 
+//        print_r($client);
+//        exit;
         $user = FALSE;
         if($client->totalFilteredRecords > 0){
             $user = UssdUser::where('phone_no','254'.$no)->orWhere('phone_no',"0".$no)->first();
@@ -773,6 +775,11 @@ class UssdController extends Controller
             $usr['confirm_from'] = 0;
             $usr['menu_item_id'] = 0;
             $usr['is_pcl_user'] = 1;
+            if($client->status->code == 'clientStatusType.active'){
+            $usr['active_status'] = 1;
+            }else{
+            $usr['active_status'] = 0;
+            }
             //get if user is a pcl user
 //            $pcl_status = self::isPclUser($client->id);
 //            if (count($pcl_status) > 0) {
@@ -1606,10 +1613,6 @@ class UssdController extends Controller
     public function authenticateUser($user, $message)
     {
 
-        if(!self::is_user_active($user)){
-            $response = "Your account has not been activated yet. Kindly retry later";
-            self::sendResponse($response,3);
-        }
 
         //has user accepted terms and conditions?
         if(!self::has_user_accepted_terms($user)){
@@ -1617,6 +1620,11 @@ class UssdController extends Controller
 
             $response = self::nextMenuSwitch($user, $menu);
             self::sendResponse($response,1);
+        }
+        $user = self::is_user_active($user);
+        if($user->active_status != 1){
+            $response = "Your account has not been activated yet. Kindly retry later";
+            self::sendResponse($response,3);
         }
 
         if (self::is_user_pin_set($user)) {
@@ -1755,9 +1763,10 @@ class UssdController extends Controller
     }
     public function is_user_active($user){
         if ($user->active_status == 1) {
-            return TRUE;
+            return $user;
         } else {
-            return FALSE;
+           $user = self::verifyPhonefromMifos(substr($user->phone_no,-9));
+            return $user;
         }
 
     }
