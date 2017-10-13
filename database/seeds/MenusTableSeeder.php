@@ -45,7 +45,7 @@ class MenusTableSeeder extends Seeder
                 'title' => 'Repay Loan',
                 'is_parent' => 0,
                 'type' => 3,
-                'confirmation_message' => "Please transfer Ksh. XX to paybill number XXXXXX to pay your loan",
+                'confirmation_message' => "Please transfer loan balance to paybill number 963334 to pay your loan",
             ),
             array(
                 'title' => 'Extend Loan:',
@@ -63,7 +63,7 @@ class MenusTableSeeder extends Seeder
                 'title' => 'Terms & Conditions:',
                 'is_parent' => 0,
                 'type' => 3,
-                'confirmation_message' => "Visit www.unicredit.com",
+                'confirmation_message' => "Visit http://www.unicredit.com",
             ),
             //menu 9
             array(

@@ -52,6 +52,8 @@ class SettingsTableSeeder extends Seeder
 
         $data = array();
         foreach($loanproducts as $loanproduct){
+            print_r($loanproduct);
+//            exit;
             $dat = array();
             $dat['product_name'] = $loanproduct->name;
             $dat['productId'] = $loanproduct->id;

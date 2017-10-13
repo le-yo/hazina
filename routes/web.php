@@ -26,7 +26,7 @@ Route::get('emails/verified/{code}',
 //]);
 
 //Hook routes
-Route::post('user_activated', 'HooksController@user_activated_hook');
+Route::post('user-activated', 'HooksController@user_activated_hook');
 Route::post('loan-approved', 'HooksController@loan_approved_hook');
 Route::post('loan-disbursed', 'HooksController@loan_disbursed_hook');
 //Route::post('user_activated', 'HooksController@user_activated_hook');

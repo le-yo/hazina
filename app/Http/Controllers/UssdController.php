@@ -29,7 +29,32 @@ class UssdController extends Controller
      */
     public function index()
     {
-//        $postURl = MIFOS_URL."/loans/41?".MIFOS_tenantIdentifier;
+
+//        $identifier = array(
+//            "documentTypeId"=>"2",
+//            "documentKey"=>"27151131",
+//            "description"=>"Document has been verified",
+////            "status"=>"1",
+//        );
+//
+////        print_r(json_encode($identifier));
+////        exit;
+//        $postURl = MIFOS_URL."/clients/60/identifiers?".MIFOS_tenantIdentifier;
+////        $postURl = MIFOS_URL."/codes/1/codevalues?".MIFOS_tenantIdentifier;
+//        // post the encoded application details
+//        $data = Hooks::MifosPostTransaction($postURl, json_encode($identifier));
+//        print_r($data);
+//        exit;
+
+//        $MifosX = new MifosXController();
+////        $monthly_payment = $MifosX->applyPCLLoan(46,10000,2);
+//        $monthly_payment = $MifosX->calculateRepaymentSchedule(46,10000,PCL_ID,2);
+//        print_r($monthly_payment);
+//        exit;
+
+
+//        $postURl = MIFOS_URL."/loans/77?associations=repaymentSchedule,transactions&".MIFOS_tenantIdentifier;
+//        $postURl = MIFOS_URL."/clients/46/identifiers/template?fields=documentKey,documentType,description&".MIFOS_tenantIdentifier;
 //
 //        // post the encoded application details
 ////        $loanApplication = Hooks::MifosPostTransaction($postURl, json_encode($loan_data));
@@ -312,7 +337,7 @@ class UssdController extends Controller
                         return $response;
 
                     } else {
-                        $response = "Failed .Please contact Customer Care";
+                        $response = "Failed .Please contact Customer Care on 0704 000 999";
                         self::sendResponse($response, 3);
 
                     }
@@ -353,7 +378,7 @@ class UssdController extends Controller
     {
 
 
-        $error_msg = 'We had a problem processing your loan. Kindly retry or contact Customer Care';
+        $error_msg = 'We had a problem processing your loan. Kindly retry or contact Customer Care on 0704 000 999';
         foreach ($data->errors as $error) {
 
             if ($error->userMessageGlobalisationCode == 'validation.msg.loan.principal.amount.is.not.within.min.max.range') {
@@ -845,7 +870,7 @@ class UssdController extends Controller
             if (self::postUssdConfirmationProcess($user)) {
                 $response = $menu->confirmation_message;
             } else {
-                $response = "We had a problem processing your request. Please contact Customer Care";
+                $response = "We had a problem processing your request. Please contact Customer Care on 0704 000 999";
             }
 
             self::resetUser($user);
@@ -1036,13 +1061,17 @@ class UssdController extends Controller
                 $reg_data['datatables'] = array(
                     ["registeredTableName"=>"employer",
                       "data" => array("employer"=>$employer)],
+                    ["registeredTableName"=>"dob",
+                        "data" => array("dob"=>$dob)],
                     ["registeredTableName"=>"gross_salary",
                         "data" => array(
                             "gross_salary"=>$salary,
                             "locale"=>"en",
                         )],
                 );
+
                 $reg_data['active'] = false;
+
                 $reg_data['mobileNo'] = "254".substr($user->phone_no,-9);
 
                 // url for posting the application details
@@ -1065,13 +1094,24 @@ class UssdController extends Controller
                     self::sendResponse($error_msg,3,$user);
                 } else {
                     $user->client_id = $data->clientId;
+
+//                    //send identifier
+//                    $identifier = array(
+//                        "documentTypeId"=>"2",
+//                        "documentKey"=>$id,
+//                    );
+//                    $postURl = MIFOS_URL."/clients/".$data->clientId."/identifiers?".MIFOS_tenantIdentifier;
+//                    // post the encoded application details
+//                    $data = Hooks::MifosPostTransaction($postURl, json_encode($identifier));
+//                print_r($data);
+//                exit;
                     $user = self::verifyPhonefromMifos(substr($user->phone_no,-9));
                     $user->terms_accepted = 1;
                     $user->terms_accepted_on = Carbon::now();
                     $user->save();
                     self::resetUser($user);
                     $menu = menu::find(9);
-                    $response = $menu->confirmation_message;
+                    $response = "Thank you for your interest in our Salary Advance product, your registration request has been received and will be processed shortly. For further queries call our customer care line 0704 000 999";
                     self::resetUser($user);
                     $notify = new NotifyController();
                     $notify->sendSms($user->phone_no, $response);
@@ -1193,9 +1233,9 @@ class UssdController extends Controller
                     $response = "You have no outstanding loan balance";
                 } else {
                     if($user->is_pcl_user == 1){
-                        $response = "Please transfer Ksh " . $balance['amount'] . " to Paybill Number 682684 to pay your loan";
+                        $response = "Please transfer Ksh " . $balance['amount'] . " to Paybill Number 963334 to pay your loan";
                     }else{
-                        $response = "Please transfer Ksh " . $balance['amount'] . " to Paybill Number 550819 to pay your loan";
+                        $response = "Please transfer Ksh " . $balance['amount'] . " to Paybill Number 963334 to pay your loan";
                     }
                     $notify = new NotifyController();
                     $notify->sendSms($user->phone_no, $response);
@@ -1212,7 +1252,7 @@ class UssdController extends Controller
                     $response = "Failed. Loan extension request cannot be completed. You do not have a loan";
                 } else {
                     $extension_fee = $balance['amount'] * 0.1;
-                    $response = "Please transfer extension fee of Ksh " . $extension_fee . " to Paybill No. 550819 to receive loan extension";
+                    $response = "Please transfer extension fee of Ksh " . $extension_fee . " to Paybill No. 963334 to receive loan extension";
                     $notify = new NotifyController();
                     $notify->sendSms($user->phone_no, $response);
                 }

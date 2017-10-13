@@ -12,6 +12,8 @@ namespace App;
 class Hooks {
 
     public static function MifosGetTransaction($url,$post_data=null){
+//        print_r($url);
+//        exit;
         $post_data="";
         $ch = curl_init();
         $data = "";

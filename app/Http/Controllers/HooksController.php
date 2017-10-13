@@ -25,7 +25,7 @@ class HooksController extends Controller
         $d = $request->all();
 
 //        HookLogsModel::create(['details' => json_encode($d)]);
-
+    echo "received";
         $client = self::getUser($d['clientId']);
 
         //get client
@@ -33,15 +33,19 @@ class HooksController extends Controller
 
             //get Loan limit
             $loan_limit = self::getClientLimit($client->id);
+            echo "loan_limit".$loan_limit;
             //Send message
             if ($loan_limit) {
-                $message = "Dear {name}, you can now apply for a loan of up to {limit} through your phone. Dial *696# to generate your PIN , then use the PIN to access and apply for a loan. For further queries call our customer care line 0704 000 999";
+                $message = 'Dear {name}, you can now apply for a loan of upto '.$loan_limit.' through your phone. Dial *696# to generate your PIN , then use the PIN to access and apply for a loan. For further queries call our customer care line 0704 000 999';
+//                $message = "Dear {name}, you can now apply for a loan of up to {limit} through your phone. Dial *696# to generate your PIN , then use the PIN to access and apply for a loan. For further queries call our customer care line 0704 000 999";
             } else {
                 $message = "Dear {name}, you can now apply for a loan through your phone. Dial *696# to generate your PIN , then use the PIN to access and apply for a loan. For further queries call our customer care line 0704 000 999";
             }
             $message = str_replace("{name}",$client->displayName,$message);
             $message = str_replace("{limit}",$loan_limit,$message);
-            self::sendMessage($client->mobileNo, $message);
+            echo "sending message...";
+            print_r(self::sendMessage($client->mobileNo, $message));
+            echo "message sent...";
 
         }
 
@@ -65,7 +69,13 @@ class HooksController extends Controller
         if (count($limit) > 0) {
             return $limit[0]->user_loan_limit;
         } else {
+            $url = MIFOS_URL . "/datatables/gross_salary/" . $client_id . "?" . MIFOS_tenantIdentifier;
+            $limit = Hooks::MifosGetTransaction($url, $post_data = "");
+            if (count($limit) > 0) {
+                return number_format($limit[0]->gross_salary*2/3,2);
+            }else{
             return 0;
+            }
         }
 
     }
