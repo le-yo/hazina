@@ -1063,6 +1063,12 @@ class UssdController extends Controller
                 //get the user
                 $full_name = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 10)->orderBy('id', 'DESC')->first()->response;
                 $gender = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 11)->orderBy('id', 'DESC')->first()->response;
+                if($gender == 1){
+                    $gender = 'M';
+                }else{
+                    $gender = 'F';
+                }
+
                 $employer = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 12)->orderBy('id', 'DESC')->first()->response;
                 $id = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 13)->orderBy('id', 'DESC')->first()->response;
                 $dob = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 14)->orderBy('id', 'DESC')->first()->response;
