@@ -6,8 +6,10 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\ussd_logs;
+use App\Ussduser;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HooksController extends Controller
 {
@@ -46,6 +48,49 @@ class HooksController extends Controller
             echo "sending message...";
             print_r(self::sendMessage($client->mobileNo, $message));
             echo "message sent...";
+
+        }
+
+
+    }
+    public function user_edit_hook(Request $request)
+    {
+        //Get json from mifos
+        $request->headers->set('content-type', 'application/json');
+        $d = $request->all();
+
+        HookLogsModel::create(['details' => json_encode($d)]);
+    echo "received";
+        $client = self::getUser($d['clientId']);
+//        print_r($client);
+//        exit;
+        //get client
+        if ($client) {
+
+            $user = Ussduser::whereClientId($d['clientId'])->first();
+            $usr = array();
+            $usr['name'] = $client->displayName;
+            $usr['client_id'] = $client->id;
+            $usr['office_id'] = $client->officeId;
+            $usr['phone_no'] = $client->mobileNo;
+            $usr['session'] = 0;
+            $usr['pin'] = 0;
+            $usr['progress'] = 0;
+            $usr['email'] = $client->mobileNo;
+            $usr['confirm_from'] = 0;
+            $usr['menu_item_id'] = 0;
+            $usr['is_pcl_user'] = 1;
+            if($client->status->code == 'clientStatusType.active'){
+                $usr['active_status'] = 1;
+            }else{
+                $usr['active_status'] = 0;
+            }
+            $user = Ussduser::whereClientId($d['clientId'])->first();
+            if($user){
+                DB::table('users')->where('id',$user->id)->update($usr);
+            }else{
+                $user = Ussduser::create($usr);
+            }
 
         }
 
