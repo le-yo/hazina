@@ -75,6 +75,7 @@ class HooksController extends Controller
             $usr['client_id'] = $client->id;
             $usr['office_id'] = $client->officeId;
             $usr['phone_no'] = $client->mobileNo;
+            $usr['email'] = $client->mobileNo;
             $usr['session'] = 0;
             $usr['pin'] = 0;
             $usr['progress'] = 0;

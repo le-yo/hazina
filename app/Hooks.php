@@ -62,7 +62,6 @@ class Hooks {
 //        print_r($data);exit;
         curl_close($ch);
 
-
         $response = json_decode($data);
 
         return $response;
