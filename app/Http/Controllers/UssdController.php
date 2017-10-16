@@ -212,6 +212,13 @@ class UssdController extends Controller
                 }
                 break;
             case 2 :
+                if(is_numeric($message)){
+                    $response = "Name should not contain numbers. ";
+                    $user->progress = $user->progress-1;
+                    $user->save();
+                }
+                break;
+            case 3 :
                 if (self::validationVariations($message, 1, "M")) {
 
                 } elseif (self::validationVariations($message, 2, "F")) {
@@ -231,13 +238,6 @@ class UssdController extends Controller
                         return $response . $menuItem->description;
                     }
 
-                }
-                break;
-            case 3 :
-                if(is_numeric($message)){
-                    $response = "Name should not contain numbers. ";
-                    $user->progress = $user->progress-1;
-                    $user->save();
                 }
                 break;
             case 4 :
