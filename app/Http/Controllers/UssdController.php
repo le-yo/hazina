@@ -1110,11 +1110,11 @@ class UssdController extends Controller
 
                     if(strpos($data->defaultUserMessage,'already exists')){
 
-                        $client = self::getUser($data->clientId);
-                        $user->terms_accepted = 1;
-                        $user->phone_no = $client->mobileNo;
-                        $user->terms_accepted_on = Carbon::now();
-                        $user->save();
+//                        $client = self::getUser($data->clientId);
+//                        $user->terms_accepted = 1;
+//                        $user->phone_no = $client->mobileNo;
+//                        $user->terms_accepted_on = Carbon::now();
+                        $user->delete();
                         $error_msg = 'A user with similar details has already been registered. Kindly redial to proceed';
                     }else{
                     $error_msg = 'We had a problem processing your registration. Kindly retry or contact Customer Care on 0704 000 999';
