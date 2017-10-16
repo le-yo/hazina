@@ -54,7 +54,7 @@ class UssdController extends Controller
 
 
 //        $postURl = MIFOS_URL."/loans/77?associations=repaymentSchedule,transactions&".MIFOS_tenantIdentifier;
-//        $postURl = MIFOS_URL."/clients/46/identifiers/template?fields=documentKey,documentType,description&".MIFOS_tenantIdentifier;
+////        $postURl = MIFOS_URL."/clients/46/identifiers/template?fields=documentKey,documentType,description&".MIFOS_tenantIdentifier;
 //
 //        // post the encoded application details
 ////        $loanApplication = Hooks::MifosPostTransaction($postURl, json_encode($loan_data));
@@ -212,27 +212,49 @@ class UssdController extends Controller
                 }
                 break;
             case 2 :
+                if (self::validationVariations($message, 1, "M")) {
+
+                } elseif (self::validationVariations($message, 2, "F")) {
+
+                }else {
+                    //not confirmed
+                    $response = "We could not understand your response";
+                    $step = $user->progress;
+
+                    $menuItem = menu_items::whereMenuIdAndStep(9, $step)->first();
+                    if ($menuItem) {
+
+                        $user->menu_item_id = $menuItem->id;
+                        $user->menu_id = 9;
+                        $user->progress = $step;
+                        $user->save();
+                        return $response . $menuItem->description;
+                    }
+
+                }
+                break;
+            case 3 :
                 if(is_numeric($message)){
                     $response = "Name should not contain numbers. ";
                     $user->progress = $user->progress-1;
                     $user->save();
                 }
                 break;
-            case 3 :
+            case 4 :
                 if(is_numeric($message)){
                     $response = "Employer name should not contain numbers. ";
                     $user->progress = $user->progress-1;
                     $user->save();
                 }
                 break;
-            case 4 :
+            case 5 :
                 if(!is_numeric($message)){
                     $response = "ID number should be numeric. ";
                     $user->progress = $user->progress-1;
                     $user->save();
                 }
                 break;
-            case 5 :
+            case 6 :
                 $date = explode("-",$message);
 
                 if(count($date) !=3){
@@ -241,7 +263,7 @@ class UssdController extends Controller
                     $user->save();
                 }
                 break;
-            case 6 :
+            case 7 :
                 if(!is_numeric($message)){
                     $response = "Salary must be numeric. ";
                     $user->progress = $user->progress-1;
@@ -1040,10 +1062,11 @@ class UssdController extends Controller
 
                 //get the user
                 $full_name = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 10)->orderBy('id', 'DESC')->first()->response;
-                $employer = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 11)->orderBy('id', 'DESC')->first()->response;
-                $id = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 12)->orderBy('id', 'DESC')->first()->response;
-                $dob = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 13)->orderBy('id', 'DESC')->first()->response;
-                $salary = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 14)->orderBy('id', 'DESC')->first()->response;
+                $gender = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 11)->orderBy('id', 'DESC')->first()->response;
+                $employer = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 12)->orderBy('id', 'DESC')->first()->response;
+                $id = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 13)->orderBy('id', 'DESC')->first()->response;
+                $dob = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 14)->orderBy('id', 'DESC')->first()->response;
+                $salary = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 15)->orderBy('id', 'DESC')->first()->response;
 
                 $name = explode(" ",$full_name,2);
                 $reg_data = array();
@@ -1063,6 +1086,8 @@ class UssdController extends Controller
                       "data" => array("employer"=>$employer)],
                     ["registeredTableName"=>"dob",
                         "data" => array("dob"=>$dob)],
+                    ["registeredTableName"=>"gender",
+                        "data" => array("gender"=>$gender)],
                     ["registeredTableName"=>"gross_salary",
                         "data" => array(
                             "gross_salary"=>$salary,
@@ -1084,7 +1109,10 @@ class UssdController extends Controller
                 if (empty($data->clientId)) {
 
                     if(strpos($data->defaultUserMessage,'already exists')){
+
+                        $client = self::getUser($data->clientId);
                         $user->terms_accepted = 1;
+                        $user->phone_no = $client->mobileNo;
                         $user->terms_accepted_on = Carbon::now();
                         $user->save();
                         $error_msg = 'A user with similar details has already been registered. Kindly redial to proceed';
@@ -1123,6 +1151,16 @@ class UssdController extends Controller
                 return true;
                 break;
         }
+
+    }
+
+    public function getUser($client_id)
+    {
+
+        $url = MIFOS_URL . "/clients/" . $client_id . "?" . MIFOS_tenantIdentifier;
+        $client = Hooks::MifosGetTransaction($url, $post_data = "");
+
+        return $client;
 
     }
 

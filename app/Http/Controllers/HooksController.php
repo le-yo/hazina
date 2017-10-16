@@ -58,8 +58,8 @@ class HooksController extends Controller
         //Get json from mifos
         $request->headers->set('content-type', 'application/json');
         $d = $request->all();
-        print_r($d);
-        exit;
+//        print_r($d);
+//        exit;
 
         HookLogsModel::create(['details' => json_encode($d)]);
     echo "received";
@@ -90,14 +90,16 @@ class HooksController extends Controller
             $user = Ussduser::whereClientId($d['clientId'])->first();
             if($user){
                 DB::table('users')->where('id',$user->id)->update($usr);
-                $message = "Your phone number has been changed to ".$user->phone_no;
-                $message = "Dear ".$user->name.", your registered phone number has successfully been changed to ".$user->phone_no." as per your request, Please dial *696# to access our services. For further queries contact us on 0704000999";
+                $message = "Dear ".$client->displayName.", your registered phone number has successfully been changed to ".$client->mobileNo." as per your request, Please dial *696# to access our services. For further queries contact us on 0704000999";
+                echo $message;
                 if(isset($d['changes']['mobileNo'])){
-                self::sendMessage($user->phone_no,$message);
+                self::sendMessage($client->mobileNo,$message);
                 }
-            }else{
-                $user = Ussduser::create($usr);
+                echo "hapa";
             }
+//            else{
+//                $user = Ussduser::create($usr);
+//            }
 
         }
 
