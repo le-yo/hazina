@@ -47,9 +47,9 @@ class UssdController extends Controller
 //        exit;
 
 //        $MifosX = new MifosXController();
-////        $monthly_payment = $MifosX->applyPCLLoan(46,10000,2);
-//        $monthly_payment = $MifosX->calculateRepaymentSchedule(46,10000,PCL_ID,2);
-//        print_r($monthly_payment);
+//        $loan = $MifosX->applyPCLLoan(65,5000,2);
+////        $monthly_payment = $MifosX->calculateRepaymentSchedule(46,10000,PCL_ID,2);
+//        print_r($loan);
 //        exit;
 
 

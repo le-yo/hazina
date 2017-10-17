@@ -79,6 +79,9 @@ class MifosXController extends Controller {
      */
     public function applyPCLLoan($user, $amount, $repaymentPeriods)
     {
+
+                $groupId = self::getUserGroupId($user);
+
         $loan_settings = setting::where('productId', PCL_ID)->first();
 
         $date = Carbon::now()->format('d M Y');
@@ -92,6 +95,30 @@ class MifosXController extends Controller {
         }else{
             $disbursement_date = Carbon::now()->format('d M Y');
         }
+
+        //
+//        {
+//            "locale": "en_GB",
+//	"dateFormat": "dd MMMM yyyy",
+//	"clientId": "65",
+//	"productId": 1,
+//	"principal": 10000,
+//	"loanTermFrequency": 3,
+//	"loanTermFrequencyType": 2,
+//	"loanType": "individual",
+//	"numberOfRepayments": 3,
+//	"repaymentEvery": 1,
+//    "repaymentFrequencyType": 2,
+//    "interestRatePerPeriod": 7.5,
+//    "interestRateFrequencyType": 2,
+//    "amortizationType": 1,
+//    "interestType": 1,
+//    "interestCalculationPeriodType": 1,
+//    "transactionProcessingStrategyId": 2,
+//    "expectedDisbursementDate": "17 Oct 2017",
+//    "submittedOnDate": "17 Oct 2017"
+//}
+        //
             $interest = self::getGroupInterestRate($user);
             $periods = $repaymentPeriods;
 
@@ -102,19 +129,21 @@ class MifosXController extends Controller {
         $loan_data['clientId'] = $user;
         $loan_data['principal'] = $amount;
         $loan_data['loanTermFrequency'] = $repaymentPeriods;
-        $loan_data['loanTermFrequencyType'] = $loan_settings->loanTermFrequencyType;
-        $loan_data['loanType'] = $loan_settings->loanType;
+        $loan_data['loanTermFrequencyType'] = 2; // 1
+        $loan_data['loanType'] = 'jlg';
         $loan_data['numberOfRepayments'] = $repaymentPeriods;
-        $loan_data['repaymentEvery'] = $loan_settings->repaymentEvery;
-        $loan_data['repaymentFrequencyType'] = $loan_settings->repaymentFrequencyType;
+        $loan_data['repaymentEvery'] = $loan_settings->repaymentEvery; // 2
+        $loan_data['repaymentFrequencyType'] = $loan_settings->repaymentFrequencyType; //3
         $loan_data['interestRatePerPeriod'] = $interest;
-        $loan_data['amortizationType'] = $loan_settings->amortizationType;
+        $loan_data['amortizationType'] = $loan_settings->amortizationType; //4
+        $loan_data['groupId'] = $groupId;
 //        $loan_data['interestType'] = self::getInterestType($loan_settings->productId);
         $loan_data['interestType'] = 0;
-        $loan_data['interestCalculationPeriodType'] = $loan_settings->interestCalculationPeriodType;
+        $loan_data['interestRateFrequencyType'] = 2;
+        $loan_data['interestCalculationPeriodType'] = $loan_settings->interestCalculationPeriodType; //5
         $loan_data['expectedDisbursementDate'] = $disbursement_date;
-        $loan_data['transactionProcessingStrategyId'] = $loan_settings->transactionProcessingStrategyId;
-        $loan_data['transactionProcessingStrategyId'] = 2;
+//        $loan_data['transactionProcessingStrategyId'] = $loan_settings->transactionProcessingStrategyId; //6
+        $loan_data['transactionProcessingStrategyId'] = 2; //6
         $loan_data['submittedOnDate'] = $date;
         $dData = array();
         $dData['expectedDisbursementDate'] = $disbursement_date;
@@ -126,7 +155,8 @@ class MifosXController extends Controller {
         // url for posting the application details
         $postURl = MIFOS_URL."/loans?".MIFOS_tenantIdentifier;
 //        $postURl = MIFOS_URL."/loans/30?".MIFOS_tenantIdentifier;
-
+//        print_r(json_encode($loan_data));
+//        exit;
         // post the encoded application details
         $loanApplication = Hooks::MifosPostTransaction($postURl, json_encode($loan_data));
 //        $loanApplication = Hooks::MifosGetTransaction($postURl, json_encode($loan_data));
