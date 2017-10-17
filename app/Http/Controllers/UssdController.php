@@ -411,7 +411,7 @@ class UssdController extends Controller
             }
             if ($error->userMessageGlobalisationCode == 'validation.msg.loan.groupId.cannot.be.blank') {
 
-                $error_msg = "You need to belong to a group in order to apply for a looan. Kindly Call customer care on 0704 000 999";
+                $error_msg = "You need to belong to a group in order to apply for a loan. Kindly Call customer care on 0704 000 999";
                 return $error_msg;
                 break;
             }
