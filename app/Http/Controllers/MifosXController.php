@@ -142,8 +142,11 @@ class MifosXController extends Controller {
         $loan_data['interestType'] = 1;
         $loan_data['interestCalculationPeriodType'] = $loan_settings->interestCalculationPeriodType; //5
         $loan_data['expectedDisbursementDate'] = $disbursement_date;
+        $loan_data['syncDisbursementWithMeeting'] = 1;
 //        $loan_data['transactionProcessingStrategyId'] = $loan_settings->transactionProcessingStrategyId; //6
-        $loan_data['transactionProcessingStrategyId'] = 2; //6
+        $loan_data['transactionProcessingStrategyId'] = 1; //6
+        $loan_data['repaymentFrequencyNthDayType'] = -1; //This
+//        $loan_data['repaymentFrequencyDayOfWeekType'] = 1; //This
         $loan_data['submittedOnDate'] = $date;
         $dData = array();
         $dData['expectedDisbursementDate'] = $disbursement_date;
