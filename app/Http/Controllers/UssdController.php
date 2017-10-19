@@ -45,7 +45,7 @@ class UssdController extends Controller
 //        $data = Hooks::MifosPostTransaction($postURl, json_encode($identifier));
 //        print_r($data);
 //        exit;
-//
+////
 //        $MifosX = new MifosXController();
 //        $loan = $MifosX->applyPCLLoan(62,10000,3);
 ////        $monthly_payment = $MifosX->calculateRepaymentSchedule(46,10000,PCL_ID,2);
@@ -53,7 +53,8 @@ class UssdController extends Controller
 //        exit;
 
 //
-//        $postURl = MIFOS_URL."/loans/145?associations=repaymentSchedule,transactions&".MIFOS_tenantIdentifier;
+//        $postURl = MIFOS_URL."/loans/150?associations=all&".MIFOS_tenantIdentifier;
+//        $postURl = MIFOS_URL."/groups/2?associations=collectionMeetingCalendar&".MIFOS_tenantIdentifier;
 ////        $postURl = MIFOS_URL."/clients/46/identifiers/template?fields=documentKey,documentType,description&".MIFOS_tenantIdentifier;
 //
 //        // post the encoded application details

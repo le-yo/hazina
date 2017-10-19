@@ -80,7 +80,12 @@ class MifosXController extends Controller {
     public function applyPCLLoan($user, $amount, $repaymentPeriods)
     {
 
-                $groupId = self::getUserGroupId($user);
+        $groupId = self::getUserGroupId($user);
+        $user_group = self::getUserGroup($groupId);
+        $calendarId = $user_group->collectionMeetingCalendar->id;
+
+//        print_r($user_group);
+//        exit;
 
         $loan_settings = setting::where('productId', PCL_ID)->first();
 
@@ -142,12 +147,14 @@ class MifosXController extends Controller {
         $loan_data['interestType'] = 1;
         $loan_data['interestCalculationPeriodType'] = $loan_settings->interestCalculationPeriodType; //5
         $loan_data['expectedDisbursementDate'] = $disbursement_date;
-        $loan_data['syncDisbursementWithMeeting'] = 1;
+//        $loan_data['syncDisbursementWithMeeting'] = 0;
+//        $loan_data['syncRepaymentWithMeeting'] = 1;
 //        $loan_data['transactionProcessingStrategyId'] = $loan_settings->transactionProcessingStrategyId; //6
         $loan_data['transactionProcessingStrategyId'] = 1; //6
-        $loan_data['repaymentFrequencyNthDayType'] = -1; //This
+//        $loan_data['repaymentFrequencyNthDayType'] = -1; //This
 //        $loan_data['repaymentFrequencyDayOfWeekType'] = 1; //This
         $loan_data['submittedOnDate'] = $date;
+        $loan_data['calendarId'] = $calendarId;
         $dData = array();
         $dData['expectedDisbursementDate'] = $disbursement_date;
         $dData['principal'] = $amount;
@@ -274,8 +281,21 @@ class MifosXController extends Controller {
 
         // get the group of the user
         $groups = $user->groups;
+//
+//        print_r($groups);
+//        exit;
 
         return $groups[0]->id;
+    }
+    public function getUserGroup($groupId)
+    {
+        // get the user's details
+        $url = MIFOS_URL . "/groups/" . $groupId . "?associations=all&" . MIFOS_tenantIdentifier;
+
+        // get the details from Mifos
+        $group = Hooks::MifosGetTransaction($url, $post_data = "");
+
+        return $group;
     }
 
     /**
