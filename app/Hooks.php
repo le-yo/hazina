@@ -13,7 +13,7 @@ class Hooks {
 
     public static function MifosGetTransaction($url,$post_data=null){
 
-        $data = ['slug' => 'mifos_get_request', 'text' => $post_data];
+        $data = ['slug' => 'mifos_get_request', 'content' => $post_data];
         //log request
         Log::create($data);
 //        print_r($url);
@@ -40,7 +40,7 @@ class Hooks {
             $error_message = curl_strerror($errno);
             echo "cURL error ({$errno}):\n {$error_message}";
         }
-        $data = ['slug' => 'mifos_get_response', 'text' => $data];
+        $data = ['slug' => 'mifos_get_response', 'content' => $data];
         //log response
         Log::create($data);
         curl_close($ch);
@@ -49,7 +49,7 @@ class Hooks {
     }
     public static function MifosPostTransaction($url,$post_data){
 
-        $data = ['slug' => 'mifos_post_request', 'text' => $post_data];
+        $data = ['slug' => 'mifos_post_request', 'content' => $post_data];
         //log request
         Log::create($data);
         $ch = curl_init();
@@ -73,7 +73,7 @@ class Hooks {
 //        print_r($data);exit;
         curl_close($ch);
 
-        $data = ['slug' => 'mifos_post_response', 'text' => $data];
+        $data = ['slug' => 'mifos_post_response', 'content' => $data];
 
         //log response
         Log::create($data);
