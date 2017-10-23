@@ -1445,9 +1445,17 @@ class UssdController extends Controller
         foreach ($menu_items as $key => $value) {
 
             $response = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, $value->id)->orderBy('id', 'DESC')->first();
-            if( $value->confirmation_phrase !="IGNORE"){
+            if( $value->confirmation_phrase =="Gender"){
+               if($response->response == 1){
+                   $response->response = "Male";
+               }else{
+                   $response->response = "Female";
+               }
+                $confirmation = $confirmation . PHP_EOL . $value->confirmation_phrase . ": " . $response->response;
+            }elseif( $value->confirmation_phrase !="IGNORE"){
             $confirmation = $confirmation . PHP_EOL . $value->confirmation_phrase . ": " . $response->response;
             }
+
             $amount = $response->response;
         }
         if (($user->is_pcl_user == 1) && ($user->menu_id !="9")) {

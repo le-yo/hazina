@@ -98,7 +98,7 @@ class MenuItemsTableSeeder extends Seeder
                 'description' => 'Select Gender:'.PHP_EOL."1. M".PHP_EOL."2. F",
                 'next_menu_id' => 0,
                 'step' => 3,
-                'confirmation_phrase' => 'Name',
+                'confirmation_phrase' => 'Gender',
             ),
             array(
                 'menu_id' => 9,
