@@ -1081,11 +1081,12 @@ class UssdController extends Controller
                 $dob = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 14)->orderBy('id', 'DESC')->first()->response;
                 $salary = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 15)->orderBy('id', 'DESC')->first()->response;
 
-                $name = explode(" ",$full_name,2);
+                $name = explode(" ",$full_name,3);
                 $reg_data = array();
                 if(count($name)>1){
                 $reg_data['firstname'] = $name[0];
-                $reg_data['lastname'] = $name[1];
+                $reg_data['middlename'] = $name[1];
+                $reg_data['lastname'] = $name[2];
                 }else{
                 $reg_data['fullname'] = $full_name;
                 }
