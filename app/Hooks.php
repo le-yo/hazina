@@ -40,9 +40,9 @@ class Hooks {
             $error_message = curl_strerror($errno);
             echo "cURL error ({$errno}):\n {$error_message}";
         }
-        $data = ['slug' => 'mifos_get_response', 'content' => $data];
+        $dt = ['slug' => 'mifos_get_response', 'content' => $data];
         //log response
-        Log::create($data);
+        Log::create($dt);
         curl_close($ch);
         $response = json_decode($data);
         return $response;
@@ -73,10 +73,10 @@ class Hooks {
 //        print_r($data);exit;
         curl_close($ch);
 
-        $data = ['slug' => 'mifos_post_response', 'content' => $data];
+        $dt = ['slug' => 'mifos_post_response', 'content' => $data];
 
         //log response
-        Log::create($data);
+        Log::create($dt);
 
         $response = json_decode($data);
 
