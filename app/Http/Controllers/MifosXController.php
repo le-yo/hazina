@@ -172,6 +172,8 @@ class MifosXController extends Controller {
 //        $loanApplication = Hooks::MifosGetTransaction($postURl, json_encode($loan_data));
 //        print_r($loanApplication);
 //        exit;
+
+
         return $loanApplication;
     }
 

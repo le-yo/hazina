@@ -12,6 +12,10 @@ namespace App;
 class Hooks {
 
     public static function MifosGetTransaction($url,$post_data=null){
+
+        $data = ['slug' => 'mifos_get_request', 'text' => $post_data];
+        //log request
+        Log::create($data);
 //        print_r($url);
 //        exit;
         $post_data="";
@@ -36,11 +40,18 @@ class Hooks {
             $error_message = curl_strerror($errno);
             echo "cURL error ({$errno}):\n {$error_message}";
         }
+        $data = ['slug' => 'mifos_get_response', 'text' => $data];
+        //log response
+        Log::create($data);
         curl_close($ch);
         $response = json_decode($data);
         return $response;
     }
     public static function MifosPostTransaction($url,$post_data){
+
+        $data = ['slug' => 'mifos_post_request', 'text' => $post_data];
+        //log request
+        Log::create($data);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -61,6 +72,11 @@ class Hooks {
         }
 //        print_r($data);exit;
         curl_close($ch);
+
+        $data = ['slug' => 'mifos_post_response', 'text' => $data];
+
+        //log response
+        Log::create($data);
 
         $response = json_decode($data);
 
