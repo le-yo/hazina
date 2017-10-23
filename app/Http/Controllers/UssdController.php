@@ -1095,15 +1095,15 @@ class UssdController extends Controller
                 $reg_data['locale'] = "en";
                 $reg_data['active'] = false;
                 $reg_data['datatables'] = array(
-                    ["registeredTableName"=>"employer",
-                      "data" => array("employer"=>$employer)],
-                    ["registeredTableName"=>"dob",
-                        "data" => array("dob"=>$dob)],
-                    ["registeredTableName"=>"gender",
-                        "data" => array("gender"=>$gender)],
-                    ["registeredTableName"=>"gross_salary",
+                    ["registeredTableName"=>"Employer",
+                      "data" => array("Employer"=>$employer)],
+                    ["registeredTableName"=>"DOB",
+                        "data" => array("DOB"=>$dob)],
+                    ["registeredTableName"=>"Gender",
+                        "data" => array("Gender"=>$gender)],
+                    ["registeredTableName"=>"Gross Salary",
                         "data" => array(
-                            "gross_salary"=>$salary,
+                            "Gross Salary"=>$salary,
                             "locale"=>"en",
                         )],
                 );
