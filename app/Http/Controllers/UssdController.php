@@ -1072,10 +1072,15 @@ class UssdController extends Controller
                 $gender = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 11)->orderBy('id', 'DESC')->first()->response;
                 if($gender == 1){
                     $gender = 'M';
-                }else{
+                }elseif($gender == 2){
                     $gender = 'F';
                 }
-
+                $g = $gender;
+                if($gender == 'M'){
+                    $g = 1;
+                }elseif($gender == 'F'){
+                    $g = 2;
+                }
                 $employer = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 12)->orderBy('id', 'DESC')->first()->response;
                 $id = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 13)->orderBy('id', 'DESC')->first()->response;
                 $dob = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 14)->orderBy('id', 'DESC')->first()->response;
@@ -1098,6 +1103,10 @@ class UssdController extends Controller
                 $reg_data['externalId'] = $id;
                 $reg_data['dateFormat'] = "dd MMMM yyyy";
                 $reg_data['locale'] = "en";
+                $reg_data['genderId'] = $g;
+                $reg_data['clientTypeId'] = "IND";
+                $reg_data['legalFormType'] = "person";
+                $reg_data['Date of Birth'] = $dob;
                 $reg_data['active'] = false;
                 $reg_data['datatables'] = array(
                     ["registeredTableName"=>"Employer",
@@ -1142,13 +1151,13 @@ class UssdController extends Controller
                     $user->client_id = $data->clientId;
 
 //                    //send identifier
-//                    $identifier = array(
-//                        "documentTypeId"=>"2",
-//                        "documentKey"=>$id,
-//                    );
-//                    $postURl = MIFOS_URL."/clients/".$data->clientId."/identifiers?".MIFOS_tenantIdentifier;
-//                    // post the encoded application details
-//                    $data = Hooks::MifosPostTransaction($postURl, json_encode($identifier));
+                    $identifier = array(
+                        "documentTypeId"=>"2",
+                        "documentKey"=>$id,
+                    );
+                    $postURl = MIFOS_URL."/clients/".$data->clientId."/identifiers?".MIFOS_tenantIdentifier;
+                    // post the encoded application details
+                    $data = Hooks::MifosPostTransaction($postURl, json_encode($identifier));
 //                print_r($data);
 //                exit;
                     $user = self::verifyPhonefromMifos(substr($user->phone_no,-9));
