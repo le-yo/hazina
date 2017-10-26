@@ -258,11 +258,11 @@ class UssdController extends Controller
             case 6 :
                 $date = explode("-",$message);
 
-                if(count($date) !=3){
-                    $response = "Invalid Date. ";
-                    $user->progress = $user->progress-1;
-                    $user->save();
-                }
+//                if(count($date) !=3){
+//                    $response = "Invalid Date. ";
+//                    $user->progress = $user->progress-1;
+//                    $user->save();
+//                }
                 break;
             case 7 :
                 if(!is_numeric($message)){
