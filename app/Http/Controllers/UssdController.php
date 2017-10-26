@@ -29,7 +29,13 @@ class UssdController extends Controller
      */
     public function index()
     {
-
+//        $data = '{"firstname":"FEATURE","lastname":"PHONE","officeId":1,"externalId":"123456781","dateFormat":"dd MMMM yyyy","locale":"en","active":false,"datatables":[{"registeredTableName":"Employer","data":{"Employer":"WATU"}},{"registeredTableName":"DOB","data":{"DOB":"01011990"}},{"registeredTableName":"Gender","data":{"Gender":"M"}},{"registeredTableName":"Gross Salary","data":{"Gross Salary":"50000","locale":"en"}}],"mobileNo":"2547256277234"}';
+//
+//        $postURl = MIFOS_URL."/clients?".MIFOS_tenantIdentifier;
+//        // post the encoded application details
+//        $data = Hooks::MifosPostTransaction($postURl, $data);
+//                print_r($data);
+//                exit;
 //        $identifier = array(
 //            "documentTypeId"=>"2",
 //            "documentKey"=>"27151131",
@@ -1103,10 +1109,10 @@ class UssdController extends Controller
                 $reg_data['externalId'] = $id;
                 $reg_data['dateFormat'] = "dd MMMM yyyy";
                 $reg_data['locale'] = "en";
-                $reg_data['genderId'] = $g;
-                $reg_data['clientTypeId'] = "IND";
-                $reg_data['legalFormType'] = "person";
-                $reg_data['Date of Birth'] = $dob;
+//                $reg_data['genderId'] = $g;
+//                $reg_data['clientTypeId'] = "IND";
+//                $reg_data['legalFormType'] = "person";
+//                $reg_data['Date of Birth'] = $dob;
                 $reg_data['active'] = false;
                 $reg_data['datatables'] = array(
                     ["registeredTableName"=>"Employer",
