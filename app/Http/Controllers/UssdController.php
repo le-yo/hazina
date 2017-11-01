@@ -1110,7 +1110,7 @@ class UssdController extends Controller
                 $reg_data['dateFormat'] = "dd MMMM yyyy";
                 $reg_data['locale'] = "en";
 //                $reg_data['genderId'] = $g;
-//                $reg_data['clientTypeId'] = "IND";
+                $reg_data['clientTypeId'] = "IND";
 //                $reg_data['legalFormType'] = "person";
 //                $reg_data['Date of Birth'] = $dob;
                 $reg_data['active'] = false;
