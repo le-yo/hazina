@@ -223,6 +223,9 @@ class UssdController extends Controller
                     $response = "Name should not contain numbers. ";
                     $user->progress = $user->progress-1;
                     $user->save();
+                }else{
+                    $user->progress = $user->progress+1;
+                    $user->save();
                 }
                 break;
             case 3 :
@@ -1075,18 +1078,18 @@ class UssdController extends Controller
 
                 //get the user
                 $full_name = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 10)->orderBy('id', 'DESC')->first()->response;
-                $gender = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 11)->orderBy('id', 'DESC')->first()->response;
-                if($gender == 1){
-                    $gender = 'M';
-                }elseif($gender == 2){
-                    $gender = 'F';
-                }
-                $g = $gender;
-                if($gender == 'M'){
-                    $g = 1;
-                }elseif($gender == 'F'){
-                    $g = 2;
-                }
+//                $gender = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 11)->orderBy('id', 'DESC')->first()->response;
+//                if($gender == 1){
+//                    $gender = 'M';
+//                }elseif($gender == 2){
+//                    $gender = 'F';
+//                }
+//                $g = $gender;
+//                if($gender == 'M'){
+//                    $g = 1;
+//                }elseif($gender == 'F'){
+//                    $g = 2;
+//                }
                 $employer = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 12)->orderBy('id', 'DESC')->first()->response;
                 $id = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 13)->orderBy('id', 'DESC')->first()->response;
                 $dob = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 14)->orderBy('id', 'DESC')->first()->response;
@@ -1119,8 +1122,8 @@ class UssdController extends Controller
                       "data" => array("Employer"=>$employer)],
                     ["registeredTableName"=>"DOB",
                         "data" => array("DOB"=>$dob)],
-                    ["registeredTableName"=>"Gender",
-                        "data" => array("Gender"=>$gender)],
+//                    ["registeredTableName"=>"Gender",
+//                        "data" => array("Gender"=>$gender)],
                     ["registeredTableName"=>"Gross Salary",
                         "data" => array(
                             "Gross Salary"=>$salary,
@@ -1466,12 +1469,12 @@ class UssdController extends Controller
 
             $response = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, $value->id)->orderBy('id', 'DESC')->first();
             if( $value->confirmation_phrase =="Gender"){
-               if($response->response == 1){
-                   $response->response = "Male";
-               }else{
-                   $response->response = "Female";
-               }
-                $confirmation = $confirmation . PHP_EOL . $value->confirmation_phrase . ": " . $response->response;
+//               if($response->response == 1){
+//                   $response->response = "Male";
+//               }else{
+//                   $response->response = "Female";
+//               }
+//                $confirmation = $confirmation . PHP_EOL . $value->confirmation_phrase . ": " . $response->response;
             }elseif( $value->confirmation_phrase !="IGNORE"){
             $confirmation = $confirmation . PHP_EOL . $value->confirmation_phrase . ": " . $response->response;
             }
