@@ -40,14 +40,14 @@ class UssdController extends Controller
 //            "documentTypeId"=>"2",
 //            "documentKey"=>"27151131",
 //            "description"=>"Document has been verified",
-////            "status"=>"1",
+//            "status"=>"active",
 //        );
-//
-////        print_r(json_encode($identifier));
-////        exit;
+
+//        print_r(json_encode($identifier));
+//        exit;
 //        $postURl = MIFOS_URL."/clients/60/identifiers?".MIFOS_tenantIdentifier;
-////        $postURl = MIFOS_URL."/codes/1/codevalues?".MIFOS_tenantIdentifier;
-//        // post the encoded application details
+//////        $postURl = MIFOS_URL."/codes/1/codevalues?".MIFOS_tenantIdentifier;
+////        // post the encoded application details
 //        $data = Hooks::MifosPostTransaction($postURl, json_encode($identifier));
 //        print_r($data);
 //        exit;
@@ -1109,7 +1109,7 @@ class UssdController extends Controller
                 $reg_data['fullname'] = $full_name;
                 }
                 $reg_data['officeId'] = 1;
-                $reg_data['externalId'] = $id;
+//                $reg_data['externalId'] = $id;
                 $reg_data['dateFormat'] = "dd MMMM yyyy";
                 $reg_data['locale'] = "en";
 //                $reg_data['genderId'] = $g;
@@ -1163,6 +1163,8 @@ class UssdController extends Controller
                     $identifier = array(
                         "documentTypeId"=>"2",
                         "documentKey"=>$id,
+                        "description"=>"Document has been verified",
+                        "status"=>"active",
                     );
                     $postURl = MIFOS_URL."/clients/".$data->clientId."/identifiers?".MIFOS_tenantIdentifier;
                     // post the encoded application details
