@@ -3,6 +3,7 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Outbox;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AfricasTalkingGateway;
 
@@ -46,6 +47,12 @@ class NotifyController extends Controller {
 	}
 
 	public function sendSms($to,$message){
+
+        $data = ['phone' => $to, 'message' => $message];
+
+        //log USSD request
+        Outbox::create($data);
+
 		//require_once('AfricasTalkingGateway.php');
 
 		$gateway    = new AfricasTalkingGateway($this->_username, $this->_apiKey);
