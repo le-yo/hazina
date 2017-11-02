@@ -1502,7 +1502,7 @@ class UssdController extends Controller
 
             } else {
                 $confirmation = $confirmation . PHP_EOL . "Period: " . $response->response . " month";
-                $confirmation = $confirmation . PHP_EOL . "Monthly payment: " . $monthly_payment;
+                $confirmation = $confirmation . PHP_EOL . "REPAYMENT(S) : " .PHP_EOL. $monthly_payment;
             }
         }
 
