@@ -472,7 +472,7 @@ class HooksController extends Controller
 //            print_r($client_loan);exit;
                 $response = self::getNextPayment($d['loanId']);
                 $schedule = $response['schedule'];
-                $message = "Dear ".$client->displayName.", your loan Kshs. ".$client_loan->summary->principalDisbursed.", has been disbursed to your M-Pesa Account. The loan must be repaid via our M-pesa paybill Number 963334 on or before the due date(s):".PHP_EOL.$schedule.PHP_EOL." For further assistance please call our customer care line 0704 000 999";
+                $message = "Dear ".$client->displayName.", your loan Kshs. ".$client_loan->summary->principalDisbursed.", has been disbursed to your M-Pesa Account. The loan must be repaid via our M-pesa paybill Number 963334 on or before the due date(s):".PHP_EOL.$schedule."For further assistance please call our customer care line 0704 000 999";
                 self::sendMessage($client->mobileNo, $message);
                 $send_loan_data = env('LOANS_URL').$client->mobileNo."/".$client_loan->id;
                 file_get_contents($send_loan_data);
