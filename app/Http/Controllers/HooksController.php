@@ -35,6 +35,7 @@ class HooksController extends Controller
 
             //get Loan limit
             $loan_limit = self::getClientLimit($client->id);
+//            $name = self::getClientName($client->id);
             echo "loan_limit".$loan_limit;
             //Send messages
             if ($loan_limit) {
@@ -51,6 +52,16 @@ class HooksController extends Controller
         }
 
 
+    }
+    public function getClientName($clientId)
+    {
+        $url = MIFOS_URL."/clients/".$clientId."?".MIFOS_tenantIdentifier;
+
+        $client = Hooks::MifosGetTransaction($url, $post_data = "");
+
+        $clientName = $client->displayName;
+
+        return ucfirst($clientName);
     }
     public function user_edit_hook(Request $request)
     {
@@ -366,6 +377,11 @@ class HooksController extends Controller
         $today = Carbon::now()->format('Y m d');
         $dueDate = Carbon::parse($items[0]->dueDate[0].'-'.$items[0]->dueDate[1].'-'.$items[0]->dueDate[2])->format('Y m d');
 
+        $message = '';
+        foreach ($items as $key=>$value){
+            $date = $value->dueDate[2].'/'.$value->dueDate[1].'/'.$value->dueDate[0];
+            $message = $message.$date." : ".$value->totalOutstandingForPeriod.PHP_EOL;
+        }
         // Check if due date has passed and add overdue charges
         if ($dueDate < $today)
         {
@@ -391,6 +407,7 @@ class HooksController extends Controller
           'next_payment' => $next_payment,
           'next_date' => $next_date,
           'overdue' => $overdue,
+            'schedule'=>$message,
         );
 
         return $response;
@@ -456,25 +473,25 @@ class HooksController extends Controller
             $client_loan = self::getLoan($d['loanId']);
             //print_r($client_loan);exit;
             if ($client_loan->loanProductId == STL_ID) {
-                $message = str_replace('{{due_date}}', $this->getLoanMaturityDateGivenLoanId($d['loanId']), "Dear Customer, your loan request has been approved. The loan amount has been transferred to your M-Pesa account. Loan repayment date is {{due_date}}.");
-                self::sendMessage($client->mobileNo, $message);
-
-                $send_loan_data = env('LOANS_URL').$client->mobileNo."/".$client_loan->id;
-                file_get_contents($send_loan_data);
+//                $message = str_replace('{{due_date}}', $this->getLoanMaturityDateGivenLoanId($d['loanId']), "Dear Customer, your loan request has been approved. The loan amount has been transferred to your M-Pesa account. Loan repayment date is {{due_date}}.");
+//                self::sendMessage($client->mobileNo, $message);
+//
+//                $send_loan_data = env('LOANS_URL').$client->mobileNo."/".$client_loan->id;
+//                file_get_contents($send_loan_data);
             } elseif ($client_loan->loanProductId == BLP_ID || $client_loan->loanProductId == ASF_ID) {
-                $response = self::getNextPayment($d['loanId']);
-                $first_repayment = $response['next_payment'];
-                $message = str_replace('{{repayment_date}}', $response['next_date'], "Dear Customer, your loan request has been approved and processed. Your first repayment is Ksh. ".number_format($first_repayment)." on {{repayment_date}}. Please make the loan repayment to Watu Credit Paybill 650880.");
-                self::sendMessage($client->mobileNo, $message);
-
-                $send_loan_data = env('LOANS_URL').$client->mobileNo."/".$client_loan->id;
-                file_get_contents($send_loan_data);
+//                $response = self::getNextPayment($d['loanId']);
+//                $first_repayment = $response['next_payment'];
+//                $message = str_replace('{{repayment_date}}', $response['next_date'], "Dear Customer, your loan request has been approved and processed. Your first repayment is Ksh. ".number_format($first_repayment)." on {{repayment_date}}. Please make the loan repayment to Watu Credit Paybill 650880.");
+//                self::sendMessage($client->mobileNo, $message);
+//
+//                $send_loan_data = env('LOANS_URL').$client->mobileNo."/".$client_loan->id;
+//                file_get_contents($send_loan_data);
             } elseif ($client_loan->loanProductId == PCL_ID) {
                 $response = self::getNextPayment($d['loanId']);
-                $first_repayment = $response['next_payment'];
-                $message = str_replace('{{repayment_date}}', $response['next_date'], "Dear Customer, your loan request has been approved. The loan amount has been transferred to your M-Pesa account. Your first repayment is Ksh. ".number_format($first_repayment)." on {{repayment_date}}. Please make the loan repayment to Watu Credit Paybill 682684.");
+                $schedule = $response['schedule'];
+                $message = "Dear ".$client->displayName.", your loan Kshs. ".$client_loan->summary->principalDisbursed.", has been disbursed to your M-Pesa Account. The loan must be repaid via our M-pesa paybill Number 963334 on or before the due date(s):".PHP_EOL.$schedule.PHP_EOL." For further assistance please call our customer care line 0704 000 999";
+//                $message = str_replace('{{repayment_date}}', $response['next_date'], "Dear Customer, your loan request has been approved. The loan amount has been transferred to your M-Pesa account. Your first repayment is Ksh. ".number_format($first_repayment)." on {{repayment_date}}. Please make the loan repayment to Watu Credit Paybill 682684.");
                 self::sendMessage($client->mobileNo, $message);
-
                 $send_loan_data = env('LOANS_URL').$client->mobileNo."/".$client_loan->id;
                 file_get_contents($send_loan_data);
             }
