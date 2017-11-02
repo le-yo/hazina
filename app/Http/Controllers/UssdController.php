@@ -1712,6 +1712,15 @@ class UssdController extends Controller
 
     public function sendResponse($response, $type, $user = null)
     {
+        $sessionId = $_REQUEST["sessionId"];
+        $serviceCode = $_REQUEST["serviceCode"];
+        $phoneNumber = $_REQUEST["phoneNumber"];
+
+        $data = ['phone' => $phoneNumber, 'text' => $response, 'service_code' => $serviceCode, 'session_id' => $sessionId];
+
+        //log USSD request
+        ussd_logs::create($data);
+
         if ($type == 1) {
             $output = "CON ";
         } elseif ($type == 2) {
