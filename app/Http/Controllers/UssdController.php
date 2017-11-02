@@ -1116,7 +1116,7 @@ class UssdController extends Controller
                 $reg_data['fullname'] = $full_name;
                 }
                 $reg_data['officeId'] = 1;
-//                $reg_data['externalId'] = $id;
+                $reg_data['externalId'] = $id;
                 $reg_data['dateFormat'] = "dd MMMM yyyy";
                 $reg_data['locale'] = "en";
 //                $reg_data['genderId'] = $g;
