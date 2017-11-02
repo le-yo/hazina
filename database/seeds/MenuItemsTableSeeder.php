@@ -74,14 +74,14 @@ class MenuItemsTableSeeder extends Seeder
             ),
             array(
                 'menu_id' => 9,
-                'description' => 'Welcome to Uni Limited.'.PHP_EOL.'By proceeding you agree to the terms and conditions provided at www.unicredit.com'.PHP_EOL.'1. Yes'.PHP_EOL.'2. No',
+                'description' => 'Welcome to Uni Limited.'.PHP_EOL.'By proceeding you agree to the terms and conditions provided at www.uniltd.com'.PHP_EOL.'1. Yes'.PHP_EOL.'2. No',
                 'next_menu_id' => 0,
                 'step' => 1,
                 'confirmation_phrase' => 'IGNORE',
             ),
             array(
                 'menu_id' => 9,
-                'description' => 'Welcome to Uni Limited.'.PHP_EOL.'By proceeding you agree to the terms and conditions provided at www.unicredit.com'.PHP_EOL.'1. Yes'.PHP_EOL.'2. No',
+                'description' => 'Welcome to Uni Limited.'.PHP_EOL.'By proceeding you agree to the terms and conditions provided at www.uniltd.com'.PHP_EOL.'1. Yes'.PHP_EOL.'2. No',
                 'next_menu_id' => 0,
                 'step' => 1,
                 'confirmation_phrase' => 'IGNORE',
@@ -116,14 +116,14 @@ class MenuItemsTableSeeder extends Seeder
             ),
             array(
                 'menu_id' => 9,
-                'description' => 'Enter date of birth (DD-MM-YYYY)',
+                'description' => 'Enter date of birth (DDMMYYYY)',
                 'next_menu_id' => 0,
                 'step' => 6,
                 'confirmation_phrase' => 'DOB',
             ),
             array(
                 'menu_id' => 9,
-                'description' => 'Enter Gross Salary (Kshs.)',
+                'description' => 'Enter Net Salary(Kshs.)',
                 'next_menu_id' => 0,
                 'step' => 7,
                 'confirmation_phrase' => 'Salary',

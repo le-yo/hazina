@@ -1381,7 +1381,7 @@ class UssdController extends Controller
                     return $response;
                     //confirm batch
                 } else {
-                    $response = "Incorrect period." . PHP_EOL . "Select loan period:" . PHP_EOL . "1. 1 month" . PHP_EOL . "2. 2 months" . PHP_EOL . "3. 3 months";
+                    $response = "Incorrect period." . PHP_EOL . "Select loan period:" . PHP_EOL . "1. 1 Month" . PHP_EOL . "2. 2 Months" . PHP_EOL . "3. 3 Months";
                     $user->menu_item_id = 00;
                     $user->menu_id = $menu->id;
                     $user->progress = 2;
@@ -1818,11 +1818,11 @@ class UssdController extends Controller
 
             $user = self::generateUserPIN($user);
 
-            $response = "CON Your PIN has been generated and set to " . $user->pin . PHP_EOL . "Thanks for being a valued customer";
-            $msg = "Your PIN has been generated and set to " . $user->pin . PHP_EOL . "Thanks for being a valued customer";
+            $response = "CON Your PIN has been generated and set to " . $user->pin . PHP_EOL . "Welcome on board";
+            $msg = "Your PIN has been generated and set to " . $user->pin . PHP_EOL . "Welcome on board";
             $notify = new NotifyController();
             $notify->sendSms($user->phone_no, $msg);
-            $response = $response . PHP_EOL . "1. Proceed to main menu" . PHP_EOL . "2. Log out";
+            $response = $response . PHP_EOL . "1. Proceed to main menu" . PHP_EOL . "2. Cancel";
             $user->session = 4;
             $user->progress = 0;
             $user->save();
