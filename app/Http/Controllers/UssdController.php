@@ -29,6 +29,13 @@ class UssdController extends Controller
      */
     public function index()
     {
+
+//        $mifos = new MifosXController();
+//
+//        $response = $mifos->calculateFullRepaymentSchedule(60,1000,1,2);
+//
+//        print_r($response);
+//        exit;
 //        $data = '{"firstname":"FEATURE","lastname":"PHONE","officeId":1,"externalId":"123456781","dateFormat":"dd MMMM yyyy","locale":"en","active":false,"datatables":[{"registeredTableName":"Employer","data":{"Employer":"WATU"}},{"registeredTableName":"DOB","data":{"DOB":"01011990"}},{"registeredTableName":"Gender","data":{"Gender":"M"}},{"registeredTableName":"Gross Salary","data":{"Gross Salary":"50000","locale":"en"}}],"mobileNo":"2547256277234"}';
 //
 //        $postURl = MIFOS_URL."/clients?".MIFOS_tenantIdentifier;
@@ -1486,7 +1493,7 @@ class UssdController extends Controller
         if (($user->is_pcl_user == 1) && ($user->menu_id !="9")) {
             $response = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 00)->orderBy('id', 'DESC')->first();
             $MifosX = new MifosXController();
-            $monthly_payment = $MifosX->calculateRepaymentSchedule($user->client_id,$amount,PCL_ID,$response->response);
+            $monthly_payment = $MifosX->calculateFullRepaymentSchedule($user->client_id,$amount,PCL_ID,$response->response);
 
             if ($response->response < 2) {
 

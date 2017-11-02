@@ -344,6 +344,92 @@ class MifosXController extends Controller {
      * @param $repaymentPeriods
      * @return mixed
      */
+
+    public function calculateFullRepaymentSchedule($clientId, $amount, $loanProductId, $repaymentPeriods)
+    {
+        $loan_settings = setting::where('productId', $loanProductId)->first();
+
+        $date = Carbon::now()->format('d M Y');
+        if(Carbon::now()->isWeekend()){
+            if(Carbon::now()->isSaturday()){
+                $disbursement_date = Carbon::now()->addDays(2)->format('d M Y');
+            }else{
+                $disbursement_date = Carbon::now()->addDays(1)->format('d M Y');
+
+            }
+        }else{
+            $disbursement_date = Carbon::now()->format('d M Y');
+        }
+
+        if($loanProductId == PCL_ID)
+        {
+            $interest = self::getGroupInterestRate($clientId);
+            $periods = $repaymentPeriods;
+        } else
+        {
+            $interest = $loan_settings->interestRatePerPeriod;
+            $periods = $loan_settings->numberOfRepayments;
+        }
+        $groupId = self::getUserGroupId($clientId);
+        $user_group = self::getUserGroup($groupId);
+        $calendarId = $user_group->collectionMeetingCalendar->id;
+
+        $loan_data = [];
+        $loan_data['dateFormat'] = 'dd MMMM yyyy';
+        $loan_data['locale'] = 'en_GB';
+        $loan_data['productId'] = $loan_settings->productId;
+        $loan_data['clientId'] = $clientId;
+        $loan_data['principal'] = $amount;
+        $loan_data['loanTermFrequency'] = $periods;
+        $loan_data['loanTermFrequencyType'] = 2;
+        $loan_data['loanType'] = 'jlg';
+        $loan_data['numberOfRepayments'] = $periods;
+        $loan_data['repaymentEvery'] = $loan_settings->repaymentEvery;
+        $loan_data['repaymentFrequencyType'] = $loan_settings->repaymentFrequencyType;
+        $loan_data['interestRatePerPeriod'] = $interest;
+        $loan_data['interestRateFrequencyType'] = 2;
+        $loan_data['interestCalculationPeriodType'] = $loan_settings->interestCalculationPeriodType;
+        $loan_data['interestType'] = 1;
+        $loan_data['groupId'] = $groupId;
+        $loan_data['amortizationType'] = $loan_settings->amortizationType;
+        $loan_data['expectedDisbursementDate'] = $disbursement_date;
+        $loan_data['transactionProcessingStrategyId'] = 1;
+        $loan_data['submittedOnDate'] = $date;
+        $loan_data['submittedOnDate'] = $date;
+        $loan_data['calendarId'] = $calendarId;
+        $dData = array();
+        $dData['expectedDisbursementDate'] = $disbursement_date;
+        $dData['principal'] = $amount;
+        $dData['approvedPrincipal'] = $amount;
+        $loan_data['disbursementData'] = array();
+        // Get the url for calculating the loan schedule
+        $url = MIFOS_URL."/loans?command=calculateLoanSchedule&". MIFOS_tenantIdentifier;
+
+        // Post to the url to receive the schedule as a response
+        $loan = Hooks::MifosPostTransaction($url, json_encode($loan_data));
+
+        // Initialize an empty array for the schedule
+        $schedule = [];
+
+        // Get the periods for the schedule
+        $paymentPeriods = $loan->periods;
+
+        $response = '';
+        // Loop through all the periods
+        for ($i = 0; $i < count($paymentPeriods); $i++)
+        {
+            // Push only the peroids that have not been paid for
+            if (array_key_exists('daysInPeriod', $paymentPeriods[$i])) {
+                $outstandingForPeriod = $paymentPeriods[$i]->totalOutstandingForPeriod;
+                $paymentDueDate = Carbon::parse($paymentPeriods[$i]->dueDate[0].'-'.$paymentPeriods[$i]->dueDate[1].'-'.$paymentPeriods[$i]->dueDate[2])->format('j F Y');
+                $response = $response.$paymentDueDate." : ".$outstandingForPeriod.PHP_EOL;
+
+                array_push($schedule, $outstandingForPeriod);
+            }
+        }
+        return $response;
+    }
+
     public function calculateRepaymentSchedule($clientId, $amount, $loanProductId, $repaymentPeriods)
     {
         $loan_settings = setting::where('productId', $loanProductId)->first();
