@@ -33,7 +33,7 @@ class MenusTableSeeder extends Seeder
                 'title' => 'Apply for Loan',
                 'is_parent' => 0,
                 'type' => 2,
-                'confirmation_message' => "Your Loan request has been received and will be processed shortly.",
+                'confirmation_message' => "Your loan request has been received and will be processed shortly. For further assistance please call our customer care line: 0704 000 999.",
             ),
             array(
                 'title' => 'Loan balance',
