@@ -423,7 +423,7 @@ class MifosXController extends Controller {
                 $outstandingForPeriod = $paymentPeriods[$i]->totalOutstandingForPeriod;
                 $paymentDueDate = $paymentPeriods[$i]->dueDate[2].'/'.$paymentPeriods[$i]->dueDate[1].'/'.$paymentPeriods[$i]->dueDate[0];
                 $response = $response.$paymentDueDate." : ".$outstandingForPeriod.PHP_EOL;
-                array_push($schedule, $outstandingForPeriod); 
+                array_push($schedule, $outstandingForPeriod);
             }
         }
         return $response;

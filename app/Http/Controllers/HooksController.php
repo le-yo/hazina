@@ -468,33 +468,14 @@ class HooksController extends Controller
             $client = self::getUser($client_id);
 
             //check the loan product id. we may need to call to find the product id.
-            //$client_loan = self::getLoan(16543); // test loan
-            //print_r($client_loan);exit;
             $client_loan = self::getLoan($d['loanId']);
-            //print_r($client_loan);exit;
-            if ($client_loan->loanProductId == STL_ID) {
-//                $message = str_replace('{{due_date}}', $this->getLoanMaturityDateGivenLoanId($d['loanId']), "Dear Customer, your loan request has been approved. The loan amount has been transferred to your M-Pesa account. Loan repayment date is {{due_date}}.");
-//                self::sendMessage($client->mobileNo, $message);
-//
-//                $send_loan_data = env('LOANS_URL').$client->mobileNo."/".$client_loan->id;
-//                file_get_contents($send_loan_data);
-            } elseif ($client_loan->loanProductId == BLP_ID || $client_loan->loanProductId == ASF_ID) {
-//                $response = self::getNextPayment($d['loanId']);
-//                $first_repayment = $response['next_payment'];
-//                $message = str_replace('{{repayment_date}}', $response['next_date'], "Dear Customer, your loan request has been approved and processed. Your first repayment is Ksh. ".number_format($first_repayment)." on {{repayment_date}}. Please make the loan repayment to Watu Credit Paybill 650880.");
-//                self::sendMessage($client->mobileNo, $message);
-//
-//                $send_loan_data = env('LOANS_URL').$client->mobileNo."/".$client_loan->id;
-//                file_get_contents($send_loan_data);
-            } elseif ($client_loan->loanProductId == PCL_ID) {
+//            print_r($client_loan);exit;
                 $response = self::getNextPayment($d['loanId']);
                 $schedule = $response['schedule'];
                 $message = "Dear ".$client->displayName.", your loan Kshs. ".$client_loan->summary->principalDisbursed.", has been disbursed to your M-Pesa Account. The loan must be repaid via our M-pesa paybill Number 963334 on or before the due date(s):".PHP_EOL.$schedule.PHP_EOL." For further assistance please call our customer care line 0704 000 999";
-//                $message = str_replace('{{repayment_date}}', $response['next_date'], "Dear Customer, your loan request has been approved. The loan amount has been transferred to your M-Pesa account. Your first repayment is Ksh. ".number_format($first_repayment)." on {{repayment_date}}. Please make the loan repayment to Watu Credit Paybill 682684.");
                 self::sendMessage($client->mobileNo, $message);
                 $send_loan_data = env('LOANS_URL').$client->mobileNo."/".$client_loan->id;
                 file_get_contents($send_loan_data);
-            }
         }
     }
 
