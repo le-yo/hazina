@@ -123,8 +123,8 @@ class HooksController extends Controller
         if (count($limit) > 0) {
             return $limit[0]->user_loan_limit;
         } else {
-            $url = MIFOS_URL . "/datatables/gross_salary/" . $client_id . "?" . MIFOS_tenantIdentifier;
-            $limit = Hooks::MifosGetTransaction($url, $post_data = "");
+            $url = MIFOS_URL . "/datatables/Gross Salary/" . $client_id . "?" . MIFOS_tenantIdentifier;
+            $limit = Hooks::MifosGetTransaction(urlencode($url), $post_data = "");
             if (count($limit) > 0) {
                 return number_format($limit[0]->gross_salary*2/3,2);
             }else{
