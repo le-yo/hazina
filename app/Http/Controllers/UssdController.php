@@ -1184,7 +1184,7 @@ class UssdController extends Controller
                     $user->save();
                     self::resetUser($user);
                     $menu = menu::find(9);
-                    $response = "Thank you for your interest in our Salary Advance product, your registration request has been received and will be processed shortly. For further queries call our customer care line 0704 000 999";
+                    $response = "Thank you for your interest in our Salary Advance product, your registration request has been received and will be processed shortly. For further assistance call our customer care line 0704 000 999";
                     self::resetUser($user);
                     $notify = new NotifyController();
                     $notify->sendSms($user->phone_no, $response);
