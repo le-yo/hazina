@@ -380,7 +380,7 @@ class HooksController extends Controller
         $message = '';
         foreach ($items as $key=>$value){
             $date = Carbon::parse($value->dueDate[0].'-'.$value->dueDate[1].'-'.$value->dueDate[2])->format('d-m-Y');
-            $message = $message.$date." : ".$value->totalOutstandingForPeriod.PHP_EOL;
+            $message = $message.$date." : ".number_format($value->totalOutstandingForPeriod).PHP_EOL;
         }
         // Check if due date has passed and add overdue charges
         if ($dueDate < $today)

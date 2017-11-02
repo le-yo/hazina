@@ -423,7 +423,7 @@ class MifosXController extends Controller {
                 $outstandingForPeriod = $paymentPeriods[$i]->totalOutstandingForPeriod;
                 $paymentDueDate = Carbon::parse($paymentPeriods[$i]->dueDate[0].'-'.$paymentPeriods[$i]->dueDate[1].'-'.$paymentPeriods[$i]->dueDate[2])->format('d-m-Y');
 //                $paymentDueDate = $paymentPeriods[$i]->dueDate[2].'/'.$paymentPeriods[$i]->dueDate[1].'/'.$paymentPeriods[$i]->dueDate[0];
-                $response = $response.$paymentDueDate." : ".$outstandingForPeriod.PHP_EOL;
+                $response = $response.$paymentDueDate." : ".number_format($outstandingForPeriod).PHP_EOL;
                 array_push($schedule, $outstandingForPeriod);
             }
         }
