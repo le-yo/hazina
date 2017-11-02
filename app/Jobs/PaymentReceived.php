@@ -101,6 +101,16 @@ class PaymentReceived extends Job implements ShouldQueue
      * @param $data
      * @return bool
      */
+    public function getClientName($clientId)
+    {
+        $url = MIFOS_URL."/clients/".$clientId."?".MIFOS_tenantIdentifier;
+
+        $client = Hooks::MifosGetTransaction($url, $post_data = "");
+
+        $clientName = $client->displayName;
+
+        return ucfirst($clientName);
+    }
     public function processLoan($data){
         $ussd = new UssdController();
         $response = $ussd->getPCLLoanfromPhone($data['phone']);
@@ -164,16 +174,31 @@ class PaymentReceived extends Job implements ShouldQueue
                     $hooks = new MifosXController();
                     $next_payment = $hooks->checkNextInstallment($loanID);
                     //$loan_balance['next_payment'] = $next_payment;
-                    $msg = $data['transaction_id']." confirmed. Your payment of KES ".$data['amount']." has been received. Loan balance: KES ".$next_payment['balance'].PHP_EOL."Next Installment: Ksh ".$next_payment['next_installment']." due on ".$next_payment['next_date'];
+                    $msg = "Dear ".self::getClientName(client_id).", we have received your payment of Kshs. ".$data['amount'].". Please clear the outstanding balance Kshs. ".$next_payment['balance']." due on ".$next_payment['next_date'].". For further assistance please call our customer care line 0704 000 999";
 
                 }else {
-                    $msg = $data['transaction_id']." confirmed. Your payment of KES " . $data['amount'] . " has been received. Your loan has been paid fully.";
+                    $limit = self::getLoanLimit($user->client_id);
+                    $msg = "Dear ".self::getClientName(client_id).", your salary advance loan has been repaid. You can apply for another loan immediately within your limit of Kshs ".$limit.". Thank you for choosing Uni Ltd.";
                 }
                 $notify = new NotifyController();
                 $notify->sendSms($data['phone'],$msg);
 
                  }
                 return true;
+        }
+
+
+    }
+
+    public function getLoanLimit($id)
+    {
+//        return 0;
+        $url = MIFOS_URL . "/datatables/user_loan_limit/" . $id . "?" . MIFOS_tenantIdentifier;
+        $limit = Hooks::MifosGetTransaction($url);
+        if (count($limit) > 0) {
+            return $limit[0]->user_loan_limit;
+        } else {
+            return 0;
         }
     }
 }
