@@ -90,7 +90,7 @@ class HooksController extends Controller
             $user = Ussduser::whereClientId($d['clientId'])->first();
             if($user){
                 DB::table('users')->where('id',$user->id)->update($usr);
-                $message = "Dear ".$client->displayName.", your registered phone number has successfully been changed to ".$client->mobileNo." as per your request, Please dial *696# to access our services. For further queries contact us on 0704000999";
+                $message = "Dear ".$client->displayName.", your registered phone number has successfully been changed to ".$client->mobileNo." as per your request. Please dial *696# to access our services. For further queries contact us on 0704000999";
                 echo $message;
                 if(isset($d['changes']['mobileNo'])){
                 self::sendMessage($client->mobileNo,$message);
