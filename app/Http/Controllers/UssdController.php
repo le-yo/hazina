@@ -1774,7 +1774,7 @@ class UssdController extends Controller
         }
         $user = self::is_user_active($user);
         if($user->active_status != 1){
-            $response = "Your account has not been activated yet. Kindly retry later";
+            $response = "Dear ".$user->name.", your registration request is under review. You will receive a confirmation message on activation. For further assistance please call our customer care line 0704 000 999";
             self::sendResponse($response,3);
         }
 
