@@ -297,7 +297,7 @@ class UssdController extends Controller
                 break;
             case 7 :
                 if((!is_numeric($message)) || (trim($message) < 1000)){
-                    $response = "Salary must be numeric and above 1000";
+                    $response = "Salary must be numeric and above 1000".PHP_EOL;
                     $user->progress = $user->progress-1;
                     $user->save();
                 }
