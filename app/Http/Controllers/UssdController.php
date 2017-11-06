@@ -220,7 +220,7 @@ class UssdController extends Controller
                     //not confirmed
                     $response = "We could not understand your response";
                     //restart the process
-                    $output = "By proceeding you agree to accept terms and condition as available at http://unicredit.com/terms".PHP_EOL."1. Yes".PHP_EOL."2. No";
+                    $output = "By proceeding you agree to the terms and conditions provided on www.uniltd.com".PHP_EOL."1. Yes".PHP_EOL."2. No";
                     $response = $response . PHP_EOL . $output;
                     return $response;
                 }
@@ -1198,7 +1198,7 @@ class UssdController extends Controller
                     $user->save();
                     self::resetUser($user);
                     $menu = menu::find(9);
-                    $response = "Thank you for your interest in our Salary Advance product, your registration request has been received and will be processed shortly. For further assistance call our customer care line 0704 000 999";
+                    $response = "Dear ".$full_name." , your registration request is under review. You will receive a confirmation message on activation. For further assistance please call our customer care line 0704 000 999";
                     self::resetUser($user);
                     $notify = new NotifyController();
                     $notify->sendSms($user->phone_no, $response);
