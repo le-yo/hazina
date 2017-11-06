@@ -89,17 +89,17 @@ class MifosXController extends Controller {
 
         $loan_settings = setting::where('productId', PCL_ID)->first();
 
-        $date = Carbon::now()->format('d M Y');
-        if(Carbon::now()->isWeekend()){
-            if(Carbon::now()->isSaturday()){
-                $disbursement_date = Carbon::now()->addDays(2)->format('d M Y');
-            }else{
-                $disbursement_date = Carbon::now()->addDays(1)->format('d M Y');
-
-            }
-        }else{
+//        $date = Carbon::now()->format('d M Y');
+//        if(Carbon::now()->isWeekend()){
+//            if(Carbon::now()->isSaturday()){
+//                $disbursement_date = Carbon::now()->addDays(2)->format('d M Y');
+//            }else{
+//                $disbursement_date = Carbon::now()->addDays(1)->format('d M Y');
+//
+//            }
+//        }else{
             $disbursement_date = Carbon::now()->format('d M Y');
-        }
+//        }
 
         //
 //        {
