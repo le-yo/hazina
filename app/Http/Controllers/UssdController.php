@@ -280,9 +280,11 @@ class UssdController extends Controller
                     $response = "ID number should be numeric and must be between 6 and 8 digits";
                     $user->progress = $user->progress-1;
                     $user->save();
+                }else{
+                    $user->progress = $user->progress+1;
+                    $user->save(); 
                 }
-                $user->progress = $user->progress+1;
-                $user->save();
+
                 break;
             case 6 :
 //                $date = explode("-",$message);
