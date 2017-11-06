@@ -276,7 +276,7 @@ class UssdController extends Controller
                 }
                 break;
             case 3 :
-                if((!is_numeric($message)) || (strlen($message<6))|| (strlen($message>8))){
+                if((!is_numeric($message)) || (strlen($message)<6)|| (strlen($message)>8)){
                     $response = "ID number should be numeric and must be between 6 and 8 digits".PHP_EOL;
                     $user->progress = $user->progress-1;
                     $user->save();
