@@ -270,19 +270,19 @@ class UssdController extends Controller
                 break;
             case 5 :
                 if(is_numeric($message)){
-                    $response = "Employer name should not contain numbers. ";
+                    $response = "Employer name should not contain numbers.".PHP_EOL;
                     $user->progress = $user->progress-1;
                     $user->save();
                 }
                 break;
             case 3 :
                 if((!is_numeric($message)) || (strlen($message<6))|| (strlen($message>8))){
-                    $response = "ID number should be numeric and must be between 6 and 8 digits";
+                    $response = "ID number should be numeric and must be between 6 and 8 digits".PHP_EOL;
                     $user->progress = $user->progress-1;
                     $user->save();
                 }else{
                     $user->progress = $user->progress+1;
-                    $user->save(); 
+                    $user->save();
                 }
 
                 break;
@@ -290,7 +290,7 @@ class UssdController extends Controller
 //                $date = explode("-",$message);
 
                 if(strlen($message) !=8){
-                    $response = "Invalid Date. Date must be of the format DDMMYYYY and must contain 8 digits";
+                    $response = "Invalid Date. Date must be of the format DDMMYYYY and must contain 8 digits".PHP_EOL;
                     $user->progress = $user->progress-1;
                     $user->save();
                 }
