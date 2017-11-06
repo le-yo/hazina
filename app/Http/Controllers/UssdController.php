@@ -226,16 +226,27 @@ class UssdController extends Controller
                 }
                 break;
             case 2 :
-                if(is_numeric($message)){
-                    $response = "Name should not contain numbers. ";
+                if(1 === preg_match('~[0-9]~', $message)){
+                    $response = "Name should not contain numbers.";
                     $user->progress = $user->progress-1;
                     $user->save();
                 }else{
-                    $user->progress = $user->progress+1;
-                    $user->save();
+
+                    $exploded_name = explode(" ",$message);
+                    if(count($exploded_name)<2){
+                        $response = "Enter at least two names.";
+                        $user->progress = $user->progress-1;
+                        $user->save();
+                    }else{
+                        if((strlen($exploded_name[0])<2) || (strlen($exploded_name[1])<2)){
+                            $response = "A name must contain at least two characters.";
+                            $user->progress = $user->progress-1;
+                            $user->save();
+                        }
+                    }
                 }
                 break;
-            case 3 :
+            case 4 :
                 if (self::validationVariations($message, 1, "M")) {
 
                 } elseif (self::validationVariations($message, 2, "F")) {
@@ -257,32 +268,34 @@ class UssdController extends Controller
 
                 }
                 break;
-            case 4 :
+            case 5 :
                 if(is_numeric($message)){
                     $response = "Employer name should not contain numbers. ";
                     $user->progress = $user->progress-1;
                     $user->save();
                 }
                 break;
-            case 5 :
-                if(!is_numeric($message)){
-                    $response = "ID number should be numeric. ";
+            case 3 :
+                if((!is_numeric($message)) || (strlen($message<6))|| (strlen($message>8))){
+                    $response = "ID number should be numeric and must be between 6 and 8 digits";
+                    $user->progress = $user->progress-1;
+                    $user->save();
+                }
+                $user->progress = $user->progress+1;
+                $user->save();
+                break;
+            case 6 :
+//                $date = explode("-",$message);
+
+                if(strlen($message) !=8){
+                    $response = "Invalid Date. Date must be of the format DDMMYYYY and must contain 8 digits";
                     $user->progress = $user->progress-1;
                     $user->save();
                 }
                 break;
-            case 6 :
-                $date = explode("-",$message);
-
-//                if(count($date) !=3){
-//                    $response = "Invalid Date. ";
-//                    $user->progress = $user->progress-1;
-//                    $user->save();
-//                }
-                break;
             case 7 :
-                if(!is_numeric($message)){
-                    $response = "Salary must be numeric. ";
+                if((!is_numeric($message)) || (trim($message) < 1000)){
+                    $response = "Salary must be numeric and above 1000";
                     $user->progress = $user->progress-1;
                     $user->save();
                 }
@@ -1085,7 +1098,7 @@ class UssdController extends Controller
 
                 //get the user
                 $full_name = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 10)->orderBy('id', 'DESC')->first()->response;
-//                $gender = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 11)->orderBy('id', 'DESC')->first()->response;
+                $id = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 11)->orderBy('id', 'DESC')->first()->response;
 //                if($gender == 1){
 //                    $gender = 'M';
 //                }elseif($gender == 2){
@@ -1097,8 +1110,7 @@ class UssdController extends Controller
 //                }elseif($gender == 'F'){
 //                    $g = 2;
 //                }
-                $employer = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 12)->orderBy('id', 'DESC')->first()->response;
-                $id = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 13)->orderBy('id', 'DESC')->first()->response;
+                $employer = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 13)->orderBy('id', 'DESC')->first()->response;
                 $dob = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 14)->orderBy('id', 'DESC')->first()->response;
                 $salary = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 15)->orderBy('id', 'DESC')->first()->response;
 

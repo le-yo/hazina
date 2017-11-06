@@ -95,24 +95,24 @@ class MenuItemsTableSeeder extends Seeder
             ),
             array(
                 'menu_id' => 9,
-                'description' => 'Select Gender:'.PHP_EOL."1. M".PHP_EOL."2. F",
+                'description' => 'Enter national ID Number',
                 'next_menu_id' => 0,
                 'step' => 3,
+                'confirmation_phrase' => 'ID',
+            ),
+            array(
+                'menu_id' => 9,
+                'description' => 'Select Gender:'.PHP_EOL."1. M".PHP_EOL."2. F",
+                'next_menu_id' => 0,
+                'step' => 4,
                 'confirmation_phrase' => 'Gender',
             ),
             array(
                 'menu_id' => 9,
                 'description' => 'Enter employer registered name',
                 'next_menu_id' => 0,
-                'step' => 4,
-                'confirmation_phrase' => 'Employer',
-            ),
-            array(
-                'menu_id' => 9,
-                'description' => 'Enter national ID Number',
-                'next_menu_id' => 0,
                 'step' => 5,
-                'confirmation_phrase' => 'ID',
+                'confirmation_phrase' => 'Employer',
             ),
             array(
                 'menu_id' => 9,
