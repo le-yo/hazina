@@ -227,7 +227,7 @@ class UssdController extends Controller
                 break;
             case 2 :
                 if(1 === preg_match('~[0-9]~', $message)){
-                    $response = "Name should not contain numbers.";
+                    $response = "Name should not contain numbers.".PHP_EOL;
                     $user->progress = $user->progress-1;
                     $user->save();
                 }else{
