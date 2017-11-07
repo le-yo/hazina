@@ -246,6 +246,17 @@ class UssdController extends Controller
                     }
                 }
                 break;
+            case 3 :
+                if((!is_numeric($message)) || (strlen($message)<6)|| (strlen($message)>8)){
+                    $response = "ID number should be numeric and must be between 6 and 8 digits".PHP_EOL;
+                    $user->progress = $user->progress-1;
+                    $user->save();
+                }else{
+                    $user->progress = $user->progress+1;
+                    $user->save();
+                }
+
+                break;
             case 4 :
                 if (self::validationVariations($message, 1, "M")) {
 
@@ -269,28 +280,17 @@ class UssdController extends Controller
                 }
                 break;
             case 5 :
-                if(is_numeric($message)){
-                    $response = "Employer name should not contain numbers.".PHP_EOL;
-                    $user->progress = $user->progress-1;
-                    $user->save();
-                }
-                break;
-            case 3 :
-                if((!is_numeric($message)) || (strlen($message)<6)|| (strlen($message)>8)){
-                    $response = "ID number should be numeric and must be between 6 and 8 digits".PHP_EOL;
-                    $user->progress = $user->progress-1;
-                    $user->save();
-                }else{
-                    $user->progress = $user->progress+1;
-                    $user->save();
-                }
-
-                break;
-            case 6 :
 //                $date = explode("-",$message);
 
                 if(strlen($message) !=8){
                     $response = "Invalid Date. Date must be of the format DDMMYYYY and must contain 8 digits".PHP_EOL;
+                    $user->progress = $user->progress-1;
+                    $user->save();
+                }
+                break;
+            case 6 :
+                if(is_numeric($message)){
+                    $response = "Employer name should not contain numbers.".PHP_EOL;
                     $user->progress = $user->progress-1;
                     $user->save();
                 }
@@ -1112,8 +1112,8 @@ class UssdController extends Controller
 //                }elseif($gender == 'F'){
 //                    $g = 2;
 //                }
-                $employer = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 13)->orderBy('id', 'DESC')->first()->response;
-                $dob = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 14)->orderBy('id', 'DESC')->first()->response;
+                $dob = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 13)->orderBy('id', 'DESC')->first()->response;
+                $employer = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 14)->orderBy('id', 'DESC')->first()->response;
                 $salary = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 15)->orderBy('id', 'DESC')->first()->response;
 
                 $name = explode(" ",$full_name,3);
