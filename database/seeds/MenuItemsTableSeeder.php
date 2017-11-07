@@ -109,17 +109,17 @@ class MenuItemsTableSeeder extends Seeder
             ),
             array(
                 'menu_id' => 9,
-                'description' => 'Enter employer registered name',
+                'description' => 'Enter date of birth (DDMMYYYY)',
                 'next_menu_id' => 0,
                 'step' => 5,
-                'confirmation_phrase' => 'Employer',
+                'confirmation_phrase' => 'DOB',
             ),
             array(
                 'menu_id' => 9,
-                'description' => 'Enter date of birth (DDMMYYYY)',
+                'description' => 'Enter employer registered name',
                 'next_menu_id' => 0,
                 'step' => 6,
-                'confirmation_phrase' => 'DOB',
+                'confirmation_phrase' => 'Employer',
             ),
             array(
                 'menu_id' => 9,
