@@ -220,7 +220,7 @@ class UssdController extends Controller
                     //not confirmed
                     $response = "We could not understand your response";
                     //restart the process
-                    $output = "By proceeding you agree to the terms and conditions provided on www.abkredit.co.ke".PHP_EOL."1. Yes".PHP_EOL."2. No";
+                    $output = "By proceeding you agree to the terms and conditions provided on www.abkredit.co.ke".PHP_EOL.'1. I Agree'.PHP_EOL.'2. I Disagree';
                     $response = $response . PHP_EOL . $output;
                     return $response;
                 }
