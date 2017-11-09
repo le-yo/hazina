@@ -207,6 +207,9 @@ class UssdController extends Controller
             case 0 :
                 $menu = menu::find(9);
                 $response = self::nextMenuSwitch($user, $menu);
+                $message = "Dear esteemed Client, thank you for your interest in our Salary Advance Loan product. Please read and understand our terms and conditions provided on www.abkredit.co.ke";
+                $notify = new NotifyController();
+                $notify->sendSms($user->phone_no,$message);
                 self::sendResponse($response,1);
                 break;
             case 1 :
