@@ -1148,9 +1148,9 @@ class UssdController extends Controller
                         "data" => array("DOB"=>$dob)],
 //                    ["registeredTableName"=>"Gender",
 //                        "data" => array("Gender"=>$gender)],
-                    ["registeredTableName"=>"Gross Salary",
+                    ["registeredTableName"=>"Net Salary",
                         "data" => array(
-                            "Gross Salary"=>$salary,
+                            "Net Salary"=>$salary,
                             "locale"=>"en",
                         )],
                 );
