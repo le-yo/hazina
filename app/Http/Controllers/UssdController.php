@@ -207,7 +207,7 @@ class UssdController extends Controller
             case 0 :
                 $menu = menu::find(9);
                 $response = self::nextMenuSwitch($user, $menu);
-                $message = "Dear esteemed Client, thank you for your interest in our Salary Advance Loan product. Please read and understand our terms and conditions on www.abkredit.co.ke";
+                $message = "Dear esteemed Client, thank you for your interest in our Salary Advance Loan product. Please read and understand our terms and conditions on www.unilimited.co.ke";
                 $notify = new NotifyController();
                 $notify->sendSms($user->phone_no,$message);
                 self::sendResponse($response,1);
@@ -223,7 +223,7 @@ class UssdController extends Controller
                     //not confirmed
                     $response = "We could not understand your response";
                     //restart the process
-                    $output = "By proceeding you agree to the terms and conditions on www.abkredit.co.ke".PHP_EOL.'1. I Agree'.PHP_EOL.'2. I Disagree';
+                    $output = "By proceeding you agree to the terms and conditions on www.unilimited.co.ke".PHP_EOL.'1. I Agree'.PHP_EOL.'2. I Disagree';
                     $response = $response . PHP_EOL . $output;
                     return $response;
                 }
@@ -355,7 +355,7 @@ class UssdController extends Controller
                     //not confirmed
                     $response = "We could not understand your response";
                     //restart the process
-                    $output = 'Welcome to Uni Limited.'.PHP_EOL.'By proceeding you agree to the terms and conditions on www.abkredit.co.ke'.PHP_EOL.'1. I Agree'.PHP_EOL.'2. I Disagree';
+                    $output = 'Welcome to Uni Limited.'.PHP_EOL.'By proceeding you agree to the terms and conditions on www.unilimited.co.ke'.PHP_EOL.'1. I Agree'.PHP_EOL.'2. I Disagree';
                     $response = $response . PHP_EOL . $output;
                     return $response;
                 }

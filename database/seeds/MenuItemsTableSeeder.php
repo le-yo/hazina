@@ -74,14 +74,14 @@ class MenuItemsTableSeeder extends Seeder
             ),
             array(
                 'menu_id' => 9,
-                'description' => 'Welcome to Uni Limited.'.PHP_EOL.'By proceeding you agree to the terms and conditions on www.abkredit.co.ke'.PHP_EOL.'1. I Agree'.PHP_EOL.'2. I Disagree',
+                'description' => 'Welcome to Uni Limited.'.PHP_EOL.'By proceeding you agree to the terms and conditions on www.unilimited.co.ke'.PHP_EOL.'1. I Agree'.PHP_EOL.'2. I Disagree',
                 'next_menu_id' => 0,
                 'step' => 1,
                 'confirmation_phrase' => 'IGNORE',
             ),
             array(
                 'menu_id' => 9,
-                'description' => 'Welcome to Uni Limited.'.PHP_EOL.'By proceeding you agree to the terms and conditions on www.abkredit.co.ke'.PHP_EOL.'1. I Agree'.PHP_EOL.'2. I Disagree',
+                'description' => 'Welcome to Uni Limited.'.PHP_EOL.'By proceeding you agree to the terms and conditions on www.unilimited.co.ke'.PHP_EOL.'1. I Agree'.PHP_EOL.'2. I Disagree',
                 'next_menu_id' => 0,
                 'step' => 1,
                 'confirmation_phrase' => 'IGNORE',
