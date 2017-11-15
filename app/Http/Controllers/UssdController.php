@@ -290,6 +290,8 @@ class UssdController extends Controller
                     $user->progress = $user->progress-1;
                     $user->save();
                 }
+
+
                 break;
             case 6 :
                 if(is_numeric($message)){
@@ -970,7 +972,7 @@ class UssdController extends Controller
 
         } else {
             //not confirmed
-            $response = "Please enter 1 or 2e";
+            $response = "Please enter 1 or 2";
             //restart the process
             $output = self::confirmBatch($user, $menu);
 
