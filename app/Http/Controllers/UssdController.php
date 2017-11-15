@@ -221,7 +221,7 @@ class UssdController extends Controller
                     self::sendResponse($response, 3);
                 } else {
                     //not confirmed
-                    $response = "We could not understand your response";
+                    $response = "Please enter 1 or 2";
                     //restart the process
                     $output = "By proceeding you agree to the terms and conditions on www.unilimited.co.ke".PHP_EOL.'1. I Agree'.PHP_EOL.'2. I Disagree';
                     $response = $response . PHP_EOL . $output;
@@ -267,7 +267,7 @@ class UssdController extends Controller
 
                 }else {
                     //not confirmed
-                    $response = "We could not understand your response";
+                    $response = "Please enter 1 or 2";
                     $step = $user->progress;
 
                     $menuItem = menu_items::whereMenuIdAndStep(9, $step)->first();
@@ -354,7 +354,7 @@ class UssdController extends Controller
                     self::sendResponse($response, 3);
                 } else {
                     //not confirmed
-                    $response = "We could not understand your response";
+                    $response = "Please enter 1 or 2";
                     //restart the process
                     $output = 'Welcome to Uni Limited.'.PHP_EOL.'By proceeding you agree to the terms and conditions on www.unilimited.co.ke'.PHP_EOL.'1. I Agree'.PHP_EOL.'2. I Disagree';
                     $response = $response . PHP_EOL . $output;
@@ -970,7 +970,7 @@ class UssdController extends Controller
 
         } else {
             //not confirmed
-            $response = "We could not understand your response";
+            $response = "Please enter 1 or 2e";
             //restart the process
             $output = self::confirmBatch($user, $menu);
 
