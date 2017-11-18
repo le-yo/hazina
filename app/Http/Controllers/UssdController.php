@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Configuration;
 use App\Hooks;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -29,7 +30,6 @@ class UssdController extends Controller
      */
     public function index()
     {
-
 //        $mifos = new MifosXController();
 //
 //        $response = $mifos->calculateFullRepaymentSchedule(60,1000,1,2);
@@ -285,13 +285,24 @@ class UssdController extends Controller
             case 5 :
 //                $date = explode("-",$message);
 
-                if(strlen($message) !=8){
-                    $response = "Invalid Date. Date must be of the format DDMMYYYY and must contain 8 digits".PHP_EOL;
+                if(strlen($message) !=self::getConfig('date_str_length')){
+                    $response = self::getConfig('invalid_date_str_length').PHP_EOL;
                     $user->progress = $user->progress-1;
                     $user->save();
+                }else{
+                    //check if user is below min age or above max age
+                    $age = Carbon::createFromDate(substr($message,-4),substr($message,2,2),substr($message,0,2))->age;
+                    $min = self::getConfig('min_loanee_age');
+                    $max = self::getConfig('max_loanee_age');
+                    if(($age < $min) || ($age> $max)){
+                        $error = self::getConfig('age_error_message');
+                        $error = str_replace("{min}", $min, $error);
+                        $error = str_replace("{max}", $max, $error);
+                        $response = $max.PHP_EOL;
+                        $user->progress = $user->progress-1;
+                        $user->save();
+                    }
                 }
-
-
                 break;
             case 6 :
                 if(is_numeric($message)){
@@ -375,6 +386,10 @@ class UssdController extends Controller
      *
      * @return Response
      */
+
+    public function getConfig($slug){
+        return Configuration::whereSlug($slug)->first()->value;
+    }
     public function resetPIN($user, $message)
     {
 
