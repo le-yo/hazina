@@ -29,7 +29,7 @@ class ConfigurationSeeder extends Seeder
             ),
             array(
                 'slug' => 'age_error_message',
-                'value' => 'You must be over {min} years and under {max} years old',
+                'value' => 'You must be over {min} years and under {max} years old.',
             ),
             array(
                 'slug' => 'date_str_length',
