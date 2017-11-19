@@ -298,7 +298,7 @@ class UssdController extends Controller
                         $error = self::getConfig('age_error_message');
                         $error = str_replace("{min}", $min, $error);
                         $error = str_replace("{max}", $max, $error);
-                        $response = $max.PHP_EOL;
+                        $response = $error.PHP_EOL;
                         $user->progress = $user->progress-1;
                         $user->save();
                     }
