@@ -12,7 +12,6 @@ define('recipients_PCL_URL', env('recipients_PCL_URL'));
 
 
 //routes
-Route::get('/', 'WelcomeController@index');
 Route::post('ussd', 'UssdController@index');
 
 Route::resource('dashboard', 'DashController');
@@ -61,6 +60,37 @@ Route::post('payments/upload', 'PaymentsController@uploadPayments');
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/home', ['as' => 'home', 'uses' => function() {
+    if (!Auth::check()) {
+        return view('welcome');
+    } else {
+        $now = \Carbon\Carbon::now();
+        //today
+        $today_sum = \App\Payment::where('transaction_time','>=',$now->subDay(1))->sum('amount');
+        $today_count = \App\Payment::where('transaction_time','>=',\Carbon\Carbon::now()->subDay(1))->count();
+        //this week
+        $week_sum = \App\Payment::where('transaction_time','>=',\Carbon\Carbon::now()->subWeek(1))->sum('amount');
+        $week_count = \App\Payment::where('transaction_time','>=',\Carbon\Carbon::now()->subWeek(1))->count();
+
+        //this month
+        $month_sum = \App\Payment::where('transaction_time','>=',\Carbon\Carbon::now()->subMonth(1))->sum('amount');
+        $month_count = \App\Payment::where('transaction_time','>=',\Carbon\Carbon::now()->subMonth(1))->count();
+
+        //to date
+        $to_date_sum = \App\Payment::all()->sum('amount');
+        $to_date_count = \App\Payment::all()->count();
+
+        return view('dashboard', compact('today_sum','today_count','week_sum','week_count','month_count','month_sum','to_date_count','to_date_sum'));
+    }
+}]);
+
+
+//Datatables
+Route::get('payments/datatables', ['as' => 'payments.datatables', 'uses' => 'DatatablesController@getPayments']);
+Route::get('payments/datatables/unprocessed', ['as' => 'payments.datatables.processed', 'uses' => 'DatatablesController@getProcessedPayments']);
+Route::get('payments/datatables/unrecognized', ['as' => 'payments.datatables.unrecognized', 'uses' => 'DatatablesController@getUnrecognizedPayments']);
+
+
+Auth::routes();
+
+//Route::get('/home', 'HomeController@index')->name('home');
