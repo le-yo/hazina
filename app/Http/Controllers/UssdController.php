@@ -1219,7 +1219,7 @@ class UssdController extends Controller
                     $user->save();
                     self::resetUser($user);
                     $menu = menu::find(9);
-                    $response = "Dear ".$full_name." , you will receive a confirmation message on activation. For further assistance please call our customer care line 0704 000 999";
+                    $response = "Dear ".$full_name.", you will receive a confirmation SMS on activation. For further assistance please call our customer care line 0704 000 999";
                     self::resetUser($user);
                     $notify = new NotifyController();
                     $notify->sendSms($user->phone_no, $response);
@@ -1797,7 +1797,7 @@ class UssdController extends Controller
         }
         $user = self::is_user_active($user);
         if($user->active_status != 1){
-            $response = "Dear ".$user->name.", your registration request is under review. You will receive a confirmation message on activation. For further assistance please call our customer care line 0704 000 999";
+            $response = "Dear ".$user->name.", you will receive a confirmation SMS on activation. For further assistance please call our customer care line 0704 000 999";
             self::sendResponse($response,3);
         }
 
