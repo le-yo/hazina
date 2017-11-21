@@ -1029,14 +1029,14 @@ class UssdController extends Controller
             //$response = "Your current loan balance is Ksh 0";
         }
         if ($loanAccounts[0]->status->pendingApproval == 1) {
-            $error_msg = "Your previouirmation SMS on disbursement of funds to your m-her assistance please call our customer care line: 0704 000 999";
+            $error_msg = "Your previous Salary Advance Loan application is pending approval. You will receive a confirmation SMS on disbursement of funds to your M-pesa account. For further assistance please call our customer care line: 0704 000 999";
             //$error_msg = "Sorry .You have an outstanding loan balance of Ksh ".$loan->principal.". Please pay and apply for loan.";
             $notify->sendSms($user->phone_no, $error_msg);
             self::sendResponse($error_msg, 2, $user);
 
         }
         if ($loanAccounts[0]->status->waitingForDisbursal == 1) {
-            $error_msg = "Your previous loan application is pending disbursal. You will receive a confirmation SMS on disbursement of funds to your m-pesa account. For further assistance please call our customer care line: 0704 000 999";
+            $error_msg = "Your previous Salary Advance Loan application is pending disbursement. You will receive a confirmation SMS on disbursement of funds to your M-pesa account. For further assistance please call our customer care line: 0704 000 999";
             //$error_msg = "Sorry .You have an outstanding loan balance of Ksh ".$loan->principal.". Please pay and apply for loan.";
             $notify->sendSms($user->phone_no, $error_msg);
             self::sendResponse($error_msg, 2, $user);
@@ -1087,13 +1087,13 @@ class UssdController extends Controller
                         self::sendResponse($error_msg, 2, $user);
                     }
                     if ($loanAccounts[0]->status->pendingApproval == 1) {
-                        $error_msg = "Your previous loan application is pending approval. You will receive a confirmation SMS on disbursement of funds to your m-pesa account. For further assistance please call our customer care line: 0704 000 999";
+                        $error_msg = "Your previous Salary Advance Loan application is pending approval. You will receive a confirmation SMS on disbursement of funds to your M-pesa account. For further assistance please call our customer care line: 0704 000 999";
                         $notify->sendSms($user->phone_no, $error_msg);
                         self::sendResponse($error_msg, 2, $user);
 
                     }
                     if ($loanAccounts[0]->status->waitingForDisbursal == 1) {
-                        $error_msg = "Sorry. Your previous loan application of Ksh " . $loan->principal . " has been approved and is pending disbursal";
+                        $error_msg = "Your previous Salary Advance Loan application is pending approval. You will receive a confirmation SMS on disbursement of funds to your M-pesa account. For further assistance please call our customer care line: 0704 000 999";
                         $notify->sendSms($user->phone_no, $error_msg);
                         self::sendResponse($error_msg, 2, $user);
 
@@ -1718,13 +1718,13 @@ class UssdController extends Controller
                 self::sendResponse($error_msg, 2, $user);
                 break;
             } elseif (($la->status->pendingApproval == 1) && ($la->productId == $product_id)) {
-                $error_msg = "Your previous loan application is pending approval. You will receive a confirmation SMS on disbursement of funds to your m-pesa account. For further assistance please call our customer care line: 0704 000 999";
+                $error_msg = "Your previous Salary Advance Loan application is pending approval. You will receive a confirmation SMS on disbursement of funds to your M-pesa account. For further assistance please call our customer care line: 0704 000 999";
                 $notify = new NotifyController();
                 $notify->sendSms($user->phone_no, $error_msg);
                 self::sendResponse($error_msg, 2, $user);
                 break;
             } elseif (($la->status->waitingForDisbursal == 1) && ($la->productId == $product_id)) {
-                $error_msg = "Your previous loan application is pending disbursement. You will receive a confirmation SMS on disbursement of funds to your m-pesa account. For further assistance please call our customer care line: 0704 000 999";
+                $error_msg = "Your previous Salary Advance Loan application is pending disbursement. You will receive a confirmation SMS on disbursement of funds to your M-pesa account. For further assistance please call our customer care line: 0704 000 999";
                 $notify = new NotifyController();
                 $notify->sendSms($user->phone_no, $error_msg);
                 self::sendResponse($error_msg, 2, $user);
