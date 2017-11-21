@@ -1021,7 +1021,7 @@ class UssdController extends Controller
         }
 
         if (!empty($loan_balance['amount'])) {
-            $error_msg = "Your outstanding loan balance of Ksh " . $loan_balance['amount'] . " needs to be paid before applying for a new loan.";
+            $error_msg = "Your outstanding Salary Advance Loan balance of Kshs. " . $loan_balance['amount'] . " needs to be repaid before applying for a new Salary Advance Loan. For further assistance please call our customer care line: 0704 000 999.";
             //$error_msg = "Sorry. You have an outstanding loan balance of Ksh ".$balance['amount'].". Please pay and apply for loan.";
             //$notify->sendSms($user->phone_no,$error_msg);
             self::sendResponse($error_msg, 2, $user);
@@ -1083,7 +1083,7 @@ class UssdController extends Controller
                     $loan = self::getLoan($loanAccounts[0]->id);
                     $balance = self::getLoanBalance($user->client_id);
                     if (!empty($balance['amount'])) {
-                        $error_msg = "Your outstanding loan balance of Ksh " . $balance['amount'] . " needs to be paid before applying for a new loan.";
+                        $error_msg = "Your outstanding Salary Advance Loan balance of Kshs. " . $balance['amount'] . " needs to be repaid before applying for a new Salary Advance Loan. For further assistance please call our customer care line: 0704 000 999.";
                         self::sendResponse($error_msg, 2, $user);
                     }
                     if ($loanAccounts[0]->status->pendingApproval == 1) {
@@ -1675,7 +1675,7 @@ class UssdController extends Controller
 //        });
 
         if (!empty($balance['amount'])) {
-            $error_msg = "Your outstanding loan balance of Kshs " . $balance['amount'] . " needs to be repaid before applying for a new loan. For further assistance please call our customer care line: 0704 000 999.";
+            $error_msg = "Your outstanding Salary Advance Loan balance of Kshs. " . $balance['amount'] . " needs to be repaid before applying for a new Salary Advance Loan. For further assistance please call our customer care line: 0704 000 999.";
             self::sendResponse($error_msg, 2, $user);
         }
 

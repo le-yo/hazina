@@ -178,7 +178,7 @@ class PaymentReceived extends Job implements ShouldQueue
 
                 }else {
                     $limit = self::getLoanLimit($user->client_id);
-                    $msg = "Dear ".self::getClientName(client_id).", your salary advance loan has been repaid. You can apply for another loan immediately within your limit of Kshs ".$limit.". Thank you for choosing Uni Ltd.";
+                    $msg = "Dear ".self::getClientName(client_id).", your Salary Advance Loan has been fully repaid. You can apply for another Salary Advance Loan immediately within your limit of Kshs ".$limit.". Thank you for choosing Uni Ltd.";
                 }
                 $notify = new NotifyController();
                 $notify->sendSms($data['phone'],$msg);
