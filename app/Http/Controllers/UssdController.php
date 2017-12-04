@@ -125,8 +125,8 @@ class UssdController extends Controller
 //
 //            //$response_ussd = "Watu Credit Short Term Loan".PHP_EOL."1. Loans: up-to Ksh 100,000.".PHP_EOL."2. Interest Rate: 10% pm.".PHP_EOL."3. Loan Term: 1 Month.".PHP_EOL."4. Disbursement: Within 24Hr.".PHP_EOL."5. Fees: None.".PHP_EOL."6. Option To Extend Loan.".PHP_EOL."Call 0790 000 999 For Registration";
 //            //$response_sms =  "Watu Credit Short Term Loan".PHP_EOL."1. Loans: up-to Ksh 100,000".PHP_EOL."2. Interest Rate: 10% pm".PHP_EOL."3. Loan Term: 1 Month".PHP_EOL."4. Disbursement: Within 24Hr".PHP_EOL."5. Fees: None".PHP_EOL."6. Option To Extend Loan".PHP_EOL."Requirements".PHP_EOL."1. ID: National ID".PHP_EOL."2. Group Size: Min. 5 Members".PHP_EOL."3. Guarantee: 4 Group Members".PHP_EOL."Call 0790 000 999 For Registration";
-//            $response_ussd = "Thank you for your interest in UniCredit loan products. Please call Customer Care on xxxx for registration information";
-//            $response_sms = "Thank you for your interest in UniCredit loan products. Please call Customer Care on xxxx for registration information";
+//            $response_ussd = "Thank you for your interest in Uni Limited loan products. Please call Customer Care on xxxx for registration information";
+//            $response_sms = "Thank you for your interest in Uni Limited loan products. Please call Customer Care on xxxx for registration information";
 //            $notify = new NotifyController();
 //            $notify->sendSms($phoneNumber, $response_sms);
 //            self::sendResponse($response_ussd, 3, $user);
@@ -217,7 +217,7 @@ class UssdController extends Controller
                 if (self::validationVariations($message, 1, "yes")) {
 
                 } elseif (self::validationVariations($message, 2, "no")) {
-                    $response = "Thank you for using UniCredit.";
+                    $response = "Thank you for using Uni Limited.";
                     self::sendResponse($response, 3);
                 } else {
                     //not confirmed
@@ -363,7 +363,7 @@ class UssdController extends Controller
                     self::sendResponse($response, 1, $user);
 
                 } elseif (self::validationVariations($message, 2, "no")) {
-                    $response = "Thank you for using UniCredit.";
+                    $response = "Thank you for using Uni Limited.";
                     self::sendResponse($response, 3);
                 } else {
                     //not confirmed
@@ -1780,7 +1780,7 @@ class UssdController extends Controller
 
     public function underMaintenance()
     {
-        $response = "Welcome to UniCredit." . PHP_EOL . "System is under maintenance. Please check back later";
+        $response = "Welcome to Uni Limited." . PHP_EOL . "System is under maintenance. Please check back later";
         self::sendResponse($response, 3);
     }
 
@@ -1805,7 +1805,7 @@ class UssdController extends Controller
 
             switch ($user->progress) {
                 case 0 :
-                    $response = "Welcome to UniCredit.".PHP_EOL."Enter your PIN";
+                    $response = "Welcome to Uni Limited.".PHP_EOL."Enter your PIN";
                     $user->session = 1;
                     $user->progress = 1;
                     $user->menu_id = 1;
