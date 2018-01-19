@@ -15,7 +15,7 @@ class DatatablesController extends Controller
 {
     public  function __construct()
     {
-        $this->middleware('sentinel.auth');
+        $this->middleware('auth');
     }
 
     public function getPayments()
