@@ -34,7 +34,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="{{ route('home') }}">&nbsp;&nbsp;&nbsp;UniLimited Payments</a>
+                    <a class="navbar-brand" href="{{ route('home') }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UniLimited Payments</a>
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 {{--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">--}}
