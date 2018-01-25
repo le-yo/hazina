@@ -115,8 +115,10 @@ class PaymentReceived extends Job implements ShouldQueue
         $ussd = new UssdController();
         $response = $ussd->getPCLLoanfromPhone($data['phone']);
 
-
         $receipt = self::jsonp_decode($response);
+        if(isset($receipt->error)){
+            return;
+        }
         $loanID = $receipt->loan->id;
         // get repayment details
         $repayment_data = [];
