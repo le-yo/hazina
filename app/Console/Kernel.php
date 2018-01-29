@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call('App\Http\Controllers\ReminderController@send')->dailyAt('22:42')->name('payment-reminder');
+        $schedule->call('App\Http\Controllers\ReminderController@send')->dailyAt('22:44')->name('payment-reminder');
     }
 
     /**
