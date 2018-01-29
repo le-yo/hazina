@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 use App\setting;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use DateTime;
 
@@ -563,4 +564,66 @@ class MifosXController extends Controller {
 
         return $response;
     }
+
+    public static function listDueClientsByProduct($productId)
+    {
+        // Get the url for running the report
+        $getURl = MIFOS_URL."/runreports/Due%20and%20Overdue?R_startDate=".Carbon::today()->format('Y-m-d')."&R_endDate=".Carbon::today()->addDays(5)->format('Y-m-d')."&R_officeId=1&R_currencyId=-1&R_loanProductId=".$productId;
+
+        // Send a GET request
+        $reports = self::get($getURl);
+
+        // Collect the data into a collection
+        $collection = collect($reports);
+
+        // Pull the column headers and data
+        $columns = $collection->pull('columnHeaders');
+        $data = $collection->pull('data');
+
+        // Initialize empty array
+        $response = [];
+        $columnHeaders = [];
+
+        // Loop through the columns and get their names
+        foreach ($columns as $column)
+        {
+            array_push($columnHeaders, $column->columnName);
+        }
+
+        // Loop through the data and combine the column headers
+        foreach ($data as $row)
+        {
+            $rowData = array_combine($columnHeaders, $row->row);
+
+            array_push($response, $rowData);
+        }
+
+        return $response;
+    }
+
+    public static function get($url)
+    {
+        $client = new Client(['verify' => false]);
+        $credentials = base64_encode(MIFOS_UN.':'.MIFOS_PASS);
+
+        try {
+            $data = $client->get($url,
+                [
+                    'headers' => [
+                        'Authorization' => 'Basic '.$credentials,
+                        'Content-Type' => 'application/json',
+                        'Fineract-Platform-TenantId' => MIFOS_tenantIdentifier
+                    ]
+                ]
+            );
+
+            $response = json_decode($data->getBody());
+        } catch (BadResponseException $exception) {
+            $response = $exception->getResponse()->getBody()->getContents();
+        }
+
+        return $response;
+    }
+
+
 }
