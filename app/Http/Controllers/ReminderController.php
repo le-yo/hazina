@@ -12,10 +12,10 @@ class ReminderController extends Controller
 {
     //
     public function send(){
-//        $mifos = new MifosXController();
+        $mifos = new MifosXController();
 //        $url = 'https://unidemo.mifosconnect.com/fineract-provider/api/v1/runreports/Due%20and%20Overdue?R_startDate=2018-01-25&R_endDate=2018-01-30&R_officeId=1&R_currencyId=-1&R_loanProductId=1&'.MIFOS_tenantIdentifier;
-//        $response = Hooks::MifosGetTransaction($url);
-//
+        $response = $mifos->listDueClientsByProduct(1);
+
 //        print_r($response);
 //        exit;
         $sampleData = '[{
@@ -37,17 +37,17 @@ class ReminderController extends Controller
 }]';
 
         //$due_clients = $mifos->listDueClientsByProduct(1);
-        foreach (\GuzzleHttp\json_decode($sampleData,true) as $sd){
+//        foreach (\GuzzleHttp\json_decode($sampleData,true) as $sd){
+        foreach ($response as $sd){
             $exploded = explode("-",$sd['Due Date']);
             $due_date = Carbon::createFromDate($exploded[0], $exploded[1], $exploded[2]);
             $diff = Carbon::now()->diffInDays($due_date);
             $dd = $due_date->toDateString();
             self::sendReminder($diff,$sd);
-            print_r($diff);
-
+//            print_r($diff);
         }
-        print_r("hapa");
-        exit;
+//        print_r("hapa");
+//        exit;
 
 
     }

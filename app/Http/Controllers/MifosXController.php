@@ -568,7 +568,7 @@ class MifosXController extends Controller {
     public static function listDueClientsByProduct($productId)
     {
         // Get the url for running the report
-        $getURl = MIFOS_URL."/runreports/Due%20and%20Overdue?R_startDate=".Carbon::today()->format('Y-m-d')."&R_endDate=".Carbon::today()->addDays(5)->format('Y-m-d')."&R_officeId=1&R_currencyId=-1&R_loanProductId=".$productId;
+        $getURl = MIFOS_URL."/runreports/Due%20and%20Overdue?R_startDate=".Carbon::today()->format('Y-m-d')."&R_endDate=".Carbon::today()->addDays(15)->format('Y-m-d')."&R_officeId=1&R_currencyId=-1&R_loanProductId=".$productId;
 
         // Send a GET request
         $reports = self::get($getURl);
@@ -612,7 +612,7 @@ class MifosXController extends Controller {
                     'headers' => [
                         'Authorization' => 'Basic '.$credentials,
                         'Content-Type' => 'application/json',
-                        'Fineract-Platform-TenantId' => MIFOS_tenantIdentifier
+                        'Fineract-Platform-TenantId' => 'unidemo'
                     ]
                 ]
             );
