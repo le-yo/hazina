@@ -12,5 +12,7 @@ class Outbox extends Model
     protected $fillable = [
         'phone',
         'message',
+        'status',
+        'reminder_id',
     ];
 }
