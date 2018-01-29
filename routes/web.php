@@ -166,5 +166,9 @@ Route::get('payments/extend/{id}', 'PaymentsController@extendLoan');
 // Excel payments upload
 Route::post('payments/upload', 'PaymentsController@uploadPayments');
 
+//Reminders
+Route::get('reminder/send', 'ReminderController@send');
+
+
 
 //Route::get('/home', 'HomeController@index')->name('home');
