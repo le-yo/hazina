@@ -13,7 +13,7 @@ class Hooks {
 
     public static function MifosGetTransaction($url,$post_data=null){
 
-        $data = ['slug' => 'mifos_get_request', 'content' => $post_data];
+        $data = ['slug' => 'mifos_get_request', 'content' => $url];
         //log request
         Log::create($data);
 //        print_r($url);
