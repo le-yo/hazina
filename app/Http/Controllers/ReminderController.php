@@ -43,8 +43,8 @@ class ReminderController extends Controller
             $msg = str_replace($search, $replace, $subject);
             $message->message = $msg;
             $message->save();
-//            $notify = new NotifyController();
-//            $notify->sendSms($sd['Mobile No'],$msg);
+            $notify = new NotifyController();
+            $notify->sendSms($sd['Mobile No'],$msg);
             $message->status= 1;
             $message->save();
         }
