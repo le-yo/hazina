@@ -167,7 +167,7 @@ Route::get('payments/extend/{id}', 'PaymentsController@extendLoan');
 Route::post('payments/upload', 'PaymentsController@uploadPayments');
 
 //Reminders
-Route::get('reminder/send', 'ReminderController@send');
+Route::get('reminder/send', 'ReminderController@sendOverdue');
 
 
 
