@@ -565,84 +565,11 @@ class MifosXController extends Controller {
         return $response;
     }
 
-    public static function listAllDueClients()
+
+    public static function listAllDueAndOverdueClients()
     {
         // Get the url for running the report
-        $getURl = MIFOS_URL."/runreports/Due%20And%20Overdue%20-%20Clients?R_startDate=".Carbon::today()->format('Y-m-d')."&R_endDate=".Carbon::today()->addDays(5)->format('Y-m-d')."&R_loanOfficerId=-1&R_officeId=1";
-
-        // Send a GET request
-        $reports = self::get($getURl);
-
-        // Collect the data into a collection
-        $collection = collect($reports);
-
-        // Pull the column headers and data
-        $columns = $collection->pull('columnHeaders');
-        $data = $collection->pull('data');
-
-        // Initialize empty array
-        $response = [];
-        $columnHeaders = [];
-
-        // Loop through the columns and get their names
-        foreach ($columns as $column)
-        {
-            array_push($columnHeaders, $column->columnName);
-        }
-
-        // Loop through the data and combine the column headers
-        foreach ($data as $row)
-        {
-            $rowData = array_combine($columnHeaders, $row->row);
-
-            array_push($response, $rowData);
-        }
-
-        return $response;
-    }
-
-
-    public static function listDueClientsByProduct($productId)
-    {
-        // Get the url for running the report
-//        $getURl = MIFOS_URL."/runreports/Due%20and%20Overdue?R_startDate=".Carbon::today()->subDays(15)->format('Y-m-d')."&R_endDate=".Carbon::today()->addDays(5)->format('Y-m-d')."&R_officeId=1&R_currencyId=-1&R_loanProductId=".$productId;
-        $getURl = MIFOS_URL."/runreports/Due%20and%20Overdue?R_startDate=".Carbon::today()->subYears(1)->format('Y-m-d')."&R_endDate=".Carbon::today()->subDay()->format('Y-m-d')."&R_officeId=1&R_currencyId=-1&R_loanProductId=".$productId;
-
-        // Send a GET request
-        $reports = self::get($getURl);
-
-        // Collect the data into a collection
-        $collection = collect($reports);
-
-        // Pull the column headers and data
-        $columns = $collection->pull('columnHeaders');
-        $data = $collection->pull('data');
-
-        // Initialize empty array
-        $response = [];
-        $columnHeaders = [];
-
-        // Loop through the columns and get their names
-        foreach ($columns as $column)
-        {
-            array_push($columnHeaders, $column->columnName);
-        }
-
-        // Loop through the data and combine the column headers
-        foreach ($data as $row)
-        {
-            $rowData = array_combine($columnHeaders, $row->row);
-
-            array_push($response, $rowData);
-        }
-
-        return $response;
-    }
-
-    public static function listAllOverdueClients()
-    {
-        // Get the url for running the report
-        $getURl = MIFOS_URL."/runreports/Due%20and%20Overdue?R_startDate=".Carbon::today()->subYears(1)->format('Y-m-d')."&R_endDate=".Carbon::today()->subDay()->format('Y-m-d')."&R_officeId=1&R_currencyId=-1&R_loanProductId=1";
+        $getURl = MIFOS_URL."/runreports/Due%20and%20Overdue?R_startDate=".Carbon::today()->subDays(16)->format('Y-m-d')."&R_endDate=".Carbon::today()->addDays(6)->format('Y-m-d')."&R_officeId=1&R_currencyId=-1&R_loanProductId=1";
 
         // Send a GET request
         $reports = self::get($getURl);

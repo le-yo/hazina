@@ -14,5 +14,6 @@ class Outbox extends Model
         'message',
         'status',
         'reminder_id',
+        'content',
     ];
 }
