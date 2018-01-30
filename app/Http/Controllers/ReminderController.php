@@ -95,7 +95,7 @@ class ReminderController extends Controller
     public function sendReminder($diff,$sd){
         $reminder = null;
        if($diff>-1){
-        $reminder = Reminder::whereDaysTo($diff)->first();
+        $reminder = Reminder::whereDaysOverdue($diff)->first();
        }else{
 //           $diff = 0-$diff;
 //
