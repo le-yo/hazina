@@ -63,17 +63,17 @@ class NotifyController extends Controller {
 		{
 			// Thats it, hit send and we'll take care of the rest.
             $results = $gateway->sendMessage($to, $message,'UNI-LIMITED');
-			foreach($results as $result) {
-				// Note that only the Status "Success" means the message was sent
-				echo " Number: " .$result->number;
-				echo " Status: " .$result->status;
-				echo " MessageId: " .$result->messageId;
-				echo " Cost: "   .$result->cost."\n";
-			}
+//			foreach($results as $result) {
+//				// Note that only the Status "Success" means the message was sent
+//				echo " Number: " .$result->number;
+//				echo " Status: " .$result->status;
+//				echo " MessageId: " .$result->messageId;
+//				echo " Cost: "   .$result->cost."\n";
+//			}
 		}
 		catch ( AfricasTalkingGatewayException $e )
 		{
-			echo "Encountered an error while sending: ".$e->getMessage();
+//			echo "Encountered an error while sending: ".$e->getMessage();
 		}
 
 return;
