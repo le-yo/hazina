@@ -78,7 +78,6 @@ class NotifyController extends Controller {
 
 return;
 
-
 	}
 	/**
 	 * Show the form for creating a new resource.
