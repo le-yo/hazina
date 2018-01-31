@@ -60,7 +60,7 @@ class AfricasTalkingGateway
      */
 
     if ( strlen($to_) == 0 || strlen($message_) == 0 ) {
-      throw new AfricasTalkingGatewayException('Please supply both to and message parameters');
+//      throw new AfricasTalkingGatewayException('Please supply both to and message parameters');
     }
 
     $params = array(
