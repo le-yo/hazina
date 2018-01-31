@@ -44,11 +44,11 @@ class ReminderController extends Controller
             $message->message = $msg;
             $message->save();
             $notify = new NotifyController();
-//            if(strlen($sd['Mobile No'])>7){
+            if(strlen($sd['Mobile No'])>7){
             $notify->sendSms($sd['Mobile No'],$msg);
             $message->status= 1;
             $message->save();
-//            }
+            }
         }
     }
 }
