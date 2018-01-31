@@ -17,7 +17,7 @@ class AddFieldsToOutboxTable extends Migration
         {
             $table->integer('status')->after('message')->default(0);
             $table->integer('reminder_id')->after('message')->default(0);
-            $table->longText('content');
+            $table->longText('content')->after('message')->default(null);
         });
     }
 
