@@ -506,6 +506,7 @@ class MifosXController extends Controller {
 
     public function checkNextInstallment($loanId)
     {
+        $overdue_status = 0;
         // Get the url for retrieving the specific loan
         $url = MIFOS_URL . "/loans/" . $loanId . "?associations=repaymentSchedule&" . MIFOS_tenantIdentifier;
 
@@ -540,16 +541,19 @@ class MifosXController extends Controller {
         {
             $repaymentScheduleNextInstallment = $items[0]->totalOutstandingForPeriod;
             $repaymentScheduleNextDate = Carbon::parse($items[0]->dueDate[0].'-'.$items[0]->dueDate[1].'-'.$items[0]->dueDate[2])->format('j F Y');
+            $overdue_status = 2;
         }
         elseif ($dueDate > $today)
         {
             $repaymentScheduleNextInstallment = $items[0]->totalOutstandingForPeriod;
             $repaymentScheduleNextDate = Carbon::parse($items[0]->dueDate[0].'-'.$items[0]->dueDate[1].'-'.$items[0]->dueDate[2])->format('j F Y');
+
         }
         elseif($dueDate == $today)
         {
             $repaymentScheduleNextInstallment = $items[0]->totalOutstandingForPeriod;
             $repaymentScheduleNextDate = Carbon::parse($items[0]->dueDate[0].'-'.$items[0]->dueDate[1].'-'.$items[0]->dueDate[2])->format('j F Y');
+            $overdue_status = 1;
         }
 
         // Grab the schedule total outstanding(balance)
@@ -560,6 +564,7 @@ class MifosXController extends Controller {
             'balance' => $repaymentScheduleOutstanding,
             'next_date' => $repaymentScheduleNextDate,
             'next_installment' => $repaymentScheduleNextInstallment,
+            'overdue_status' => $overdue_status
         );
 
         return $response;
