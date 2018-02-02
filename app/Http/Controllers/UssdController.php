@@ -1446,17 +1446,17 @@ class UssdController extends Controller
 
             $response = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, $value->id)->orderBy('id', 'DESC')->first();
             if(( $value->confirmation_phrase =="Salary") || ($value->confirmation_phrase =="Amount")){
+                    $amount = $response->response;
                    $response->response = "Kshs. ".number_format($response->response,2);
 //               if($response->response == 1){
 //               }else{
 //                   $response->response = "Female";
 //               }
-//                $confirmation = $confirmation . PHP_EOL . $value->confirmation_phrase . ": " . $response->response;
+                $confirmation = $confirmation . PHP_EOL . $value->confirmation_phrase . ": " . $response->response;
             }elseif( $value->confirmation_phrase !="IGNORE"){
             $confirmation = $confirmation . PHP_EOL . $value->confirmation_phrase . ": " . $response->response;
             }
 
-            $amount = $response->response;
         }
         if (($user->is_pcl_user == 1) && ($user->menu_id !="9")) {
             $response = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 00)->orderBy('id', 'DESC')->first();

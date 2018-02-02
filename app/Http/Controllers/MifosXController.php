@@ -378,7 +378,7 @@ class MifosXController extends Controller {
         $loan_data = [];
         $loan_data['dateFormat'] = 'dd MMMM yyyy';
         $loan_data['locale'] = 'en_GB';
-        $loan_data['productId'] = $loan_settings->productId;
+        $loan_data['productId'] = PCL_ID;
         $loan_data['clientId'] = $clientId;
         $loan_data['principal'] = $amount;
         $loan_data['loanTermFrequency'] = $periods;
