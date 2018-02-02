@@ -1738,7 +1738,7 @@ class UssdController extends Controller
 
             switch ($user->progress) {
                 case 0 :
-                    $response = "Welcome to Uni Limited.".PHP_EOL."Enter your PIN";
+                    $response = "Welcome to Uni Limited.".PHP_EOL."Enter your PIN (Forgot PIN? Answer with 0)";
                     $user->session = 1;
                     $user->progress = 1;
                     $user->menu_id = 1;
