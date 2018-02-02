@@ -1445,9 +1445,9 @@ class UssdController extends Controller
         foreach ($menu_items as $key => $value) {
 
             $response = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, $value->id)->orderBy('id', 'DESC')->first();
-            if( $value->confirmation_phrase =="Gender"){
+            if( $value->confirmation_phrase =="Salary"){
+                   $response->response = "Kshs. ".number_format($response->response,2);
 //               if($response->response == 1){
-//                   $response->response = "Male";
 //               }else{
 //                   $response->response = "Female";
 //               }
