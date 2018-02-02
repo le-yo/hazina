@@ -701,7 +701,7 @@ class UssdController extends Controller
             $hooks = new MifosXController();
             $next_payment = $hooks->checkNextInstallment($loan_id);
             //$loan_balance['next_payment'] = $next_payment;
-            $msg = "Loan balance: Ksh ".number_format($next_payment['balance'],2).PHP_EOL."Next Installment: Ksh ".number_format($next_payment['next_installment'],2)." due on ".$next_payment['next_date'];
+            $msg = "Loan balance: Kshs. ".number_format($next_payment['balance'],2).PHP_EOL."Next Installment: Kshs. ".number_format($next_payment['next_installment'],2)." due on ".$next_payment['next_date'];
             $loan_balance['message'] = $msg;
         }
         return $loan_balance;
