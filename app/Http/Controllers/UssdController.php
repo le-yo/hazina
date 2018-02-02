@@ -1456,7 +1456,7 @@ class UssdController extends Controller
             $confirmation = $confirmation . PHP_EOL . $value->confirmation_phrase . ": " . $response->response;
             }
 
-            $amount = $response->response;
+            $amount = "Kshs. ".$response->response;
         }
         if (($user->is_pcl_user == 1) && ($user->menu_id !="9")) {
             $response = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 00)->orderBy('id', 'DESC')->first();
