@@ -30,57 +30,6 @@ class UssdController extends Controller
      */
     public function index()
     {
-//        $mifos = new MifosXController();
-//
-//        $response = $mifos->calculateFullRepaymentSchedule(60,1000,1,2);
-//
-//        print_r($response);
-//        exit;
-//        $data = '{"firstname":"FEATURE","lastname":"PHONE","officeId":1,"externalId":"123456781","dateFormat":"dd MMMM yyyy","locale":"en","active":false,"datatables":[{"registeredTableName":"Employer","data":{"Employer":"WATU"}},{"registeredTableName":"DOB","data":{"DOB":"01011990"}},{"registeredTableName":"Gender","data":{"Gender":"M"}},{"registeredTableName":"Gross Salary","data":{"Gross Salary":"50000","locale":"en"}}],"mobileNo":"2547256277234"}';
-//
-//        $postURl = MIFOS_URL."/clients?".MIFOS_tenantIdentifier;
-//        // post the encoded application details
-//        $data = Hooks::MifosPostTransaction($postURl, $data);
-//                print_r($data);
-//                exit;
-//        $identifier = array(
-//            "documentTypeId"=>"2",
-//            "documentKey"=>"27151131",
-//            "description"=>"Document has been verified",
-//            "status"=>"active",
-//        );
-
-//        print_r(json_encode($identifier));
-//        exit;
-//        $postURl = MIFOS_URL."/clients/60/identifiers?".MIFOS_tenantIdentifier;
-//////        $postURl = MIFOS_URL."/codes/1/codevalues?".MIFOS_tenantIdentifier;
-////        // post the encoded application details
-//        $data = Hooks::MifosPostTransaction($postURl, json_encode($identifier));
-//        print_r($data);
-//        exit;
-////
-//        $MifosX = new MifosXController();
-//        $loan = $MifosX->applyPCLLoan(62,10000,3);
-////        $monthly_payment = $MifosX->calculateRepaymentSchedule(46,10000,PCL_ID,2);
-//        print_r($loan);
-//        exit;
-
-//
-//        $postURl = MIFOS_URL."/loans/150?associations=all&".MIFOS_tenantIdentifier;
-//        $postURl = MIFOS_URL."/groups/2?associations=collectionMeetingCalendar&".MIFOS_tenantIdentifier;
-////        $postURl = MIFOS_URL."/clients/46/identifiers/template?fields=documentKey,documentType,description&".MIFOS_tenantIdentifier;
-//
-//        // post the encoded application details
-////        $loanApplication = Hooks::MifosPostTransaction($postURl, json_encode($loan_data));
-//        $loanApplication = Hooks::MifosGetTransaction($postURl);
-//
-//        print_r($loanApplication);
-//        exit;
-
-
-//$response = self::getLoan();
-//		$loan = self::isPclUser(35);
-//		$user = UssdUser::where('phone_no',"254728355429")->orWhere('phone_no',"0728355429")->first();
 
         error_reporting(0);
         header('Content-type: text/plain');
@@ -112,39 +61,18 @@ class UssdController extends Controller
         $user = UssdUser::where('phone_no', "0" . $no)->orWhere('phone_no', "254" . $no)->orWhere('email', "254" . $no)->first();
 
         if (!$user) {
-            //if user phone doesn't exist, we check out if they have been registered to mifos
-//			self::underMaintenance();
-//			exit;
             $user = self::verifyPhonefromMifos($no);
         }
-//        if (!$user) {
-//
-//
-//
-//            //trigger self registration
-//
-//            //$response_ussd = "Watu Credit Short Term Loan".PHP_EOL."1. Loans: up-to Ksh 100,000.".PHP_EOL."2. Interest Rate: 10% pm.".PHP_EOL."3. Loan Term: 1 Month.".PHP_EOL."4. Disbursement: Within 24Hr.".PHP_EOL."5. Fees: None.".PHP_EOL."6. Option To Extend Loan.".PHP_EOL."Call 0790 000 999 For Registration";
-//            //$response_sms =  "Watu Credit Short Term Loan".PHP_EOL."1. Loans: up-to Ksh 100,000".PHP_EOL."2. Interest Rate: 10% pm".PHP_EOL."3. Loan Term: 1 Month".PHP_EOL."4. Disbursement: Within 24Hr".PHP_EOL."5. Fees: None".PHP_EOL."6. Option To Extend Loan".PHP_EOL."Requirements".PHP_EOL."1. ID: National ID".PHP_EOL."2. Group Size: Min. 5 Members".PHP_EOL."3. Guarantee: 4 Group Members".PHP_EOL."Call 0790 000 999 For Registration";
-//            $response_ussd = "Thank you for your interest in Uni Limited loan products. Please call Customer Care on xxxx for registration information";
-//            $response_sms = "Thank you for your interest in Uni Limited loan products. Please call Customer Care on xxxx for registration information";
-//            $notify = new NotifyController();
-//            $notify->sendSms($phoneNumber, $response_sms);
-//            self::sendResponse($response_ussd, 3, $user);
-//            exit;
-//        }
-
-
         if (self::user_is_starting($text)) {
+
             //lets get the home menu
             //reset user
             if($user){
-
             self::resetUser($user);
             }
             //user authentication
             $message = '';
             $response = self::authenticateUser($user, $message);
-
             self::sendResponse($response, 1, $user);
         } else {
             //message is the latest stuff
@@ -1280,7 +1208,7 @@ class UssdController extends Controller
     }
 
 
-    public function getMultipleLoanBalance($client_id, $product_id = STL_ID)
+    public function getMultipleLoanBalance($client_id, $product_id = PCL_ID)
     {
 
         $clients_url = MIFOS_URL . "/clients/" . $client_id . "/accounts?" . MIFOS_tenantIdentifier;
@@ -1308,7 +1236,7 @@ class UssdController extends Controller
                 $hooks = new MifosXController();
                 $next_payment = $hooks->checkNextInstallment($loan_id);
                 //$loan_balance['next_payment'] = $next_payment;
-                $response = "Loan balance: Ksh ".$next_payment['balance'].PHP_EOL."Next Installment: Ksh ".$next_payment['next_installment']." due on ".$next_payment['next_date'];
+                $response = "Loan balance: Ksh ".number_format($next_payment['balance']).PHP_EOL."Next Installment: Ksh ".number_format($next_payment['next_installment'])." due on ".$next_payment['next_date'];
             }
         }elseif(count($loan_balance) > 1){
         $response = "Your current loan balance:".PHP_EOL;
