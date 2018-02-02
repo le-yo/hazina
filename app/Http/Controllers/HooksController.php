@@ -39,7 +39,7 @@ class HooksController extends Controller
             echo "loan_limit".$loan_limit;
             //Send messages
             if ($loan_limit) {
-                $message = 'Dear {name}, you can now apply for a Salary Advance Loan of up-to Kshs. '.$loan_limit.' through your phone. Dial *696# to generate your PIN. For further assistance please call our customer care line: 0704 000 999';
+                $message = 'Dear {name}, you can now apply for a Salary Advance Loan of up-to Kshs. '.number_format($loan_limit,2).' through your phone. Dial *696# to generate your PIN. For further assistance please call our customer care line: 0704 000 999';
             } else {
                 $message = "Dear {name}, you can now apply for a Salary Advance Loan through your phone. Dial *696# to generate your PIN. For further assistance please call our customer care line: 0704 000 999";
             }
