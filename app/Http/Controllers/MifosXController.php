@@ -421,10 +421,10 @@ class MifosXController extends Controller {
         {
             // Push only the peroids that have not been paid for
             if (array_key_exists('daysInPeriod', $paymentPeriods[$i])) {
-                $outstandingForPeriod = $paymentPeriods[$i]->totalOutstandingForPeriod;
+                $outstandingForPeriod = number_format($paymentPeriods[$i]->totalOutstandingForPeriod,2);
                 $paymentDueDate = Carbon::parse($paymentPeriods[$i]->dueDate[0].'-'.$paymentPeriods[$i]->dueDate[1].'-'.$paymentPeriods[$i]->dueDate[2])->format('d-m-Y');
 //                $paymentDueDate = $paymentPeriods[$i]->dueDate[2].'/'.$paymentPeriods[$i]->dueDate[1].'/'.$paymentPeriods[$i]->dueDate[0];
-                $response = $response.$paymentDueDate." : Kshs. ".number_format($outstandingForPeriod,2).PHP_EOL;
+                $response = $response.$paymentDueDate." : Kshs. ".$outstandingForPeriod.PHP_EOL;
                 array_push($schedule, $outstandingForPeriod);
             }
         }
