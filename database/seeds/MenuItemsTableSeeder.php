@@ -18,7 +18,7 @@ class MenuItemsTableSeeder extends Seeder
         DB::table('menu_items')->insert(array(
             array(
                 'menu_id' => 1,
-                'description' => 'Enter PIN',
+                'description' => 'Enter PIN ((Forgot PIN? Answer with 0)',
                 'next_menu_id' => 2,
                 'step' => 0,
                 'confirmation_phrase' => '',

@@ -45,7 +45,7 @@ class MenusTableSeeder extends Seeder
                 'title' => 'Repay Loan',
                 'is_parent' => 0,
                 'type' => 3,
-                'confirmation_message' => "To repay your Salary Advance Loan: 1) Go to M-pesa; 2)Select Lipa na M-pesa; 3) Select Paybill; 4)Enter Business No. 963334; 5)Account No. {Client phone no}; 6)Enter Amount; 7) Enter you M-Pesa Pin.",
+                'confirmation_message' => "To repay your Salary Advance Loan: 1) Go to M-pesa; 2)Select Lipa na M-pesa; 3) Select Paybill; 4)Enter Business No. 963334; 5)Account No. {phone} 6)Enter Amount; 7) Enter you M-Pesa Pin.",
             ),
             array(
                 'title' => 'Extend Loan:',

@@ -1278,7 +1278,6 @@ class UssdController extends Controller
             break;
             case 3:
                 //get the loan balance
-
                     $balance = self::getLoanBalance(35);
                     $notify = new NotifyController();
                     $notify->sendSms($user->phone_no, $balance['message']);
@@ -1287,7 +1286,6 @@ class UssdController extends Controller
             case 6:
                 //get the loan balance
                 $balance = self::getLoanBalance($user->client_id);
-
                 if (empty($balance['amount'])) {
                     $response = "Failed. Loan extension request cannot be completed. You do not have a loan";
                 } else {
@@ -1298,19 +1296,15 @@ class UssdController extends Controller
                 }
                 self::resetUser($user);
                 self::sendResponse($response, 2, $user);
-
                 break;
             case 7:
                 //get the loan balance
                 $statement = "Mini Statement:" . PHP_EOL . self::getClientStatement($user->client_id, $user);
-
                 $notify = new NotifyController();
                 $notify->sendSms($user->phone_no, $statement);
                 self::resetUser($user);
                 self::sendResponse($statement, 2, $user);
-
                 break;
-
             default :
                 $response = $menu->confirmation_message;
                 $response = str_replace('{phone}', $user->phone_no, $response);
