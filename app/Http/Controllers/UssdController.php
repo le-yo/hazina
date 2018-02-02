@@ -70,6 +70,7 @@ class UssdController extends Controller
             if($user){
             self::resetUser($user);
             }
+
             //user authentication
             $message = '';
             $response = self::authenticateUser($user, $message);
@@ -1283,25 +1284,6 @@ class UssdController extends Controller
                     $notify->sendSms($user->phone_no, $balance['message']);
                 self::sendResponse($balance['message'], 2, $user);
                 break;
-            case 5:
-                //get the loan balance
-                $balance = self::getLoanBalance($user->client_id,STL_ID);
-
-                if (empty($balance['amount'])) {
-                    $response = "You have no outstanding loan balance";
-                } else {
-                    if($user->is_pcl_user == 1){
-                        $response = "Please transfer Ksh " . number_format($balance['amount'] ). " to Paybill Number 963334 to pay your loan";
-                    }else{
-                        $response = "Please transfer Ksh " . number_format($balance['amount'] ) . " to Paybill Number 963334 to pay your loan";
-                    }
-                    $notify = new NotifyController();
-                    $notify->sendSms($user->phone_no, $response);
-                }
-                //self::resetUser($user);
-                self::sendResponse($response, 2, $user);
-
-                break;
             case 6:
                 //get the loan balance
                 $balance = self::getLoanBalance($user->client_id);
@@ -1331,8 +1313,9 @@ class UssdController extends Controller
 
             default :
                 $response = $menu->confirmation_message;
-
+                $response = str_replace('{phone}', $user->phone_no, $response);
                 $notify = new NotifyController();
+                $notify->sendSms($user->phone_no, $response);
                 self::sendResponse($response, 2, $user);
                 break;
         }
@@ -1731,7 +1714,6 @@ class UssdController extends Controller
         //has user accepted terms and conditions?
         if(!self::has_user_accepted_terms($user)){
             $menu = menu::find(9);
-
             $response = self::nextMenuSwitch($user, $menu);
             self::sendResponse($response,1);
         }
@@ -1755,6 +1737,7 @@ class UssdController extends Controller
                 case 1:
 
                     if (self::verifyPin($user, $message)) {
+
                         //get main menu
                         $user->menu_id = 2;
                         $user->session = 2;
