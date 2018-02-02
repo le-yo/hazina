@@ -772,7 +772,7 @@ class UssdController extends Controller
             $hooks = new MifosXController();
             $next_payment = $hooks->checkNextInstallment($loan_id);
             //$loan_balance['next_payment'] = $next_payment;
-            $msg = "Loan balance: Ksh ".$next_payment['balance'].PHP_EOL."Next Installment: Ksh ".$next_payment['next_installment']." due on ".$next_payment['next_date'];
+            $msg = "Loan balance: Ksh ".number_format($next_payment['balance']).PHP_EOL."Next Installment: Ksh ".number_format($next_payment['next_installment'])." due on ".$next_payment['next_date'];
             $loan_balance['message'] = $msg;
         }
         return $loan_balance;
@@ -1331,6 +1331,24 @@ class UssdController extends Controller
 
 
         switch ($menu->id) {
+            case 3:
+                //get the loan balance
+                $balance = self::getLoanBalance($user->client_id,PCL_ID);
+
+                if (empty($balance['amount'])) {
+                    $response = "You have no outstanding loan balance";
+                } else {
+                    if($user->is_pcl_user == 1){
+                        $response = "Please transfer Ksh " . number_format($balance['amount'] ). " to Paybill Number 963334 to pay your loan";
+                    }else{
+                        $response = "Please transfer Ksh " . number_format($balance['amount'] ) . " to Paybill Number 963334 to pay your loan";
+                    }
+                    $notify = new NotifyController();
+                    $notify->sendSms($user->phone_no, $response);
+                }
+                //self::resetUser($user);
+                self::sendResponse($response, 2, $user);
+            break;
             case 4:
                 //get the loan balance
 
@@ -1351,9 +1369,9 @@ class UssdController extends Controller
                     $response = "You have no outstanding loan balance";
                 } else {
                     if($user->is_pcl_user == 1){
-                        $response = "Please transfer Ksh " . $balance['amount'] . " to Paybill Number 963334 to pay your loan";
+                        $response = "Please transfer Ksh " . number_format($balance['amount'] ). " to Paybill Number 963334 to pay your loan";
                     }else{
-                        $response = "Please transfer Ksh " . $balance['amount'] . " to Paybill Number 963334 to pay your loan";
+                        $response = "Please transfer Ksh " . number_format($balance['amount'] ) . " to Paybill Number 963334 to pay your loan";
                     }
                     $notify = new NotifyController();
                     $notify->sendSms($user->phone_no, $response);
