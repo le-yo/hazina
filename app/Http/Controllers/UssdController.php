@@ -672,7 +672,7 @@ class UssdController extends Controller
     }
 
 
-    public function getLoanBalance($client_id, $product_id = STL_ID)
+    public function getLoanBalance($client_id, $product_id = PCL_ID)
     {
         $url = MIFOS_URL . "/clients/" . $client_id . "/accounts?" . MIFOS_tenantIdentifier;
         $account = Hooks::MifosGetTransaction($url);
@@ -1256,8 +1256,6 @@ class UssdController extends Controller
 
     public function infoMiniApp($user, $menu)
     {
-
-
         switch ($menu->id) {
             case 4:
                 //get the loan balance
@@ -1280,14 +1278,10 @@ class UssdController extends Controller
             case 3:
                 //get the loan balance
 
-                if($user->is_pcl_user == 1){
-                $balance_message = self::getMultipleLoanBalance($user->client_id,PCL_ID);
-                }else{
-                $balance_message = self::getMultipleLoanBalance($user->client_id);
-                }
+                    $balance = self::getLoanBalance(35);
                     $notify = new NotifyController();
-                    $notify->sendSms($user->phone_no, $balance_message);
-                self::sendResponse($balance_message, 2, $user);
+                    $notify->sendSms($user->phone_no, $balance['message']);
+                self::sendResponse($balance['message'], 2, $user);
                 break;
             case 5:
                 //get the loan balance
