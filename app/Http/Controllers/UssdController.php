@@ -184,7 +184,7 @@ class UssdController extends Controller
                     $user->progress = $user->progress-1;
                     $user->save();
                 }else{
-                    $user->progress = $user->progress+1;
+                    $user->progress = $user->progress+2;
                     $user->save();
                 }
 
@@ -1062,7 +1062,7 @@ class UssdController extends Controller
 //                }elseif($gender == 'F'){
 //                    $g = 2;
 //                }
-                $dob = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 13)->orderBy('id', 'DESC')->first()->response;
+//                $dob = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 13)->orderBy('id', 'DESC')->first()->response;
                 $employer = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 14)->orderBy('id', 'DESC')->first()->response;
                 $salary = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 15)->orderBy('id', 'DESC')->first()->response;
 
@@ -1091,8 +1091,8 @@ class UssdController extends Controller
                 $reg_data['datatables'] = array(
                     ["registeredTableName"=>"Employer",
                       "data" => array("Employer"=>$employer)],
-                    ["registeredTableName"=>"DOB",
-                        "data" => array("DOB"=>$dob)],
+//                    ["registeredTableName"=>"DOB",
+//                        "data" => array("DOB"=>$dob)],
 //                    ["registeredTableName"=>"Gender",
 //                        "data" => array("Gender"=>$gender)],
                     ["registeredTableName"=>"Net Salary",
