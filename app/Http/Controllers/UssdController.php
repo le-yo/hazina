@@ -1259,7 +1259,7 @@ class UssdController extends Controller
 
 
         switch ($menu->id) {
-            case 3:
+            case 4:
                 //get the loan balance
                 $balance = self::getLoanBalance($user->client_id,PCL_ID);
 
@@ -1277,7 +1277,7 @@ class UssdController extends Controller
                 //self::resetUser($user);
                 self::sendResponse($response, 2, $user);
             break;
-            case 4:
+            case 3:
                 //get the loan balance
 
                 if($user->is_pcl_user == 1){
