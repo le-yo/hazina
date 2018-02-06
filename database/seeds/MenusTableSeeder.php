@@ -33,7 +33,7 @@ class MenusTableSeeder extends Seeder
                 'title' => 'Apply for Loan',
                 'is_parent' => 0,
                 'type' => 2,
-                'confirmation_message' => "Your Salary Advance Loan request has been received and is being processed, you will receive an SMS response. For further assistance please call our customer care line: 0704 000 999.",
+                'confirmation_message' => "Your Salary Advance Loan request has been received, you will receive an SMS response. For further assistance please call our customer care line: 0704 000 999.",
             ),
             array(
                 'title' => 'Loan balance',
