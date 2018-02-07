@@ -1269,9 +1269,24 @@ class UssdController extends Controller
             case 4:
                 //get the loan balance
                 $balance = self::getLoanBalance($user->client_id);
-                $notify = new NotifyController();
-                $notify->sendSms($user->phone_no, $balance['message']);
-                self::sendResponse($balance['message'], 2, $user);
+
+                if (empty($balance['amount'])) {
+                    $response = "You have no outstanding loan balance";
+                } else {
+                    $response = $balance['message'];
+
+//                    if($user->is_pcl_user == 1){
+//                        $response = "Please transfer Ksh " . number_format($balance['amount'] ). " to Paybill Number 963334 to pay your loan";
+//                    }else{
+//                        $response = "Please transfer Ksh " . number_format($balance['amount'] ) . " to Paybill Number 963334 to pay your loan";
+//                    }
+                    $notify = new NotifyController();
+                    $notify->sendSms($user->phone_no, $response);
+                }
+                self::sendResponse($response, 2, $user);
+                //$notify = new NotifyController();
+                //$notify->sendSms($user->phone_no, $balance['message']);
+                //self::sendResponse($balance['message'], 2, $user);
 //                $balance = self::getLoanBalance(35);
 //
 //                print_r($balance);
@@ -1721,7 +1736,6 @@ class UssdController extends Controller
     public function authenticateUser($user, $message)
     {
 
-
         //has user accepted terms and conditions?
         if(!self::has_user_accepted_terms($user)){
             $menu = menu::find(9);
@@ -1735,7 +1749,6 @@ class UssdController extends Controller
         }
 
         if (self::is_user_pin_set($user)) {
-
             switch ($user->progress) {
                 case 0 :
                     $response = "Welcome to Uni Limited.".PHP_EOL."Enter your PIN (Forgot PIN? Type in 0)";
