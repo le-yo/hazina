@@ -1,11 +1,11 @@
-@extends('Centaur::layout')
+@extends('Centaur.layout')
 
 @section('title', 'Users')
 
 @section('content')
     <div class="page-header">
         <div class='btn-toolbar pull-right'>
-            <a class="btn btn-info btn-lg" href="{{ route('users.create') }}">
+            <a class="btn btn-info btn-lg" href="{{ url('users/create') }}">
                 <span class="icon-plus" aria-hidden="true"></span>
                 Create User
             </a>
@@ -36,11 +36,11 @@
                             </li>
                         </ul>
                         <div class="panel-footer">
-                            <a href="{{ route('users.edit', $user->id) }}" class="btn btn-default">
+                            <a href="{{ url('users/edit/'.$user->id) }}" class="btn btn-default">
                                 <span class="icon-pencil" aria-hidden="true"></span>
                                 Edit
                             </a>
-                            <a href="{{ route('users.destroy', $user->id) }}" class="btn btn-danger formConfirm {{ (Sentinel::getUser()->id == $user->id) ? 'disabled' : '' }}"
+                            <a href="{{ url('users.destroy/'.$user->id) }}" class="btn btn-danger formConfirm {{ (Auth::getUser()->id == $user->id) ? 'disabled' : '' }}"
                                 data-method="delete"
                                 data-token="{{ csrf_token() }}"
                                 data-toggle="modal"
@@ -49,7 +49,7 @@
                                 data-title="Please Confirm"
                                 data-id="frmDelete-{{ $user->id }}"
                                 data-form="#frmDelete-{{ $user->id }}">
-                                {!! (Sentinel::getUser()->id == $user->id) ? '<span class="icon-ban" aria-hidden="true"></span> Delete' : '<span class="icon-trash" aria-hidden="true"></span> Delete' !!}
+                                {{--{!! (Sentinel::getUser()->id == $user->id) ? '<span class="icon-ban" aria-hidden="true"></span> Delete' : '<span class="icon-trash" aria-hidden="true"></span> Delete' !!}--}}
                             </a>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
         </div>
     </div>
     <!-- Delete Confirmation Modal -->
-    @include('partials.modal')
+{{--    @include('partials.modal')--}}
     <!-- End of Delete Confirmation Modal -->
-    {!! $users->render() !!}
+    {{--{!! $users->render() !!}--}}
 @stop

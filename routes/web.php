@@ -70,8 +70,7 @@ Route::get('/home', ['as' => 'home', 'uses' => function() {
     if (!Auth::check()) {
         return view('welcome');
     } else {
-
-        return view('payment.short_term_loan');
+        return view('payment.index');
         $now = \Carbon\Carbon::now();
         //today
         $today_sum = \App\Payment::where('transaction_time','>=',$now->subDay(1))->sum('amount');
@@ -170,5 +169,7 @@ Route::post('payments/upload', 'PaymentsController@uploadPayments');
 Route::get('reminder/send', 'ReminderController@send');
 
 
+// Users
+Route::resource('users', 'UserController');
 
-//Route::get('/home', 'HomeController@index')->name('home');
+//Route::get('/user/create', ['as' => 'users.create', 'uses' => 'UserController@create']);

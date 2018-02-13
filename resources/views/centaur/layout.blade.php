@@ -25,7 +25,7 @@
     </head>
     <body>
         <nav class="navbar navbar-default">
-            <div class="container-fluid">
+            <div class="container">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -34,11 +34,11 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="{{ route('home') }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UniLimited Payments Dashboard</a>
+                    <a class="navbar-brand" href="{{ route('home') }}">UniLimited Payments Dashboard</a>
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
-                {{--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">--}}
-                    {{--<ul class="nav navbar-nav">--}}
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
                         {{--<li class="dropdown {{ Request::is('/*') || Request::is('short-term/loans*') ? 'active' : '' }}">--}}
                             {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true"><i class="icon-wallet"></i>&nbsp;Short Term Loans&nbsp;<span class="caret"></span></a>--}}
                             {{--<ul class="dropdown-menu">--}}
@@ -60,24 +60,45 @@
                                 {{--<li class="{{ Request::is('payday-loan/loans*') ? 'active' : '' }}"><a href="{{ route('payday-loan.loans') }}">Loans</a></li>--}}
                             {{--</ul>--}}
                         {{--</li>--}}
-                        {{--@if (Auth::check() && Auth::getUser()->role == 'administrator'))--}}
-                            {{--<li class="{{ Request::is('users*') ? 'active' : '' }}"><a href="{{ route('users.index') }}"><i class="icon-people"></i>&nbsp;Users</a></li>--}}
-                            {{--<li class="{{ Request::is('roles*') ? 'active' : '' }}"><a href="{{ route('roles.index') }}"><i class="icon-list"></i>&nbsp;Roles</a></li>--}}
+                        {{--@if (Auth::check() && Auth::getUser()->hasRole('admin'))--}}
+                            {{--<li class="{{ Request::is('users*') ? 'active' : '' }}"><a href="{{ route('users.create') }}"><i class="icon-people"></i>&nbsp;Users</a></li>--}}
+                            {{--<li class="{{ Request::is('roles*') ? 'active' : '' }}"><a href="{{ route('users.create') }}"><i class="icon-list"></i>&nbsp;Roles</a></li>--}}
                         {{--@endif--}}
-                    {{--</ul>--}}
-                    {{--<ul class="nav navbar-nav navbar-right">--}}
-                        {{--@if (Auth::check())--}}
-                            {{--<li><p class="navbar-text">{{ Auth::getUser()->email }}</p></li>--}}
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        @if (Auth::check())
+                          <li class="dropdown">
+                                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                                            {{ Auth::user()->name }} <span class="caret"></span>
+                                                        </a>
+
+                                                        <ul class="dropdown-menu" role="menu">
+                                                             <li class="{{ Request::is('users*') ? 'active' : '' }}"><a href="{{ url('/users') }}"><i class="icon-people"></i>&nbsp;Users</a></li>
+
+                                                            <li>
+                                                                <a href="{{ route('logout') }}"
+                                                                    onclick="event.preventDefault();
+                                                                             document.getElementById('logout-form').submit();">
+                                                                    Logout
+                                                                </a>
+
+                                                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                                                    {{ csrf_field() }}
+                                                                </form>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+{{--                            <li><p class="navbar-text">{{ Auth::getUser()->email }}</p></li>--}}
                             {{--<li><a href="{{ route('logout') }}">Log Out</a></li>--}}
-                        {{--@else--}}
-                            {{--<li><a href="{{ route('login') }}">Login</a></li>--}}
-                        {{--@endif--}}
-                    {{--</ul>--}}
-                {{--</div><!-- /.navbar-collapse -->--}}
+                        @else
+                            <li><a href="{{ route('login') }}">Login</a></li>
+                        @endif
+                    </ul>
+                </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
         </nav>
         <div class="container">
-            @include('centaur.notifications')
+{{--            @include('centaur.notifications')--}}
             @yield('content')
         </div>
 

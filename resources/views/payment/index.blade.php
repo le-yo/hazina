@@ -1,6 +1,6 @@
 @extends('centaur.layout')
 
-@section('title', 'Short Term Payments')
+@section('title', 'Payments')
 
 @section('content')
 	{{--<div class="page-header">--}}
