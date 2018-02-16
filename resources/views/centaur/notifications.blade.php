@@ -1,4 +1,4 @@
-@if ($message = Session::get('success'))
+@if(session('success'))
 <div class="row">
     <div class="alert alert-success alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true"><img src="{{ asset('images/close.gif') }}" alt="close button" class="img-responsive"/></button>
@@ -8,7 +8,7 @@
 <?php Session::forget('success');?>
 @endif
 
-@if ($message = Session::get('error'))
+@if(session('error'))
 <div class="row">
     <div class="alert alert-danger alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true"><img src="{{ asset('images/close.gif') }}" alt="close button" class="img-responsive"/></button>
@@ -18,7 +18,7 @@
 <?php Session::forget('error'); ?>
 @endif
 
-@if ($message = Session::get('warning'))
+@if(session('warning'))
 <div class="row">
     <div class="alert alert-warning alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true"><img src="{{ asset('images/close.gif') }}" alt="close button" class="img-responsive"/></button>
@@ -28,7 +28,7 @@
 <?php Session::forget('warning'); ?>
 @endif
 
-@if ($message = Session::get('info'))
+@if(session('info'))
 <div class="row">
     <div class="alert alert-info alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true"><img src="{{ asset('images/close.gif') }}" alt="close button" class="img-responsive"/></button>

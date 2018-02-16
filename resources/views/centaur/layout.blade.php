@@ -98,7 +98,7 @@
             </div><!-- /.container-fluid -->
         </nav>
         <div class="container">
-{{--            @include('centaur.notifications')--}}
+            @include('centaur.notifications')
             @yield('content')
         </div>
 

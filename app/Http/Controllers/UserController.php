@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Role;
 use App\User;
 use Mail;
 use Sentinel;
@@ -42,9 +43,9 @@ class UserController extends Controller
      */
     public function create()
     {
-//        $roles = app()->make('sentinel.roles')->createModel()->all();
+        $roles = Role::all();
 
-        return view('Centaur::users.create', ['roles' => $roles]);
+        return view('Centaur.users.create', ['roles' => $roles]);
     }
 
     /**
@@ -70,37 +71,34 @@ class UserController extends Controller
         ];
         $activate = (bool)$request->get('activate', false);
 
-        // Attempt the registration
-        $result = $this->authManager->register($credentials, $activate);
 
-        if ($result->isFailure()) {
-            return $result->dispatch;
-        }
-
-        // Do we need to send an activation email?
-        if (!$activate) {
-            $code = $result->activation->getCode();
-            $email = $result->user->email;
-            Mail::queue(
-                'centaur.email.welcome',
-                ['code' => $code, 'email' => $email],
-                function ($message) use ($email) {
-                    $message->to($email)
-                        ->subject('Your account has been created');
-                }
-            );
-        }
-
-        // Assign User Roles
+        $user = User::create([
+            'name'     => $credentials['first_name']." ".$credentials['first_name'],
+            'email'    => $credentials['email'],
+            'password' => bcrypt($credentials['password']),
+        ]);
         foreach ($request->get('roles', []) as $slug => $id) {
-            $role = Sentinel::findRoleBySlug($slug);
-            if ($role) {
-                $role->users()->attach($result->user);
-            }
+            $user
+                ->roles()
+                ->attach(Role::find($id));
         }
 
-        $result->setMessage("User {$request->get('email')} has been created.");
-        return $result->dispatch(route('users.index'));
+//        // Do we need to send an activation email?
+//        if (!$activate) {
+//            $code = $result->activation->getCode();
+//            $email = $result->user->email;
+//            Mail::queue(
+//                'centaur.email.welcome',
+//                ['code' => $code, 'email' => $email],
+//                function ($message) use ($email) {
+//                    $message->to($email)
+//                        ->subject('Your account has been created');
+//                }
+//            );
+//        }
+
+//        $result->setMessage("User ".$user->email." has been created.");
+        return redirect(url('users/index'))->withSuccess('"User ".$user->email." has been created."');
     }
 
     /**

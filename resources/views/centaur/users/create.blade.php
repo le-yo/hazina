@@ -1,4 +1,4 @@
-@extends('Centaur::layout')
+@extends('Centaur.layout')
 
 @section('title', 'Create New User')
 
@@ -28,8 +28,8 @@
                         @foreach ($roles as $role)
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" name="roles[{{ $role->slug }}]" value="{{ $role->id }}">
-                                    <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+                                    <input type="checkbox" name="roles[{{ $role->slug }}]" value="{{ $role->id }}" {{ old('roles['.$role->slug.']') == $role->id ? 'checked' : ''}}>
+                                    <span class="cr"><i class="cr-icon fa"></i></span>
                                     {{ $role->name }}
                                 </label>
                             </div>
@@ -46,7 +46,7 @@
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" name="activate" value="true" {{ old('activate') == 'true' ? 'checked' : ''}}>
-                                <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+                                <span class="cr"><i class="cr-icon fa"></i></span>
                                 Activate
                             </label>
                         </div>
