@@ -71,7 +71,8 @@ class RemindersTableSeeder extends Seeder
             ),
             array(
                 'slug' => '15_days_overdue',
-                'message' => "Dear {name}, your Salary Advance Loan is overdue from {due_date}. We have shared details of your overdue Salary Advance Loan with your company for direct deduction from your salary. Late Payment penalty is accruing at 1.75% per week. Please repay your total balance of Kshs. {balance} immediately to avoid further penalty accruing and registration with all the credit reference bureaus. For further assistance please call our customer care line 0704 000 999",
+//                'message' => "Dear {name}, your Salary Advance Loan is overdue from {due_date}. We have shared details of your overdue Salary Advance Loan with your company for direct deduction from your salary. Late Payment penalty is accruing at 1.75% per week. Please repay your total balance of Kshs. {balance} immediately to avoid further penalty accruing and registration with all the credit reference bureaus. For further assistance please call our customer care line 0704 000 999",
+                'message' => "Dear {name}, your Salary Advance Loan of Ksh. {balance} is in default. We have sent to your company our request for direct deduction from your next salary the total outstanding amount of Principal Kshs. {principal}, interest of Ksh. {interest} plus penalties of Kshs. {penalties}. For further assistance please call our customer care line: 0704 000 999",
                 'type' => 3,
                 'days_to' => null,
                 'days_overdue' => 15,

@@ -4,6 +4,7 @@ use App\Hooks;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Log;
 use App\setting;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -610,6 +611,10 @@ class MifosXController extends Controller {
 
     public static function get($url)
     {
+
+        $data = ['slug' => 'mifos_get_request', 'content' => $url];
+        //log request
+        Log::create($data);
         $client = new Client(['verify' => false]);
         $credentials = base64_encode(MIFOS_UN.':'.MIFOS_PASS);
 
@@ -619,7 +624,7 @@ class MifosXController extends Controller {
                     'headers' => [
                         'Authorization' => 'Basic '.$credentials,
                         'Content-Type' => 'application/json',
-                        'Fineract-Platform-TenantId' => 'unidemo'
+                        'Fineract-Platform-TenantId' => "uni"
                     ]
                 ]
             );
@@ -627,7 +632,11 @@ class MifosXController extends Controller {
             $response = json_decode($data->getBody());
         } catch (BadResponseException $exception) {
             $response = $exception->getResponse()->getBody()->getContents();
+
         }
+        $data = ['slug' => 'mifos_get_response', 'content' => \GuzzleHttp\json_encode($response)];
+        //log request
+        Log::create($data);
 
         return $response;
     }
