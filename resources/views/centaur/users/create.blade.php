@@ -1,4 +1,4 @@
-@extends('Centaur.layout')
+@extends('centaur.layout')
 
 @section('title', 'Create New User')
 
