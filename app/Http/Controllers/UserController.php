@@ -33,7 +33,7 @@ class UserController extends Controller
     {
         $users = User::paginate(15);
 
-        return view('Centaur.users.index', ['users' => $users]);
+        return view('centaur.users.index', ['users' => $users]);
     }
 
     /**
@@ -45,7 +45,7 @@ class UserController extends Controller
     {
         $roles = Role::all();
 
-        return view('Centaur.users.create', ['roles' => $roles]);
+        return view('centaur.users.create', ['roles' => $roles]);
     }
 
     /**
@@ -130,7 +130,7 @@ class UserController extends Controller
         $roles = app()->make('sentinel.roles')->createModel()->all();
 
         if ($user) {
-            return view('Centaur::users.edit', [
+            return view('centaur.users.edit', [
                 'user' => $user,
                 'roles' => $roles
             ]);
