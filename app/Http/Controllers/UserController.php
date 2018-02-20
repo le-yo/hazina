@@ -31,7 +31,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::paginate(15);
+        $users = User::whereNotNull('password')->paginate(15);
 
         return view('centaur.users.index', ['users' => $users]);
     }
