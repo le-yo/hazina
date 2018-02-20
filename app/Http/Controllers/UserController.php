@@ -68,7 +68,7 @@ class UserController extends Controller
             'password' => $request->get('password'),
             'first_name' => $request->get('first_name', null),
             'last_name' => $request->get('last_name', null)
-        ]; 
+        ];
         $activate = (bool)$request->get('activate', false);
 
 
