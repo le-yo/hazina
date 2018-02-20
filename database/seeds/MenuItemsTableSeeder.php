@@ -105,14 +105,14 @@ class MenuItemsTableSeeder extends Seeder
                 'description' => 'Select Gender:'.PHP_EOL."1. M".PHP_EOL."2. F",
                 'next_menu_id' => 0,
                 'step' => 4,
-                'confirmation_phrase' => 'Gender',
+                'confirmation_phrase' => 'IGNORE',
             ),
             array(
                 'menu_id' => 9,
                 'description' => 'Enter date of birth (DDMMYYYY)',
                 'next_menu_id' => 0,
                 'step' => 5,
-                'confirmation_phrase' => 'DOB',
+                'confirmation_phrase' => 'IGNORE',
             ),
             array(
                 'menu_id' => 9,
