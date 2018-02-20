@@ -16,13 +16,13 @@ class UserTableSeeder extends Seeder
         $role_manager  = \App\Role::where('name', 'manager')->first();
         $admin = new \App\User();
         $admin->name = 'Admin';
-        $admin->email = 'admin';
+        $admin->email = 'admin@unilimited.devs.mobi';
         $admin->password = bcrypt('unicredit696');
         $admin->save();
         $admin->roles()->attach($role_admin);
         $manager = new \App\User();
         $manager->name = 'Manager';
-        $manager->email = 'manager@example.com';
+        $manager->email = 'manager@unicredit.devs.mobi';
         $manager->password = bcrypt('unicredit696');
         $manager->save();
         $manager->roles()->attach($role_manager);
