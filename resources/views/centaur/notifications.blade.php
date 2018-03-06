@@ -2,7 +2,7 @@
 <div class="row">
     <div class="alert alert-success alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true"><img src="{{ asset('images/close.gif') }}" alt="close button" class="img-responsive"/></button>
-        <strong>Success:</strong> {!! $message !!}
+        <strong>Success:</strong> {!! session('success') !!}
     </div>
 </div>
 <?php Session::forget('success');?>
@@ -12,7 +12,7 @@
 <div class="row">
     <div class="alert alert-danger alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true"><img src="{{ asset('images/close.gif') }}" alt="close button" class="img-responsive"/></button>
-        <strong>Error:</strong> {!! $message !!}
+        <strong>Error:</strong> {!! session('error') !!}
     </div>
 </div>
 <?php Session::forget('error'); ?>

@@ -62,9 +62,6 @@ class DatatablesController extends Controller
                 return number_format($payment->amount);
             })->editColumn('action', function($id) {
                 return '<ul class="list-unstyled list-inline">
-                        <li>
-                                <a href="'.url('makePayment/manual/'.$id->id).'" class="btn btn-xs btn-info"><i class="icon-map"></i> Mark as Processed</a>
-                            </li>
                             <li>
                                 <a href="'.url('makePayment/unrecognized/'.$id->id).'" class="btn btn-xs btn-info"><i class="icon-ban"></i> Mark as Unrecognized</a>
                             </li>
@@ -87,9 +84,6 @@ class DatatablesController extends Controller
                 return '<ul class="list-unstyled list-inline">
                          <li>
                                 <a href="'.url('makePayment/manual/'.$id->id).'" class="btn btn-xs btn-info"><i class="icon-map"></i> Mark as Processed</a>
-                            </li>
-                            <li>
-                                <a href="'.url('makePayment/unrecognized/'.$id->id).'" class="btn btn-xs btn-info"><i class="icon-ban"></i> Mark as Unrecognized</a>
                             </li>
                             <li>
                         </ul>';

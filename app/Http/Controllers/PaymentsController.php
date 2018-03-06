@@ -62,6 +62,7 @@ class PaymentsController extends Controller
             return redirect()->back()->with('success', 'Transaction successfully processed manually');
 
         }
+
         if(strtolower(trim($note)) == 'unrecognized'){
             //update status and return with unrecognized
             $payment->status =2;
