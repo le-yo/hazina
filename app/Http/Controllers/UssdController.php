@@ -962,7 +962,7 @@ class UssdController extends Controller
         }
 
         if (!empty($loan_balance['amount'])) {
-            $error_msg = "Your outstanding Salary Advance Loan balance of Kshs. " . $loan_balance['amount'] . " needs to be repaid before applying for a new Salary Advance Loan. For further assistance please call our customer care line: 0704 000 999.";
+            $error_msg = "Your outstanding Salary Advance Loan balance of Kshs. " . number_format($loan_balance['amount'],2) . " needs to be repaid before applying for a new Salary Advance Loan. For further assistance please call our customer care line: 0704 000 999.";
             //$error_msg = "Sorry. You have an outstanding loan balance of Ksh ".$balance['amount'].". Please pay and apply for loan.";
             //$notify->sendSms($user->phone_no,$error_msg);
             self::sendResponse($error_msg, 2, $user);
@@ -982,7 +982,7 @@ class UssdController extends Controller
             $notify->sendSms($user->phone_no, $error_msg);
             self::sendResponse($error_msg, 2, $user);
 
-        }
+        } 
 
         //get the loan being applied for
         $loan = ussd_response::whereUserIdAndMenuIdAndMenuItemId($user->id, $user->menu_id, 7)->orderBy('id', 'DESC')->first()->response;
@@ -1233,7 +1233,7 @@ class UssdController extends Controller
 
             if (!empty($loanAccount->loanBalance) && ($loanAccount->status->code == 'loanStatusType.active')) {
                 $loan_balance[$loanAccount->productId]['amount'] = $loan_balance['amount'] + $loanAccount->loanBalance;
-                $loan_balance[$loanAccount->productId]['message'] = "Ksh " . number_format($loanAccount->loanBalance) . " due on " . implode("/", array_reverse($loanAccount->timeline->expectedMaturityDate)) . "." . PHP_EOL;
+                $loan_balance[$loanAccount->productId]['message'] = "Ksh " . number_format($loanAccount->loanBalance,2) . " due on " . implode("/", array_reverse($loanAccount->timeline->expectedMaturityDate)) . "." . PHP_EOL;
                 $loan_id = $loanAccount->id;
                 $i++;
             }
