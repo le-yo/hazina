@@ -83,7 +83,7 @@ class PaymentsController extends Controller
         $url = recipients_URL.$payment->phone;
 
         // receive the response and decode it
-        $response = file_get_contents($url);
+        $response = file_get_contents($url);     
         $response = json_decode($response);
 
         // check if the response is successful
