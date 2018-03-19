@@ -177,7 +177,7 @@ class PaymentReceived extends Job implements ShouldQueue
                     $hooks = new MifosXController();
                     $next_payment = $hooks->checkNextInstallment($loanID);
                     //$loan_balance['next_payment'] = $next_payment;
-                    $msg = "Dear ".self::getClientName($user->client_id).", thank you we have received your payment of Kshs. ".number_format($data['amount'],2).". Please clear the outstanding balance Kshs. ".number_format($next_payment['balance'],2)." due on ".$next_payment['next_date'].". For any assistance please call our customer care line 0704 000 999";
+                    $msg = "Dear ".self::getClientName($user->client_id).", thank you we have received your payment of Kshs. ".number_format($data['amount'],2).". Please clear the outstanding balance Kshs. ".number_format($next_payment['next_installment'],2)." due on ".$next_payment['next_date'].". For any assistance please call our customer care line 0704 000 999";
                 }else {
                     $limit = self::getLoanLimit($user->client_id);
                     $msg = "Dear ".self::getClientName($user->client_id).", your Salary Advance Loan has been fully repaid. You can apply for another Salary Advance Loan immediately within your limit of Kshs ".number_format($limit,2).". Thank you for choosing Uni Ltd.";
