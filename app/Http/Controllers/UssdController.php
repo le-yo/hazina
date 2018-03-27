@@ -1759,7 +1759,7 @@ class UssdController extends Controller
         if (self::is_user_pin_set($user)) {
             switch ($user->progress) {
                 case 0 :
-                    $response = "Welcome to Uni Limited." . PHP_EOL . "Enter your PIN (Forgot PIN? Type in 0)";
+                    $response = "Welcome to Uni Limited." . PHP_EOL . "Enter your PIN (Forgot PIN? Type 0)";
                     $user->session = 1;
                     $user->progress = 1;
                     $user->menu_id = 1;
