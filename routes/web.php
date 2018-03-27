@@ -95,7 +95,7 @@ Route::get('/', ['as' => '/', 'uses' => function() {
     if (!Auth::check()) {
         return view('welcome');
     } else {
-        return view('payment.short_term_loan');
+        return view('payment.index');
         $now = \Carbon\Carbon::now();
         //today
         $today_sum = \App\Payment::where('transaction_time','>=',$now->subDay(1))->sum('amount');

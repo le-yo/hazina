@@ -85,6 +85,9 @@ class DatatablesController extends Controller
                          <li>
                                 <a href="'.url('makePayment/manual/'.$id->id).'" class="btn btn-xs btn-info"><i class="icon-map"></i> Mark as Processed</a>
                             </li>
+                             <li>
+                                <a data-url="'.url('payments/comment/'.$id->id).'" class="btn btn-xs btn-info comment"><i class="icon-note"></i> Add Comment</a>
+                            </li>
                             <li>
                         </ul>';
             })
