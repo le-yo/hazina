@@ -20,7 +20,7 @@ class NotifyController extends Controller {
 		public function __construct()
 		{
 			$this->_username    = "unicredit";
-			$this->_apiKey      = "d79c444f09d5762a30f14a7afc0581898574bb4c5d384683ef9ae8e0f03840a1";
+			$this->_apiKey      = "5a419a91571b4869ffe71e382693e240e70d298e016373dc42e9ba2528c87f11";
 
 		}
 
@@ -64,7 +64,7 @@ class NotifyController extends Controller {
 			// Thats it, hit send and we'll take care of the rest.
             $results = $gateway->sendMessage($to, $message,'UNI-LIMITED');
 //			foreach($results as $result) {
-//				// Note that only the Status "Success" means the message was sent
+//				 Note that only the Status "Success" means the message was sent
 //				echo " Number: " .$result->number;
 //				echo " Status: " .$result->status;
 //				echo " MessageId: " .$result->messageId;
