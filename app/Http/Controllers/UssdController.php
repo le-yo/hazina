@@ -1000,6 +1000,11 @@ class UssdController extends Controller
             self::sendResponse($error, 2, $user);
             exit;
         } else {
+            $now = Carbon::now()->toDateString();
+            $new_loan = $now.": New loan application from ".$user->name." amount ".number_format($loan,2).".";
+            $notify->sendSms("254707773267", $new_loan);
+            $notify->sendSms("254705099230", $new_loan);
+            $notify->sendSms("254728355429", $new_loan);
             return TRUE;
         }
     }
