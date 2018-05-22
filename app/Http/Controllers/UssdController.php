@@ -1003,7 +1003,7 @@ class UssdController extends Controller
             $now = Carbon::now()->toDateTimeString();
             $new_loan = $now.": New loan application from ".$user->name." amount ".number_format($loan,2).".";
             $local_hour_now = Carbon::now()->hour;
-            if(($local_hour_now < 9) || ($local_hour_now > 18)) {
+            if(($local_hour_now < 9) || ($local_hour_now > 17)) {
                 $notify->sendSms("254707773267", $new_loan);
                 $notify->sendSms("254705099230", $new_loan);
                 $notify->sendSms("254728355429", $new_loan);
