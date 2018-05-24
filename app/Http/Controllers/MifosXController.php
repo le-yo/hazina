@@ -249,7 +249,7 @@ class MifosXController extends Controller {
      */
     public function getGroupInterestRate($clientId)
     {
-        return 7.5;
+//        return 7.5;
         // get the group id
         $groupId = self::getUserGroupId($clientId);
 
@@ -261,7 +261,7 @@ class MifosXController extends Controller {
 
         if ($interest == [])
         {
-            return 6;
+            return 7.5;
         }
         else
         {
