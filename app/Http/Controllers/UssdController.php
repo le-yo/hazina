@@ -718,7 +718,7 @@ class UssdController extends Controller
 
             }
         }
-            $loan_balance['message'] = "Loan balance:".PHP_EOL.$loan_balance_message;
+            $loan_balance['message'] = "Next installment balance:".PHP_EOL.$loan_balance_message."Total Outstanding Loan balance: Kshs. ".$loan_balance['amount'];
 
 //        if (($product_id == PCL_ID) && ($loan_balance['amount'] > 0)) {
 //            $hooks = new MifosXController();
