@@ -686,26 +686,30 @@ class UssdController extends Controller
         $loan_balance = array();
         $loan_balance['amount'] = 0;
         $loan_balance['message'] = "Your outstanding loan balance due on:".PHP_EOL;
+        $loan_balance_message = '';
 //
 //        print_r($account);
 //        exit;
 
+                $hooks = new MifosXController();
         foreach ($account->loanAccounts as $loanAccount) {
-            $loan_balance_message = '';
             if (!empty($loanAccount->loanBalance) && ($loanAccount->status->code == 'loanStatusType.active') && ($loanAccount->productId == $product_id)) {
                 $loan_balance['amount'] = $loan_balance['amount'] + $loanAccount->loanBalance;
-                $loan_balance['message'] = $loan_balance['message'] . implode("/", array_reverse($loanAccount->timeline->expectedMaturityDate)) . " is Ksh " . number_format($loanAccount->loanBalance) . "." . PHP_EOL;
+//                $loan_balance['message'] = $loan_balance['message'] . implode("/", array_reverse($loanAccount->timeline->expectedMaturityDate)) . " is Ksh " . number_format($loanAccount->loanBalance) . "." . PHP_EOL;
                 //$loan_balance['raw'] = $loanAccount;
                 $loan_id = $loanAccount->id;
                 $i++;
-//                $hooks = new MifosXController();
-//                $next_payment = $hooks->checkNextInstallment($loan_id);
-//                //$loan_balance['next_payment'] = $next_payment;
+                $next_payment = $hooks->checkNextInstallment($loan_id);
+//                print_r($next_payment['next_installment']);
+//                exit;
+                //$loan_balance['next_payment'] = $next_payment;
 //                $msg = "Kshs. " . number_format($next_payment['balance'], 2);
+
+                $loan_balance_message = $loan_balance_message . $next_payment['next_date'].": Kshs. " . number_format($next_payment['next_installment'], 2).PHP_EOL;
 //                if ($next_payment['overdue_status'] == 0) {
-//                    $msg = $msg . PHP_EOL . "Next Installment: Kshs. " . number_format($next_payment['next_installment'], 2) . " due on " . $next_payment['next_date'];
+//                    $msg = $msg . PHP_EOL . $next_payment['next_date'].": Kshs. " . number_format($next_payment['next_installment'], 2);
 //                } elseif ($next_payment['overdue_status'] == 1) {
-//                    $msg = $msg . PHP_EOL . "Next Installment: Kshs. " . number_format($next_payment['next_installment'], 2) . " due today";
+//                    $msg = $msg . PHP_EOL . $next_payment['next_date'].": Kshs. " . number_format($next_payment['next_installment'], 2);
 //                } else {
 //                    $msg = $msg . PHP_EOL . "Overdue Installment: Kshs. " . number_format($next_payment['next_installment'], 2) . " was due on " . $next_payment['next_date'];
 //                }
@@ -713,8 +717,8 @@ class UssdController extends Controller
 //                $loan_balance_message = $loan_balance_message.$msg.PHP_EOL;
 
             }
-//            $loan_balance['message'] = "Loan balance:".PHP_EOL.$loan_balance_message;
         }
+            $loan_balance['message'] = "Loan balance:".PHP_EOL.$loan_balance_message;
 
 //        if (($product_id == PCL_ID) && ($loan_balance['amount'] > 0)) {
 //            $hooks = new MifosXController();
