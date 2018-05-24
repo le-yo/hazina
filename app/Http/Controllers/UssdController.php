@@ -685,37 +685,52 @@ class UssdController extends Controller
         $i = 0;
         $loan_balance = array();
         $loan_balance['amount'] = 0;
-        $loan_balance['message'] = "Your outstanding loan balance due on ";
+        $loan_balance['message'] = "Your outstanding loan balance due on:".PHP_EOL;
 //
 //        print_r($account);
 //        exit;
 
         foreach ($account->loanAccounts as $loanAccount) {
-
+            $loan_balance_message = '';
             if (!empty($loanAccount->loanBalance) && ($loanAccount->status->code == 'loanStatusType.active') && ($loanAccount->productId == $product_id)) {
                 $loan_balance['amount'] = $loan_balance['amount'] + $loanAccount->loanBalance;
                 $loan_balance['message'] = $loan_balance['message'] . implode("/", array_reverse($loanAccount->timeline->expectedMaturityDate)) . " is Ksh " . number_format($loanAccount->loanBalance) . "." . PHP_EOL;
                 //$loan_balance['raw'] = $loanAccount;
                 $loan_id = $loanAccount->id;
                 $i++;
+//                $hooks = new MifosXController();
+//                $next_payment = $hooks->checkNextInstallment($loan_id);
+//                //$loan_balance['next_payment'] = $next_payment;
+//                $msg = "Kshs. " . number_format($next_payment['balance'], 2);
+//                if ($next_payment['overdue_status'] == 0) {
+//                    $msg = $msg . PHP_EOL . "Next Installment: Kshs. " . number_format($next_payment['next_installment'], 2) . " due on " . $next_payment['next_date'];
+//                } elseif ($next_payment['overdue_status'] == 1) {
+//                    $msg = $msg . PHP_EOL . "Next Installment: Kshs. " . number_format($next_payment['next_installment'], 2) . " due today";
+//                } else {
+//                    $msg = $msg . PHP_EOL . "Overdue Installment: Kshs. " . number_format($next_payment['next_installment'], 2) . " was due on " . $next_payment['next_date'];
+//                }
+//
+//                $loan_balance_message = $loan_balance_message.$msg.PHP_EOL;
+
             }
+//            $loan_balance['message'] = "Loan balance:".PHP_EOL.$loan_balance_message;
         }
 
-        if (($product_id == PCL_ID) && ($loan_balance['amount'] > 0)) {
-            $hooks = new MifosXController();
-            $next_payment = $hooks->checkNextInstallment($loan_id);
-            //$loan_balance['next_payment'] = $next_payment;
-            $msg = "Loan balance: Kshs. " . number_format($next_payment['balance'], 2);
-            if ($next_payment['overdue_status'] == 0) {
-                $msg = $msg . PHP_EOL . "Next Installment: Kshs. " . number_format($next_payment['next_installment'], 2) . " due on " . $next_payment['next_date'];
-            } elseif ($next_payment['overdue_status'] == 1) {
-                $msg = $msg . PHP_EOL . "Next Installment: Kshs. " . number_format($next_payment['next_installment'], 2) . " due today";
-            } else {
-                $msg = $msg . PHP_EOL . "Overdue Installment: Kshs. " . number_format($next_payment['next_installment'], 2) . " was due on " . $next_payment['next_date'];
-            }
-
-            $loan_balance['message'] = $msg;
-        }
+//        if (($product_id == PCL_ID) && ($loan_balance['amount'] > 0)) {
+//            $hooks = new MifosXController();
+//            $next_payment = $hooks->checkNextInstallment($loan_id);
+//            //$loan_balance['next_payment'] = $next_payment;
+//            $msg = "Loan balance: Kshs. " . number_format($next_payment['balance'], 2);
+//            if ($next_payment['overdue_status'] == 0) {
+//                $msg = $msg . PHP_EOL . "Next Installment: Kshs. " . number_format($next_payment['next_installment'], 2) . " due on " . $next_payment['next_date'];
+//            } elseif ($next_payment['overdue_status'] == 1) {
+//                $msg = $msg . PHP_EOL . "Next Installment: Kshs. " . number_format($next_payment['next_installment'], 2) . " due today";
+//            } else {
+//                $msg = $msg . PHP_EOL . "Overdue Installment: Kshs. " . number_format($next_payment['next_installment'], 2) . " was due on " . $next_payment['next_date'];
+//            }
+//
+//            $loan_balance['message'] = $msg;
+//        }
         return $loan_balance;
     }
 
