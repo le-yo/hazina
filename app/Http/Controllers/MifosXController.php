@@ -254,7 +254,7 @@ class MifosXController extends Controller {
         $groupId = self::getUserGroupId($clientId);
 
         // load the url for getting the group interest
-        $url = MIFOS_URL."/datatables/Interest%20rate/".$groupId."?".MIFOS_tenantIdentifier;
+        $url = MIFOS_URL."/datatables/Group%20Interest%20Rate/".$groupId."?".MIFOS_tenantIdentifier;
 
         // grab the datatable details from Mifos
         $interest = Hooks::MifosGetTransaction($url, $post_data = "");
