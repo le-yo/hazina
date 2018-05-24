@@ -879,8 +879,9 @@ class UssdController extends Controller
         if (count($limit) > 0) {
             $limit = $limit[0]->user_loan_limit;
             $balance = self::getLoanBalance($id);
+
             if (!empty($balance['amount'])) {
-               $limit = $limit-$balance;
+               $limit = $limit-$balance['amount'];
             }
             return $limit;
         } else {
@@ -1687,7 +1688,7 @@ class UssdController extends Controller
         $loanAccounts = self::getClientLoanAccounts($user->client_id);
 
         foreach ($loanAccounts as $la) {
-            if (($la->status->active == 1) && ($la->productId == $product_id)) {
+            if (($la->status->active == 1) && ($la->productId == $product_id)&& ($limit<1)) {
                 $error_msg = "Please clear your current loan in order to apply for another loan";
                 $notify = new NotifyController();
                 $notify->sendSms($user->phone_no, $error_msg);
