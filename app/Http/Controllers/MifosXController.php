@@ -265,7 +265,7 @@ class MifosXController extends Controller {
         }
         else
         {
-            return $interest[0]->Rate; 
+            return $interest[0]->Rate;
         }
     }
 

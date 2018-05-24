@@ -877,7 +877,12 @@ class UssdController extends Controller
         $url = MIFOS_URL . "/datatables/user_loan_limit/" . $id . "?" . MIFOS_tenantIdentifier;
         $limit = Hooks::MifosGetTransaction($url);
         if (count($limit) > 0) {
-            return $limit[0]->user_loan_limit;
+            $limit = $limit[0]->user_loan_limit;
+            $balance = self::getLoanBalance($id);
+            if (!empty($balance['amount'])) {
+               $limit = $limit-$balance;
+            }
+            return $limit;
         } else {
             return 0;
         }
@@ -1633,7 +1638,7 @@ class UssdController extends Controller
 //        $groupId = $mifosX->getUserGroupId($user->client_id);
 
         $balance = self::getLoanBalance($user->client_id, $product_id);
-
+        $limit = self::getLoanLimit($user->client_id);
         $client = new Client([
             'verify' => false
         ]);
@@ -1645,7 +1650,7 @@ class UssdController extends Controller
 //            return ucfirst($value) !== self::getClientName($user->client_id);
 //        });
 
-        if (!empty($balance['amount'])) {
+        if ($limit<1) {
             $error_msg = "Your outstanding Salary Advance Loan balance of Kshs. " . $balance['amount'] . " needs to be repaid before applying for a new Salary Advance Loan. For further assistance please call our customer care line: 0704 000 999.";
             self::sendResponse($error_msg, 2, $user);
         }
