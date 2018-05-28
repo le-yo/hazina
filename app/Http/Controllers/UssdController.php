@@ -722,7 +722,7 @@ class UssdController extends Controller
         }
 
         if($i>1){
-            $loan_balance['message'] = "Total Due:".PHP_EOL.$loan_balance_message."Total Installment amount Kshs:".number_format($loan_balance['installment_amount'],2).PHP_EOL."Total Outstanding Loan balance: Kshs. ".number_format($loan_balance['amount'],2);  
+            $loan_balance['message'] = "Total Due:".PHP_EOL.$loan_balance_message."Total Installment amount Kshs:".number_format($loan_balance['installment_amount'],2).PHP_EOL."Total Outstanding Loan balance: Kshs. ".number_format($loan_balance['amount'],2);
         }else{
             $loan_balance['message'] = "Your outstanding loan balance is Kshs: ".number_format($loan_balance['amount'],2).PHP_EOL."Next Installment amount Kshs:".number_format($loan_balance['installment_amount'],2)." due on ".$next_payment['next_date'];
         }
