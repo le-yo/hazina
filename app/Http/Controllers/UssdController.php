@@ -31,6 +31,7 @@ class UssdController extends Controller
     public function index()
     {
 
+
         error_reporting(0);
         header('Content-type: text/plain');
         set_time_limit(100000);
