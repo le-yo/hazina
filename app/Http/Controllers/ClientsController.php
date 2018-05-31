@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\PreapprovedClients;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -13,9 +14,9 @@ class ClientsController extends Controller
 {
     //
     public function index(){
-
-        return view('preapproved-clients.index');
-
+        $title = 'Clients';
+        $clients = PreapprovedClients::orderBy('id','DESC')->paginate(6);
+        return view('preapproved-clients.index',compact('clients','title'));
     }
 
     public function upload(){
@@ -41,32 +42,36 @@ class ClientsController extends Controller
             $data = Excel::load($path, function ($reader){
 
             })->get();
-
+            $i = 0;
+            $j = 0;
 //            print_r($data);exit();
             if (!empty($data) && $data->count()){
                 foreach($data[0] as $key => $value){
-//                    print_r($value);exit();
-                    $insert[] =
-                    [
-                        'mobile_number' => $value['mobilenumber'],
-                        'national_id_number' => $value['nationalidnumber'],
-                        'names' => $value['names'],
-                        'net_salary' => $value['netsalary'],
-                        'loan_limits' => $value['loanlimits']
-                    ];
-                }
-//                print_r($insert);exit();
-                if (!empty($insert)){
-                    $insertData = DB::table('preapproved_clients')->insert($insert);
 
-                    if ($insertData){
-                        Session::flash('success','Your data has successfully imported');
-                    }else{
-                        Session::flash('error','Error while importing your data');
+//                    print_r($value);exit();
+                    if(!empty($value['mobilenumber'])){
+                        $no = substr($value['mobilenumber'], -9);
+
+                        $client = PreapprovedClients::where('mobile_number', "0" . $no)->orWhere('mobile_number', "254" . $no)->first();
+                        if(!$client){
+                            $data = [
+                                'mobile_number' => $value['mobilenumber'],
+                                'national_id_number' => $value['nationalidnumber'],
+                                'names' => $value['names'],
+                                'net_salary' => $value['netsalary'],
+                                'loan_limits' => $value['loanlimits']
+                            ];
+                            PreapprovedClients::create($data);
+                            $i++;
+                        }else{
+                            $j++;
+                        }
                     }
+
                 }
             }
-            return back();
+            Session::flash('success',$i.' clients added successfully and '.$j.' duplicates rejected.');
+            return redirect('preapproved-clients');
         }else{
             Session::flash('error','Your file is not valid');
             return back();

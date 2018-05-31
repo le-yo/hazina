@@ -45,7 +45,8 @@
         </div><!-- /.container-fluid -->
     </nav>
     <div class="container">
-{{--    @include('Centaur::notifications')--}}
+        <br>
+    @include('partials.notifications')
     @yield('content')
     </div>
     @include('partials.landingfooter')
