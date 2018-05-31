@@ -1,12 +1,14 @@
 <?php namespace App\Http\Controllers;
 
 use App\Configuration;
+use App\Helpers\Mifos\MifosHooks;
 use App\Hooks;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\menu;
 use App\menu_items;
+use App\PreapprovedClients;
 use App\ussd_logs;
 use App\ussd_response;
 use App\Ussduser;
@@ -1189,6 +1191,14 @@ class UssdController extends Controller
                     self::sendResponse($error_msg, 3, $user);
                 } else {
                     $user->client_id = $data->clientId;
+                    $user->save();
+                    $no = substr($user->phone_no, -9);
+
+                    $client = PreapprovedClients::where('mobile_number', "0" . $no)->orWhere('mobile_number', "254" . $no)->first();
+                    if($client){
+                        //activate client
+                        self::activateClient($user->client_id);
+                    }
 
 //                    //send identifier
                     $identifier = array(
@@ -1221,6 +1231,29 @@ class UssdController extends Controller
                 break;
         }
 
+    }
+
+    public function activateClient($clientId)
+    {
+        try {
+            $body = [
+                'locale' => 'en',
+                'dateFormat' => 'dd MMMM yyyy',
+                'activationDate' => Carbon::now()->format('d M Y')
+            ];
+
+            $hook = new MifosHooks();
+            $response = $hook->post('clients/'.$clientId.'?command=activate', $body);
+
+            if(array_key_exists('resourceId', $response))
+            {
+                return ['status' => 'success', 'data' => $response];
+            } else {
+                return ['status' => 'error', 'message' => implode(' & ', array_pluck($response['errors'], 'developerMessage')), 'code' => $response['httpStatusCode']];
+            }
+        } catch (\Exception $exception) {
+            return ['status' => 'error', 'message' => $exception->getMessage(), 'code' => $exception->getCode()];
+        }
     }
 
     public function getUser($client_id)
