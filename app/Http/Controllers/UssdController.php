@@ -753,7 +753,7 @@ class UssdController extends Controller
         $url = MIFOS_URL . "/clients/" . $client_id . "/accounts?fields=loanAccounts&" . MIFOS_tenantIdentifier;
         $loanAccounts = Hooks::MifosGetTransaction($url);
         if (!empty($loanAccounts->loanAccounts)) {
-            $loanAccounts = $loanAccounts->loanAccounts;
+            $loanAccounts = array_reverse($loanAccounts->loanAccounts); 
         } else {
             $loanAccounts = array();
         }
