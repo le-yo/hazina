@@ -173,3 +173,8 @@ Route::get('reminder/send', 'ReminderController@send');
 Route::resource('users', 'UserController');
 
 //Route::get('/user/create', ['as' => 'users.create', 'uses' => 'UserController@create']);
+
+
+Route::get('preapproved-clients','ClientsController@index');
+Route::get('preapproved-clients/upload','ClientsController@upload');
+Route::post('preapproved-clients/upload','ClientsController@storeUpload');
