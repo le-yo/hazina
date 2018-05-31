@@ -553,7 +553,7 @@ class UssdController extends Controller
             if (($la->status->active == 1) && ($la->productId == PCL_ID)) {
                 $loan = $la;
                 $loan_id = $la->id;
-                break;
+//                break;
             }
         }
 
@@ -688,6 +688,8 @@ class UssdController extends Controller
         $loan_balance['installment_amount'] = 0;
         $loan_balance['message'] = "Your outstanding loan balance due on:".PHP_EOL;
         $loan_balance_message = '';
+        $next_payment = array();
+        $next_payment['next_date'] = 'None';
         $i = 0;
 //
 //        print_r($account);
@@ -753,7 +755,7 @@ class UssdController extends Controller
         $url = MIFOS_URL . "/clients/" . $client_id . "/accounts?fields=loanAccounts&" . MIFOS_tenantIdentifier;
         $loanAccounts = Hooks::MifosGetTransaction($url);
         if (!empty($loanAccounts->loanAccounts)) {
-            $loanAccounts = array_reverse($loanAccounts->loanAccounts); 
+            $loanAccounts = array_reverse($loanAccounts->loanAccounts);
         } else {
             $loanAccounts = array();
         }

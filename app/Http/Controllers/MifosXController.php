@@ -528,7 +528,6 @@ class MifosXController extends Controller {
                 array_push($items, $repaymentSchedulePeriods[$i]);
             }
         }
-
         // Get the Dates
         $today = Carbon::now()->format('Y m d');
         $dueDate = Carbon::parse($items[0]->dueDate[0].'-'.$items[0]->dueDate[1].'-'.$items[0]->dueDate[2])->format('Y m d');

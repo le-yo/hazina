@@ -111,86 +111,102 @@ class PaymentReceived extends Job implements ShouldQueue
 
         return ucfirst($clientName);
     }
-    public function processLoan($data){
+    public function processLoan($payment_data){
 
         $ussd = new UssdController();
-        $response = $ussd->getPCLLoanfromPhone($data['phone']);
 
-        $receipt = self::jsonp_decode($response);
-        if(isset($receipt->error)){
-            return;
+        //$response = $ussd->getPCLLoanfromPhone($data['phone']);
+
+        $data = array();
+        $no = substr($payment_data['phone'], -9);
+
+        $user = Ussduser::where('phone_no', "0" . $no)->orWhere('phone_no', "254" . $no)->first();
+
+        if (!$user) {
+            //check on mifos
+            $user = $ussd->verifyPhonefromMifos($no);
+            if (!$user) {
+                $data['error'] = 1;
+                $data['message'] = 'No user found with given phone number found';
+                return json_encode($data);
+            }
+
         }
-        $loanID = $receipt->loan->id;
-        // get repayment details
-        $repayment_data = [];
-        $repayment_data['dateFormat'] = 'dd MMMM yyyy';
-        $repayment_data['locale'] = 'en_GB';
-        $repayment_data['transactionDate'] = Carbon::parse($data['transaction_time'])->format('j F Y');
-        $repayment_data['transactionAmount'] = $data['amount'];
-        $repayment_data['paymentTypeId'] = 1;
-        $repayment_data['note'] = 'Payment';
-        $repayment_data['accountNumber'] = $data['phone'];
-        $repayment_data['receiptNumber'] = $data['transaction_id'];
 
-        // json encode repayment details
-        $loan_data = json_encode($repayment_data);
+        $loanAccounts = self::getClientLoanAccountsInAscendingOrder($user->client_id);
 
-        // url for posting the repayment details
-        $postURl = MIFOS_URL . "/loans/" . $loanID . "/transactions?command=repayment&" . MIFOS_tenantIdentifier;
+        $latest_loan = end($loanAccounts);
+        $loan_id = '';
+        $loan = '';
+        $loan_payment_received = $payment_data['amount'];
+        foreach ($loanAccounts as $la) {
+            if (($la->status->active == 1) && ($la->productId == PCL_ID) && ($loan_payment_received>0)) {
 
-        // post the encoded repayment details
-        $loanPayment = Hooks::MifosPostTransaction($postURl, $loan_data);
-
-        // check if posting was successful
-        if (array_key_exists('errors', $loanPayment)) {
-            return false;
-        } else {
-            // update status column in payments table to processed
-            $no = substr($data['phone'], -9);
-
-            $user = Ussduser::where('phone_no', "0" . $no)->orWhere('phone_no', "254" . $no)->first();
-
-            if ($user) {
-
-
-                $url = MIFOS_URL . "/clients/" . $user->client_id . "/accounts?" . MIFOS_tenantIdentifier;
-                $account = Hooks::MifosGetTransaction($url);
-
-                $i = 0;
-                $loan_balance = array();
-                $loan_balance['amount'] = 0;
-                $loan_balance['message'] = "Your outstanding loan balance due on ";
-
-                $product_id = env('PCL_ID');
-                foreach ($account->loanAccounts as $loanAccount) {
-
-                    if (!empty($loanAccount->loanBalance) && ($loanAccount->status->code == 'loanStatusType.active') && ($loanAccount->productId == $product_id)) {
-                        $loan_balance['amount'] = $loan_balance['amount'] + $loanAccount->loanBalance;
-                        $loan_balance['message'] = $loan_balance['message'] . implode("/", array_reverse($loanAccount->timeline->expectedMaturityDate)) . " is Ksh " . number_format($loanAccount->loanBalance) . "." . PHP_EOL;
-                        //$loan_balance['raw'] = $loanAccount;
-                        $loan_id = $loanAccount->id;
-                        $i++;
-                    }
+                if(($la->loanBalance < $loan_payment_received) && ($la->id !=$latest_loan->id)){
+                    $loan_payment_received = $loan_payment_received - $la->loanBalance;
+                    $amount = $la->loanBalance;
+                }else{
+                    $amount = $loan_payment_received;
+                    $loan_payment_received=0;
                 }
+                // get repayment details
+                $repayment_data = [];
+                $repayment_data['dateFormat'] = 'dd MMMM yyyy';
+                $repayment_data['locale'] = 'en_GB';
+                $repayment_data['transactionDate'] = Carbon::parse($payment_data['transaction_time'])->format('j F Y');
+                $repayment_data['transactionAmount'] = $amount;
+                $repayment_data['paymentTypeId'] = 1;
+                $repayment_data['note'] = 'Payment';
+                $repayment_data['accountNumber'] = $payment_data['phone'];
+                $repayment_data['receiptNumber'] = $payment_data['transaction_id'];
+
+                // json encode repayment details
+                $loan_data = json_encode($repayment_data);
+
+                // url for posting the repayment details
+                $postURl = MIFOS_URL . "/loans/" . $la->id . "/transactions?command=repayment&" . MIFOS_tenantIdentifier;
+
+                // post the encoded repayment details
+                $loanPayment = Hooks::MifosPostTransaction($postURl, $loan_data);
+
+                // check if posting was successful
+                if (array_key_exists('errors', $loanPayment)) {
+                    return false;
+                }
+            }
+
+            if($loan_payment_received ==0){
+                break;
+            }
+        }
                 $ussd = new UssdController();
                 $balance = $ussd->getLoanBalance($user->client_id);
 
                 if($balance['amount']>0){
                     $hooks = new MifosXController();
-                    $next_payment = $hooks->checkNextInstallment($loanID);
+
+                    $next_payment = $hooks->checkNextInstallment($latest_loan->id);
                     //$loan_balance['next_payment'] = $next_payment;
-                    $msg = "Dear ".self::getClientName($user->client_id).", thank you we have received your payment of Kshs. ".number_format($data['amount'],2).". Please clear the outstanding balance Kshs. ".number_format($balance['installment_amount'],2)." due on ".$next_payment['next_date'].". To repay your total outstanding balance, please send Kshs. ".number_format($balance['amount'],2)." to our M-pesa paybill number 963334. For any assistance please call our customer care line 0704 000 999";
+                    $msg = "Dear ".self::getClientName($user->client_id).", thank you we have received your payment of Kshs. ".number_format($payment_data['amount'],2).". Please clear the outstanding balance Kshs. ".number_format($balance['installment_amount'],2)." due on ".$next_payment['next_date'].". To repay your total outstanding balance, please send Kshs. ".number_format($balance['amount'],2)." to our M-pesa paybill number 963334. For any assistance please call our customer care line 0704 000 999";
                 }else {
                     $limit = self::getLoanLimit($user->client_id);
-                    $msg = "Dear ".self::getClientName($user->client_id).", your Salary Advance Loan has been fully repaid. You can apply for another Salary Advance Loan immediately within your limit of Kshs ".number_format($limit,2).". Thank you for choosing Uni Ltd."; 
+                    $msg = "Dear ".self::getClientName($user->client_id).", your Salary Advance Loan has been fully repaid. You can apply for another Salary Advance Loan immediately within your limit of Kshs ".number_format($limit,2).". Thank you for choosing Uni Ltd.";
                 }
                 $notify = new NotifyController();
-                $notify->sendSms($data['phone'],$msg);
-                 }
-                return true;
+                $notify->sendSms($payment_data['phone'],$msg);
+            return true;
+    }
+
+    function getClientLoanAccountsInAscendingOrder($client_id)
+    {
+        $url = MIFOS_URL . "/clients/" . $client_id . "/accounts?fields=loanAccounts&" . MIFOS_tenantIdentifier;
+        $loanAccounts = Hooks::MifosGetTransaction($url);
+        if (!empty($loanAccounts->loanAccounts)) {
+            $loanAccounts = $loanAccounts->loanAccounts;
+        } else {
+            $loanAccounts = array();
         }
-
-
+        return $loanAccounts;
     }
 
     public function getLoanLimit($id)
