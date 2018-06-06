@@ -1194,7 +1194,7 @@ class UssdController extends Controller
                     $user->save();
                     $no = substr($user->phone_no, -9);
 
-                    $client = PreapprovedClients::where('mobile_number', "0" . $no)->orWhere('mobile_number', "254" . $no)->first();
+                    $client = PreapprovedClients::where('mobile_number', "0" . $no)->orWhere('mobile_number', "254" . $no)->orWhere('mobile_number',$no)->first();
                     if($client){
                         //activate client
                         self::activateClient($user->client_id);
