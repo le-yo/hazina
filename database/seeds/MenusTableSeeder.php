@@ -33,7 +33,7 @@ class MenusTableSeeder extends Seeder
                 'title' => 'Apply for Loan',
                 'is_parent' => 0,
                 'type' => 2,
-                'confirmation_message' => "Your Salary Advance Loan request has been received, you will receive an SMS response. For further assistance please call our customer care line: 0704 000 999.",
+                'confirmation_message' => "Your Salary Advance Loan request has been received, you will receive an SMS response. For further assistance please call our customer care line: 020 403 8000.",
             ),
             array(
                 'title' => 'Loan balance',
@@ -70,7 +70,7 @@ class MenusTableSeeder extends Seeder
                 'title' => 'Register:',
                 'is_parent' => 0,
                 'type' => 2,
-                'confirmation_message' => "Thank you for your interest UNI Ltd Salary Advance product, your registration request has been received and will be processed shortly. For further assistance please call our customer care line: 0704 000 999",
+                'confirmation_message' => "Thank you for your interest UNI Ltd Salary Advance product, your registration request has been received and will be processed shortly. For further assistance please call our customer care line: 020 403 8000",
             ),
 
         ));

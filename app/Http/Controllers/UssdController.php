@@ -400,7 +400,7 @@ class UssdController extends Controller
             }
             if ($error->userMessageGlobalisationCode == 'validation.msg.loan.groupId.cannot.be.blank') {
 
-                $error_msg = "You need to belong to a group in order to apply for a loan. Kindly Call customer care on 0704 000 999";
+                $error_msg = "You need to belong to a group in order to apply for a loan. Kindly Call customer care on ".env('CUSTOMERCARE_NUMBER');
                 return $error_msg;
                 break;
             }
@@ -1000,7 +1000,7 @@ class UssdController extends Controller
         }
 
         if (!empty($loan_balance['amount'])) {
-            $error_msg = "Your outstanding Salary Advance Loan balance of Kshs. " . number_format($loan_balance['amount'],2) . " needs to be repaid before applying for a new Salary Advance Loan. For further assistance please call our customer care line: 0704 000 999.";
+            $error_msg = "Your outstanding Salary Advance Loan balance of Kshs. " . number_format($loan_balance['amount'],2) . " needs to be repaid before applying for a new Salary Advance Loan. For further assistance please call our customer care line: ".env('CUSTOMERCARE_NUMBER');
             //$error_msg = "Sorry. You have an outstanding loan balance of Ksh ".$balance['amount'].". Please pay and apply for loan.";
             //$notify->sendSms($user->phone_no,$error_msg);
             self::sendResponse($error_msg, 2, $user);
@@ -1008,14 +1008,14 @@ class UssdController extends Controller
             //$response = "Your current loan balance is Ksh 0";
         }
         if ($loanAccounts[0]->status->pendingApproval == 1) {
-            $error_msg = "Your previous Salary Advance Loan application is pending approval. You will receive a confirmation SMS on disbursement of funds to your M-pesa account. For further assistance please call our customer care line: 0704 000 999";
+            $error_msg = "Your previous Salary Advance Loan application is pending approval. You will receive a confirmation SMS on disbursement of funds to your M-pesa account. For further assistance please call our customer care line: ".env('CUSTOMERCARE_NUMBER');
             //$error_msg = "Sorry .You have an outstanding loan balance of Ksh ".$loan->principal.". Please pay and apply for loan.";
             $notify->sendSms($user->phone_no, $error_msg);
             self::sendResponse($error_msg, 2, $user);
 
         }
         if ($loanAccounts[0]->status->waitingForDisbursal == 1) {
-            $error_msg = "Your previous Salary Advance Loan application is pending disbursement. You will receive a confirmation SMS on disbursement of funds to your M-pesa account. For further assistance please call our customer care line: 0704 000 999";
+            $error_msg = "Your previous Salary Advance Loan application is pending disbursement. You will receive a confirmation SMS on disbursement of funds to your M-pesa account. For further assistance please call our customer care line: ".env('CUSTOMERCARE_NUMBER');
             //$error_msg = "Sorry .You have an outstanding loan balance of Ksh ".$loan->principal.". Please pay and apply for loan.";
             $notify->sendSms($user->phone_no, $error_msg);
             self::sendResponse($error_msg, 2, $user);
@@ -1071,17 +1071,17 @@ class UssdController extends Controller
                     $loan = self::getLoan($loanAccounts[0]->id);
                     $balance = self::getLoanBalance($user->client_id);
                     if (!empty($balance['amount'])) {
-                        $error_msg = "Your outstanding Salary Advance Loan balance of Kshs. " . $balance['amount'] . " needs to be repaid before applying for a new Salary Advance Loan. For further assistance please call our customer care line: 0704 000 999.";
+                        $error_msg = "Your outstanding Salary Advance Loan balance of Kshs. " . $balance['amount'] . " needs to be repaid before applying for a new Salary Advance Loan. For further assistance please call our customer care line: ".env('CUSTOMERCARE_NUMBER');
                         self::sendResponse($error_msg, 2, $user);
                     }
                     if ($loanAccounts[0]->status->pendingApproval == 1) {
-                        $error_msg = "Your previous Salary Advance Loan application is pending approval. You will receive a confirmation SMS on disbursement of funds to your M-pesa account. For further assistance please call our customer care line: 0704 000 999";
+                        $error_msg = "Your previous Salary Advance Loan application is pending approval. You will receive a confirmation SMS on disbursement of funds to your M-pesa account. For further assistance please call our customer care line: ".env('CUSTOMERCARE_NUMBER');
                         $notify->sendSms($user->phone_no, $error_msg);
                         self::sendResponse($error_msg, 2, $user);
 
                     }
                     if ($loanAccounts[0]->status->waitingForDisbursal == 1) {
-                        $error_msg = "Your previous Salary Advance Loan application is pending approval. You will receive a confirmation SMS on disbursement of funds to your M-pesa account. For further assistance please call our customer care line: 0704 000 999";
+                        $error_msg = "Your previous Salary Advance Loan application is pending approval. You will receive a confirmation SMS on disbursement of funds to your M-pesa account. For further assistance please call our customer care line: ".env('CUSTOMERCARE_NUMBER');
                         $notify->sendSms($user->phone_no, $error_msg);
                         self::sendResponse($error_msg, 2, $user);
 
@@ -1219,7 +1219,7 @@ class UssdController extends Controller
                     $user->save();
                     self::resetUser($user);
                     $menu = menu::find(9);
-                    $response = "Dear " . $full_name . ", you will receive a confirmation SMS on activation. For further assistance please call our customer care line 0704 000 999";
+                    $response = "Dear " . $full_name . ", you will receive a confirmation SMS on activation. For further assistance please call our customer care line ".env('CUSTOMERCARE_NUMBER');
                     self::resetUser($user);
                     $notify = new NotifyController();
                     $notify->sendSms($user->phone_no, $response);
@@ -1476,7 +1476,7 @@ class UssdController extends Controller
             //get user specific loan limit
             $limit = self::getLoanLimit($user->client_id);
             if (($message > $limit) && ($limit > 0)) {
-                $response = "Dear Customer, you have requested for a loan above your limit. Please re-apply within your limit of Kshs " . number_format($limit) . ". For further assistance please call our customer care line: 0704 000 999";
+                $response = "Dear Customer, you have requested for a loan above your limit. Please re-apply within your limit of Kshs " . number_format($limit) . ". For further assistance please call our customer care line: ".env('CUSTOMERCARE_NUMBER');
                 self::sendResponse($response, 2, $user);
                 exit;
             }
@@ -1714,7 +1714,7 @@ class UssdController extends Controller
 //        });
 
         if ($limit<1) {
-            $error_msg = "Your outstanding Salary Advance Loan balance of Kshs. " . $balance['amount'] . " needs to be repaid before applying for a new Salary Advance Loan. For further assistance please call our customer care line: 0704 000 999.";
+            $error_msg = "Your outstanding Salary Advance Loan balance of Kshs. " . $balance['amount'] . " needs to be repaid before applying for a new Salary Advance Loan. For further assistance please call our customer care line: ".env('CUSTOMERCARE_NUMBER');
             self::sendResponse($error_msg, 2, $user);
         }
 
@@ -1757,13 +1757,13 @@ class UssdController extends Controller
                 self::sendResponse($error_msg, 2, $user);
                 break;
             } elseif (($la->status->pendingApproval == 1) && ($la->productId == $product_id)) {
-                $error_msg = "Your previous Salary Advance Loan application is pending approval. You will receive a confirmation SMS on disbursement of funds to your M-pesa account. For further assistance please call our customer care line: 0704 000 999";
+                $error_msg = "Your previous Salary Advance Loan application is pending approval. You will receive a confirmation SMS on disbursement of funds to your M-pesa account. For further assistance please call our customer care line: ".env('CUSTOMERCARE_NUMBER');
                 $notify = new NotifyController();
                 $notify->sendSms($user->phone_no, $error_msg);
                 self::sendResponse($error_msg, 2, $user);
                 break;
             } elseif (($la->status->waitingForDisbursal == 1) && ($la->productId == $product_id)) {
-                $error_msg = "Your previous Salary Advance Loan application is pending disbursement. You will receive a confirmation SMS on disbursement of funds to your M-pesa account. For further assistance please call our customer care line: 0704 000 999";
+                $error_msg = "Your previous Salary Advance Loan application is pending disbursement. You will receive a confirmation SMS on disbursement of funds to your M-pesa account. For further assistance please call our customer care line: ".env('CUSTOMERCARE_NUMBER');
                 $notify = new NotifyController();
                 $notify->sendSms($user->phone_no, $error_msg);
                 self::sendResponse($error_msg, 2, $user);
@@ -1834,7 +1834,7 @@ class UssdController extends Controller
         }
         $user = self::is_user_active($user);
         if ($user->active_status != 1) {
-            $response = "Dear " . $user->name . ", you will receive a confirmation SMS on activation. For further assistance please call our customer care line 0704 000 999";
+            $response = "Dear " . $user->name . ", you will receive a confirmation SMS on activation. For further assistance please call our customer care line ".env('CUSTOMERCARE_NUMBER');
             self::sendResponse($response, 3);
         }
 
