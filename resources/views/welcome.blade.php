@@ -79,7 +79,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Hazina Microfinance
+                    Hazina Microfinance  
                 </div>
 
                 {{--<div class="links">--}}
