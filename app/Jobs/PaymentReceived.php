@@ -66,18 +66,14 @@ class PaymentReceived extends Job implements ShouldQueue
         $transaction = Payment::whereTransactionId($data['transaction_id'])->first();
 
         if($transaction == null) {
-            // Immediately process payment if Business or PayCheque loan payment
-//            if($data['paybill'] == BLP_PAYBILL || $data['paybill'] == PCL_PAYBILL) {
+            $payment = Payment::create($data);
 
                 if(self::processLoan($data)) {
                     $data['status'] = 1;
                 } else {
                     $data['status'] = 2;
                 }
-//            }
 
-            // Save the payment object
-            Payment::create($data);
         }
     }
 
@@ -112,7 +108,8 @@ class PaymentReceived extends Job implements ShouldQueue
         return ucfirst($clientName);
     }
     public function processLoan($payment_data){
-
+        echo "hapa";
+        exit;
         $ussd = new UssdController();
 
         //$response = $ussd->getPCLLoanfromPhone($data['phone']);

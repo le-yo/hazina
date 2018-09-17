@@ -22,32 +22,23 @@ class DatatablesController extends Controller
     {
 
 
-        return Datatables::of(Payment::whereStatus(null)->orderBy('transaction_time', 'desc')->get())
+        return Datatables::of(Payment::whereStatus(0)->orderBy('transaction_time', 'desc')->get())
             ->editColumn('transaction_time', function ($payment) {
                 return Carbon::parse($payment->transaction_time)->format('j F Y h:i A');
             })->editColumn('amount', function ($payment) {
                 return number_format($payment->amount);
             })->editColumn('category', function ($payment) {
 
-                $category = categories::find($payment->category);
-                if($category){
-                    return '<a href="/paymentcategory/'.$category->id.'">'.$category->name.'</a>';
-                }else{
+//                $category = categories::find($payment->category);
+//                if($category){
+//                    return '<a href="/paymentcategory/'.$category->id.'">'.$category->name.'</a>';
+//                }else{
                     return "Payment not categorized";
-                }
+//                }
 //                return number_format($payment->amount);
             })->editColumn('action', function($id) {
-                $categories = categories::all();
 
-                $action = '<ul class="list-unstyled list-inline">';
-                foreach ($categories as $category){
-
-                    $action = $action.'<li>
-                                <a href="'.url('categorizePayment/'.$category->id.'/'.$id->id).'" class="btn btn-xs btn-info"><i class="icon-map"></i>'.$category->name.'</a>
-                            </li>';
-
-                }
-                $action = $action.'<ul>';
+                    $action = '';
 
                 return $action;
             })->make(true);
