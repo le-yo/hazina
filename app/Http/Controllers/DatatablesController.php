@@ -38,7 +38,9 @@ class DatatablesController extends Controller
 //                return number_format($payment->amount);
             })->editColumn('action', function($id) {
 
-                    $action = '';
+                    $action = '
+                                <a href="'.url('collectionSheet/'.$id).'" class="btn btn-xs btn-info"><i class="icon-map"></i>Collection Sheet</a>
+                            ';
 
                 return $action;
             })->make(true);

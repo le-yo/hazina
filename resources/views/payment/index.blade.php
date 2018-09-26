@@ -68,7 +68,7 @@
 												<th>Account</th>
 												<th>Amount</th>
 												<th>Transaction Time</th>
-												<th>Comment</th>
+												{{--<th>Comment</th>--}}
 												<th>Actions</th>
 											</tr>
 											</thead>
@@ -89,7 +89,7 @@
 												<th>Account</th>
 												<th>Amount</th>
 												<th>Transaction Time</th>
-												<th>Comment</th>
+												{{--<th>Comment</th>--}}
 												<th>Actions</th>
 											</tr>
 											</thead>
@@ -110,7 +110,7 @@
 												<th>Account</th>
 												<th>Amount</th>
 												<th>Transaction Time</th>
-												<th>Comment</th>
+												{{--<th>Comment</th>--}}
 												<th>Actions</th>
 											</tr>
 											</thead>
@@ -158,7 +158,7 @@
 					{data: 'account_no', name: 'account_no',sClass:"numericCol"},
 					{data: 'amount', name: 'amount',sClass:"numericCol"},
 					{data: 'transaction_time', name: 'transaction_time',sClass:"numericCol"},
-					{data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
+					// {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
 					{data: 'action', name: 'action',sClass:"numericCol", searchable: false}
 				],
                 drawCallback: function(settings) {
@@ -252,7 +252,7 @@
 					{data: 'account_no', name: 'account_no',sClass:"numericCol"},
 					{data: 'amount', name: 'amount',sClass:"numericCol"},
 					{data: 'transaction_time', name: 'transaction_time',sClass:"numericCol"},
-					{data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
+					// {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
 					{data: 'action', name: 'action',sClass:"numericCol", searchable: false}
 				],
                 drawCallback: function(settings) {
@@ -345,7 +345,7 @@
 					{data: 'account_no', name: 'account_no',sClass:"numericCol"},
 					{data: 'amount', name: 'amount',sClass:"numericCol"},
 					{data: 'transaction_time', name: 'transaction_time',sClass:"numericCol"},
-					{data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
+					// {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
 					{data: 'action', name: 'action',sClass:"numericCol", searchable: false}
 				],
                 drawCallback: function(settings) {
