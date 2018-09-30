@@ -176,5 +176,6 @@ Route::resource('users', 'UserController');
 
 
 Route::get('preapproved-clients','ClientsController@index');
+Route::get('collectionSheet/{id}','PaymentsController@collectionSheet');
 Route::get('preapproved-clients/upload','ClientsController@upload');
 Route::post('preapproved-clients/upload','ClientsController@storeUpload');

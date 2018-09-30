@@ -37,6 +37,27 @@ class PaymentsController extends Controller
         $this->dispatch($payment);
     }
 
+    public function collectionSheet($id) {
+        $payment = Payment::find($id);
+        //Get Collection Sheet
+        $postURl = MIFOS_URL . "/centers/".$payment->account_no."?command=generateCollectionSheet&" . MIFOS_tenantIdentifier;
+
+        $data = array();
+        $data['dateFormat'] = 'dd MMMM yyyy';
+        $data['locale'] = 'en_GB';
+        $data['calendarId'] = 6;
+        $data['transactionDate'] = Carbon::now()->format('d M Y');
+
+        // post the encoded application details
+        $collectionSheet = Hooks::MifosPostTransaction($postURl, json_encode($data));
+        if(count($collectionSheet) == 0){
+            session(['error' => 'Invalid account or centre ID']);
+            return redirect()->back()->with('Error', 'Invalid account or centre ID');
+        }
+        $success = 'CollectionSheet retrieved successfully';
+        return view('payment.collection',compact('collectionSheet','success'));
+    }
+
     /**
      * Gets the loan details matching with the phone number of the transaction
      * Posts the loan repayment details to the respective loan id
