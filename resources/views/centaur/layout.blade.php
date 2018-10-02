@@ -73,8 +73,8 @@
                                                         </a>
 
                                                         <ul class="dropdown-menu" role="menu">
-                                                             <li class="{{ Request::is('users*') ? 'active' : '' }}"><a href="{{ url('/users') }}"><i class="icon-people"></i>&nbsp;Users</a></li>
-                                                             <li class="{{ Request::is('users*') ? 'active' : '' }}"><a href="{{ url('/preapproved-clients') }}"><i class="icon-people"></i>Preapproved Clients</a></li>
+                                                             {{--<li class="{{ Request::is('users*') ? 'active' : '' }}"><a href="{{ url('/users') }}"><i class="icon-people"></i>&nbsp;Users</a></li>--}}
+                                                             {{--<li class="{{ Request::is('users*') ? 'active' : '' }}"><a href="{{ url('/preapproved-clients') }}"><i class="icon-people"></i>Preapproved Clients</a></li>--}}
 
                                                             <li>
                                                                 <a href="{{ route('logout') }}"
