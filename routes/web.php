@@ -155,6 +155,7 @@ Route::get('loans/disbursed/datatables/{loanProductId}', ['as' => 'loans.disburs
 
 // Mpesa
 Route::post('payments/receiver', ['as' => 'payments.receiver', 'uses' => 'PaymentsController@receiver']);
+Route::post('collectionSheetPost', ['as' => 'payments.receiver', 'uses' => 'PaymentsController@collectionSheetPost']);
 
 // Process Payments and Payments functions
 Route::get('makePayment/{note}/{id}/', 'PaymentsController@loanRepayment');

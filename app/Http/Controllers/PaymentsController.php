@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
@@ -50,12 +51,19 @@ class PaymentsController extends Controller
 
         // post the encoded application details
         $collectionSheet = Hooks::MifosPostTransaction($postURl, json_encode($data));
+
+//        print_r($collectionSheet);
+//        exit;
         if(count($collectionSheet) == 0){
             session(['error' => 'Invalid account or centre ID']);
             return redirect()->back()->with('Error', 'Invalid account or centre ID');
         }
         $success = 'CollectionSheet retrieved successfully';
         return view('payment.collection',compact('collectionSheet','success'));
+    }
+
+    public function collectionSheetPost(Request $request){
+        return json_encode($request->all());
     }
 
     /**

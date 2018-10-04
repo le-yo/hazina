@@ -31,31 +31,34 @@
                         @foreach($group->clients as $client)
                             <tr>
                                 <td>{!! $client->clientName !!}</td>
+                                {{--<td><a href="#" id="username" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Enter username">superuser</a></td>--}}
                                 @if(isset($client->loans[1]->totalDue))
-                                <td>{!! $client->loans[1]->totalDue !!}</td>
+                                <td><a href="#" class="edittable" id="{!! 'MML_group_'.$group->groupId.'_client_'.$client->clientId !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">{!! $client->loans[1]->totalDue !!}</a></td>
                                 @else
-                                    <td>0</td>
+                                    <td><a href="#" class="edittable" id="{!! 'group_'.$group->groupId.'_client_'.$client->clientId !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">0</a></td>
                                 @endif
-
                                 @if(isset($client->loans[2]->totalDue))
-                                    <td>{!! $client->loans[2]->totalDue !!}</td>
+                                    <td><a href="#" class="edittable" id="{!! 'CFL_group_'.$group->groupId.'_client_'.$client->clientId !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">{!! $client->loans[2]->totalDue !!}</a></td>
+
                                 @else
-                                    <td>0</td>
+                                    <td><a href="#" class="edittable" id="{!! 'CFL_group_'.$group->groupId.'_client_'.$client->clientId !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">0</a></td>
                                 @endif
                                 @if(isset($client->loans[0]->totalDue))
-                                    <td>{!! $client->loans[0]->totalDue !!}</td>
+                                    <td><a href="#" class="edittable" id="{!! 'MIL_group_'.$group->groupId.'_client_'.$client->clientId !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">{!! $client->loans[0]->totalDue !!}</a></td>
+
                                 @else
-                                    <td>0</td>
+                                    <td><a href="#" class="edittable" id="{!! 'MIL_group_'.$group->groupId.'_client_'.$client->clientId !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">0</a></td>
+
                                 @endif
                                 @if(isset($client->savings[0]->dueAmount))
-                                    <td>{!! $client->savings[0]->dueAmount !!}</td>
+                                    <td><a href="#" class="edittable" id="{!! 'TAC_group_'.$group->groupId.'_client_'.$client->clientId !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">{!! $client->savings[0]->dueAmount !!}</a></td>
                                 @else
-                                    <td>0</td>
+                                    <td><a href="#" class="edittable" id="{!! 'TAC_group_'.$group->groupId.'_client_'.$client->clientId !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">0</a></td>
                                 @endif
                                 @if(isset($client->savings[1]->dueAmount))
-                                    <td>{!! $client->savings[1]->dueAmount !!}</td>
+                                    <td><a href="#" class="edittable" id="{!! 'CCF_group_'.$group->groupId.'_client_'.$client->clientId !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">{!! $client->savings[1]->dueAmount !!}</a></td>
                                 @else
-                                    <td>0</td>
+                                    <td><a href="#" class="edittable" id="{!! 'CCF_group_'.$group->groupId.'_client_'.$client->clientId !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">0</a></td>
                                 @endif
                                 <td><select class="custom-select">
                                         @foreach($collectionSheet->attendanceTypeOptions as $attendanceTypeOption)
@@ -86,5 +89,15 @@
 			text-align: right;
 		}
 	</style>
+
     <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+    <script>
+        $.fn.editable.defaults.mode = 'inline';
+        $.fn.editable.defaults.highlight = '#bc64ff';
+        $('.edittable').editable({
+            type: 'text',
+            url: '/collectionSheetPost',
+            title: 'Enter new value',
+        });
+    </script>
 @endpush

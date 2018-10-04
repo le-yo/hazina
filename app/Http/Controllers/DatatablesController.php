@@ -48,7 +48,7 @@ class DatatablesController extends Controller
 
     public function getProcessedPayments()
     {
-        return Datatables::of(Payment::whereStatus(1)->orderBy('transaction_time', 'desc')->get())
+        return Datatables::of(Payment::whereStatus(3)->orderBy('transaction_time', 'desc')->get())
             ->editColumn('transaction_time', function ($payment) {
                 return Carbon::parse($payment->transaction_time)->format('j F Y h:i A');
             })->editColumn('amount', function ($payment) {
