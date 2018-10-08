@@ -52,14 +52,70 @@ class PaymentsController extends Controller
         // post the encoded application details
         $collectionSheet = Hooks::MifosPostTransaction($postURl, json_encode($data));
 
-//        print_r($collectionSheet);
-//        exit;
+
+
         if(count($collectionSheet) == 0){
             session(['error' => 'Invalid account or centre ID']);
             return redirect()->back()->with('Error', 'Invalid account or centre ID');
         }
+        //get totals
+        $sum = array();
+        $final_array = array();
+        $totals_sum = array();
+        foreach ($collectionSheet->groups as $group){
+            $final_group = array();
+            $group_sum = [
+                'loan'=>array(),
+                'savings'=> array(),
+            ];
+
+
+            foreach ($group->clients as $client){
+                $final_client = array();
+                //rearrange client loans
+                if(isset($client->loans)) {
+
+                    foreach ($client->loans as $loan) {
+
+                        if(count($loan)>0) {
+                            if(!isset($group_sum['loan'][$loan->productId])){
+                                $group_sum['loan'][$loan->productId] = 0;
+                            }
+                            if(!isset($totals_sum['loan'][$loan->productId])){
+                                $totals_sum['loan'][$loan->productId] = 0;
+                            }
+                            $final_client['loan'][$loan->productId] = $loan;
+                            $group_sum['loan'][$loan->productId] = $group_sum['loan'][$loan->productId] + $loan->totalDue;
+                            $totals_sum['loan'][$loan->productId] = $totals_sum['loan'][$loan->productId] + $loan->totalDue;
+                        }
+                    }
+                }
+
+                //rearrange client savings
+                if(isset($client->savings)) {
+                    foreach ($client->savings as $saving) {
+                        if(!isset($group_sum['savings'][$saving->productId])) {
+                            $group_sum['savings'][$saving->productId] =0;
+                        }
+                        if(!isset($totals_sum['savings'][$saving->productId])) {
+                            $totals_sum['savings'][$saving->productId] =0;
+                        }
+                        $final_client['savings'][$saving->productId] = $saving;
+                            $group_sum['savings'][$saving->productId] = $group_sum['savings'][$saving->productId] + $saving->dueAmount;
+                            $totals_sum['savings'][$saving->productId] = $totals_sum['savings'][$saving->productId] + $saving->dueAmount;
+                    }
+                }
+                $final_group[$client->clientId] = $final_client;
+            }
+            $sum[$group->groupId] = $group_sum;
+            $final_array[$group->groupId]=$final_group;
+        }
         $success = 'CollectionSheet retrieved successfully';
-        return view('payment.collection',compact('collectionSheet','success'));
+        return view('payment.collection',compact('collectionSheet','success','sum','final_array','totals_sum'));
+    }
+
+    public function saveCollectionSheet($id){
+
     }
 
     public function collectionSheetPost(Request $request){
