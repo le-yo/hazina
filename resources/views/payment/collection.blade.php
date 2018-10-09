@@ -128,11 +128,31 @@
                     <tbody>
                 <tr>
                     <td>Total Total</td>
+                    @if(isset($totals_sum['loan'][2]))
                         <td>{!! $totals_sum['loan'][2] !!}</td>
+                    @else
+                        <td>0</td>
+                    @endif
+                    @if(isset($totals_sum['loan'][5]))
                         <td>{!! $totals_sum['loan'][5] !!}</td>
+                    @else
+                        <td>0</td>
+                    @endif
+                    @if(isset($totals_sum['loan'][6]))
                         <td>{!! $totals_sum['loan'][6] !!}</td>
-                        <td>{!! $totals_sum['savings'][7] !!}</td>
-                        <td>{!! $totals_sum['savings'][3] !!}</td>
+                    @else
+                        <td>0</td>
+                    @endif
+                    @if(isset($totals_sum['savings'][7]))
+                        <td>{!! $totals_sum['loan'][7] !!}</td>
+                    @else
+                        <td>0</td>
+                    @endif
+                    @if(isset($totals_sum['savings'][3]))
+                        <td>{!! $totals_sum['loan'][3] !!}</td>
+                    @else
+                        <td>0</td>
+                    @endif
                     <td>
                     </td>
                 </tr>
@@ -160,7 +180,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
     <script>
         $.fn.editable.defaults.mode = 'inline';
-        $.fn.editable.defaults.highlight = '#bc64ff';
+        // $.fn.editable.defaults.highlight = '#bc64ff';
         $('.edittable').editable({
             type: 'text',
             url: '/collectionSheetPost',
