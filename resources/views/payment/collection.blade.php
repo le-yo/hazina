@@ -179,8 +179,6 @@
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
     <script>
-        $.fn.editable.defaults.mode = 'inline';
-        // $.fn.editable.defaults.highlight = '#bc64ff';
         $('.edittable').editable({
             type: 'text',
             url: '/collectionSheetPost',
