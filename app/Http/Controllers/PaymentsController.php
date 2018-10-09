@@ -110,6 +110,23 @@ class PaymentsController extends Controller
             $sum[$group->groupId] = $group_sum;
             $final_array[$group->groupId]=$final_group;
         }
+
+        //initializing loans
+        if(!isset($totals_sum['savings'][7])) {
+            $totals_sum['savings'][7] =0;
+        }
+        if(!isset($totals_sum['savings'][3])) { 
+            $totals_sum['savings'][3] =0;
+        }
+        if(!isset($totals_sum['loan'][2])) {
+            $totals_sum['loan'][2] =0;
+        }
+        if(!isset($totals_sum['loan'][5])) {
+            $totals_sum['loan'][5] =0;
+        }
+        if(!isset($totals_sum['loan'][6])) {
+            $totals_sum['loan'][6] =0;
+        }
         $success = 'CollectionSheet retrieved successfully';
         return view('payment.collection',compact('collectionSheet','success','sum','final_array','totals_sum'));
     }
