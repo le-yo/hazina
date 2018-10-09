@@ -144,12 +144,12 @@
                         <td>0</td>
                     @endif
                     @if(isset($totals_sum['savings'][7]))
-                        <td>{!! $totals_sum['loan'][7] !!}</td>
+                        <td>{!! $totals_sum['savings'][7] !!}</td>
                     @else
                         <td>0</td>
                     @endif
                     @if(isset($totals_sum['savings'][3]))
-                        <td>{!! $totals_sum['loan'][3] !!}</td>
+                        <td>{!! $totals_sum['savings'][3] !!}</td>
                     @else
                         <td>0</td>
                     @endif
