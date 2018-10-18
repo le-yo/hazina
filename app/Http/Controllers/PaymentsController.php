@@ -115,7 +115,7 @@ class PaymentsController extends Controller
         if(!isset($totals_sum['savings'][7])) {
             $totals_sum['savings'][7] =0;
         }
-        if(!isset($totals_sum['savings'][3])) { 
+        if(!isset($totals_sum['savings'][3])) {
             $totals_sum['savings'][3] =0;
         }
         if(!isset($totals_sum['loan'][2])) {

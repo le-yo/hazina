@@ -34,32 +34,32 @@
 
                                 {{--<td><a href="#" id="username" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Enter username">superuser</a></td>--}}
                                 @if(isset($final_array[$group->groupId][$client->clientId]['loan'][2]->totalDue))
-                                <td><a href="#" class="edittable" id="{!! 'MML_group_'.$group->groupId.'_client_'.$client->clientId !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">{!! $final_array[$group->groupId][$client->clientId]['loan'][2]->totalDue !!}</a></td>
+                                <td><a href="#" class="edittable" id="{!! 'loan_'.$group->groupId.'_'.$client->clientId.'_2' !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">{!! $final_array[$group->groupId][$client->clientId]['loan'][2]->totalDue !!}</a></td>
                                 @else
-                                    <td><a href="#" class="edittable" id="{!! 'group_'.$group->groupId.'_client_'.$client->clientId !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">0</a></td>
+                                    <td><a href="#" class="edittable" id="{!! 'loan_'.$group->groupId.'_'.$client->clientId.'_2' !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">0</a></td>
                                 @endif
                                 @if(isset($final_array[$group->groupId][$client->clientId]['loan'][5]->totalDue))
-                                    <td><a href="#" class="edittable" id="{!! 'CFL_group_'.$group->groupId.'_client_'.$client->clientId !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">{!! $final_array[$group->groupId][$client->clientId]['loan'][5]->totalDue !!}</a></td>
+                                    <td><a href="#" class="edittable" id="{!! 'loan_'.$group->groupId.'_'.$client->clientId.'_5' !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">{!! $final_array[$group->groupId][$client->clientId]['loan'][5]->totalDue !!}</a></td>
 
                                 @else
-                                    <td><a href="#" class="edittable" id="{!! 'CFL_group_'.$group->groupId.'_client_'.$client->clientId !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">0</a></td>
+                                    <td><a href="#" class="edittable" id="{!! 'loan_'.$group->groupId.'_'.$client->clientId.'_5' !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">0</a></td>
                                 @endif
                                 @if(isset($final_array[$group->groupId][$client->clientId]['loan'][6]->totalDue))
-                                    <td><a href="#" class="edittable" id="{!! 'MIL_group_'.$group->groupId.'_client_'.$client->clientId !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">{!! $final_array[$group->groupId][$client->clientId]['loan'][6]->totalDue !!}</a></td>
+                                    <td><a href="#" class="edittable" id="{!! 'loan_'.$group->groupId.'_'.$client->clientId.'_6' !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">{!! $final_array[$group->groupId][$client->clientId]['loan'][6]->totalDue !!}</a></td>
 
                                 @else
-                                    <td><a href="#" class="edittable" id="{!! 'MIL_group_'.$group->groupId.'_client_'.$client->clientId !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">0</a></td>
+                                    <td><a href="#" class="edittable" id="{!! 'loan_'.$group->groupId.'_'.$client->clientId.'_6' !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">0</a></td>
 
                                 @endif
                                 @if(isset($final_array[$group->groupId][$client->clientId]['savings'][7]->dueAmount))
-                                    <td><a href="#" class="edittable" id="{!! 'TAC_group_'.$group->groupId.'_client_'.$client->clientId !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">{!! $final_array[$group->groupId][$client->clientId]['savings'][7]->dueAmount !!}</a></td>
+                                    <td><a href="#" class="edittable" id="{!! 'savings_'.$group->groupId.'_'.$client->clientId.'_7' !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">{!! $final_array[$group->groupId][$client->clientId]['savings'][7]->dueAmount !!}</a></td>
                                 @else
-                                    <td><a href="#" class="edittable" id="{!! 'TAC_group_'.$group->groupId.'_client_'.$client->clientId !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">0</a></td>
+                                    <td><a href="#" class="edittable" id="{!! 'savings_'.$group->groupId.'_'.$client->clientId.'_7' !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">0</a></td>
                                 @endif
                                 @if(isset($final_array[$group->groupId][$client->clientId]['savings'][3]->dueAmount))
-                                    <td><a href="#" class="edittable" id="{!! 'CCF_group_'.$group->groupId.'_client_'.$client->clientId !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">{!! $final_array[$group->groupId][$client->clientId]['savings'][3]->dueAmount !!}</a></td>
+                                    <td><a href="#" class="edittable" id="{!! 'savings_'.$group->groupId.'_'.$client->clientId.'_3' !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">{!! $final_array[$group->groupId][$client->clientId]['savings'][3]->dueAmount !!}</a></td>
                                 @else
-                                    <td><a href="#" class="edittable" id="{!! 'CCF_group_'.$group->groupId.'_client_'.$client->clientId !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">0</a></td>
+                                    <td><a href="#" class="edittable" id="{!! 'savings_'.$group->groupId.'_'.$client->clientId.'_3' !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">0</a></td>
                                 @endif
                                 <td><select class="custom-select">
                                         @foreach($collectionSheet->attendanceTypeOptions as $attendanceTypeOption)
