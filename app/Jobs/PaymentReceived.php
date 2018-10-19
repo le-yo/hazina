@@ -59,6 +59,7 @@ class PaymentReceived extends Job implements ShouldQueue
         $data['transaction_id'] = $xml->getElementsByTagName('TransID')->item(0)->nodeValue;
         $data['amount'] = $xml->getElementsByTagName('TransAmount')->item(0)->nodeValue;
         $data['account_no'] = $xml->getElementsByTagName('BillRefNumber')->item(0)->nodeValue;
+        $data['externalId'] = $xml->getElementsByTagName('BillRefNumber')->item(0)->nodeValue;
         $data['transaction_time'] = $xml->getElementsByTagName('TransTime')->item(0)->nodeValue;
         $data['paybill'] = $xml->getElementsByTagName('BusinessShortCode')->item(0)->nodeValue;
 
@@ -69,11 +70,11 @@ class PaymentReceived extends Job implements ShouldQueue
             $payment = Payment::create($data);
 
                 if(self::processLoan($data)) {
-                    $data['status'] = 1;
+                    $payment->status = 1;
                 } else {
-                    $data['status'] = 2;
+                    $payment->status = 2;
                 }
-
+            $payment->save();
         }
     }
 
@@ -107,37 +108,138 @@ class PaymentReceived extends Job implements ShouldQueue
 
         return ucfirst($clientName);
     }
-    public function processLoan($payment_data){
-        echo "hapa";
-        exit;
-        $ussd = new UssdController();
+    public function getTransactionClient($data){
+        $externalid = $data['externalId'];
+        $url = MIFOS_URL . "/clients?sqlSearch=(c.external_id%20like%20%27" . $externalid . "%27)&" . MIFOS_tenantIdentifier;
+        // Get all clients
+        $client = Hooks::MifosGetTransaction($url, $post_data = '');
 
-        //$response = $ussd->getPCLLoanfromPhone($data['phone']);
+        if ($client->totalFilteredRecords == 0) {
+            //search by phone
 
-        $data = array();
-        $no = substr($payment_data['phone'], -9);
+            $no = $data['phone'];
+            $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%27" . $no . "%27)&" . MIFOS_tenantIdentifier;
 
-        $user = Ussduser::where('phone_no', "0" . $no)->orWhere('phone_no', "254" . $no)->first();
+            // Get all clients
+            $client = Hooks::MifosGetTransaction($url, $post_data = '');
 
-        if (!$user) {
-            //check on mifos
-            $user = $ussd->verifyPhonefromMifos($no);
-            if (!$user) {
-                $data['error'] = 1;
-                $data['message'] = 'No user found with given phone number found';
-                return json_encode($data);
+            if ($client->totalFilteredRecords == 0) {
+                $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%27254" . $no . "%27)&" . MIFOS_tenantIdentifier;
+
+                // Get all clients
+                $client = Hooks::MifosGetTransaction($url, $post_data = '');
             }
-
         }
 
-        $loanAccounts = self::getClientLoanAccountsInAscendingOrder($user->client_id);
+        $user = FALSE;
+        if ($client->totalFilteredRecords > 0) {
+            $client = $client->pageItems[0];
+            $usr = array();
+            $usr['client_id'] = $client->id;
+            if ($client->status->code == 'clientStatusType.active') {
+                $usr['active_status'] = 1;
+            } else {
+                $usr['active_status'] = 0;
+            }
+            $user = (object) $usr;
+        }
 
+        return $user;
+    }
+
+
+    public function verifyPhonefromMifos($no)
+    {
+        // Get the url for retrieving the specific loan
+        $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%27" . $no . "%27)&" . MIFOS_tenantIdentifier;
+
+        // Get all clients
+        $client = Hooks::MifosGetTransaction($url, $post_data = '');
+
+
+        if ($client->totalFilteredRecords == 0) {
+            $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%270" . $no . "%27)&" . MIFOS_tenantIdentifier;
+
+            // Get all clients
+            $client = Hooks::MifosGetTransaction($url, $post_data = '');
+
+            if ($client->totalFilteredRecords == 0) {
+                $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%27254" . $no . "%27)&" . MIFOS_tenantIdentifier;
+
+                // Get all clients
+                $client = Hooks::MifosGetTransaction($url, $post_data = '');
+            }
+        }
+
+//        print_r($client);
+//        exit;
+        $user = FALSE;
+        if ($client->totalFilteredRecords > 0) {
+            $user = UssdUser::where('phone_no', '254' . $no)->orWhere('phone_no', "0" . $no)->first();
+            $client = $client->pageItems[0];
+            $usr = array();
+            $usr['name'] = $client->displayName;
+            $usr['client_id'] = $client->id;
+            $usr['office_id'] = $client->officeId;
+            $usr['phone_no'] = $client->mobileNo;
+            $usr['session'] = 0;
+            $usr['progress'] = 0;
+            $usr['email'] = $client->mobileNo;
+            $usr['confirm_from'] = 0;
+            $usr['menu_item_id'] = 0;
+            $usr['is_pcl_user'] = 1;
+            if ($client->status->code == 'clientStatusType.active') {
+                $usr['active_status'] = 1;
+            } else {
+                $usr['active_status'] = 0;
+            }
+            //get if user is a pcl user
+//            $pcl_status = self::isPclUser($client->id);
+//            if (count($pcl_status) > 0) {
+//                if ($pcl_status[0]->is_pcl_user == 'true') {
+//                    $usr['is_pcl_user'] = 1;
+//                } else {
+//                    $usr['is_pcl_user'] = 0;
+//                }
+//            } else {
+//                $usr['is_pcl_user'] = 0;
+//            }
+            $user = UssdUser::where('phone_no', '254' . $no)->orWhere('phone_no', "0" . $no)->first();
+            if ($user) {
+                DB::table('users')->where('id', $user->id)->update($usr);
+                $user = UssdUser::where('phone_no', '254' . $no)->orWhere('phone_no', "0" . $no)->first();
+            } else {
+                $user = Ussduser::create($usr);
+            }
+        } else {
+            $usr = array();
+            $usr['name'] = "Another User";
+            $usr['client_id'] = 0;
+            $usr['office_id'] = 0;
+            $usr['phone_no'] = '254' . $no;
+            $usr['session'] = 0;
+            $usr['progress'] = 0;
+            $usr['email'] = '254' . $no;
+            $usr['confirm_from'] = 0;
+            $usr['menu_item_id'] = 0;
+            $usr['is_pcl_user'] = 1;
+            $user = Ussduser::create($usr);
+        }
+        return $user;
+    }
+    public function processLoan($payment_data){
+
+        //get user
+
+        $user = self::getTransactionClient($payment_data);
+
+        $loanAccounts = self::getClientLoanAccountsInAscendingOrder($user->client_id);
         $latest_loan = end($loanAccounts);
         $loan_id = '';
         $loan = '';
         $loan_payment_received = $payment_data['amount'];
         foreach ($loanAccounts as $la) {
-            if (($la->status->active == 1) && ($la->productId == PCL_ID) && ($loan_payment_received>0)) {
+            if (($la->status->active == 1) && ($loan_payment_received>0)) {
 
                 if(($la->loanBalance < $loan_payment_received) && ($la->id !=$latest_loan->id)){
                     $loan_payment_received = $loan_payment_received - $la->loanBalance;
@@ -176,21 +278,21 @@ class PaymentReceived extends Job implements ShouldQueue
                 break;
             }
         }
-                $ussd = new UssdController();
-                $balance = $ussd->getLoanBalance($user->client_id);
-
-                if($balance['amount']>0){
-                    $hooks = new MifosXController();
-
-                    $next_payment = $hooks->checkNextInstallment($latest_loan->id);
-                    //$loan_balance['next_payment'] = $next_payment;
-                    $msg = "Dear ".self::getClientName($user->client_id).", thank you we have received your payment of Kshs. ".number_format($payment_data['amount'],2).". Please clear the outstanding balance Kshs. ".number_format($balance['installment_amount'],2)." due on ".$next_payment['next_date'].". To repay your total outstanding balance, please send Kshs. ".number_format($balance['amount'],2)." to our M-pesa paybill number 963334. For any assistance please call our customer care line 0704 000 999";
-                }else {
-                    $limit = self::getLoanLimit($user->client_id);
-                    $msg = "Dear ".self::getClientName($user->client_id).", your Salary Advance Loan has been fully repaid. You can apply for another Salary Advance Loan immediately within your limit of Kshs ".number_format($limit,2).". Thank you for choosing Uni Ltd.";
-                }
-                $notify = new NotifyController();
-                $notify->sendSms($payment_data['phone'],$msg);
+//                $ussd = new UssdController();
+//                $balance = $ussd->getLoanBalance($user->client_id);
+//
+//                if($balance['amount']>0){
+//                    $hooks = new MifosXController();
+//
+//                    $next_payment = $hooks->checkNextInstallment($latest_loan->id);
+//                    //$loan_balance['next_payment'] = $next_payment;
+//                    $msg = "Dear ".self::getClientName($user->client_id).", thank you we have received your payment of Kshs. ".number_format($payment_data['amount'],2).". Please clear the outstanding balance Kshs. ".number_format($balance['installment_amount'],2)." due on ".$next_payment['next_date'].". To repay your total outstanding balance, please send Kshs. ".number_format($balance['amount'],2)." to our M-pesa paybill number 963334. For any assistance please call our customer care line 0704 000 999";
+//                }else {
+//                    $limit = self::getLoanLimit($user->client_id);
+//                    $msg = "Dear ".self::getClientName($user->client_id).", your Salary Advance Loan has been fully repaid. You can apply for another Salary Advance Loan immediately within your limit of Kshs ".number_format($limit,2).". Thank you for choosing Uni Ltd.";
+//                }
+//                $notify = new NotifyController();
+//                $notify->sendSms($payment_data['phone'],$msg);
             return true;
     }
 

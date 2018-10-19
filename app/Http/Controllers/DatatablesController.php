@@ -22,7 +22,7 @@ class DatatablesController extends Controller
     {
 
 
-        return Datatables::of(Payment::whereStatus(0)->orderBy('transaction_time', 'desc')->get())
+        return Datatables::of(Payment::whereStatus(1)->orderBy('transaction_time', 'desc')->get())
             ->editColumn('transaction_time', function ($payment) {
                 return Carbon::parse($payment->transaction_time)->format('j F Y h:i A');
             })->editColumn('amount', function ($payment) {
@@ -48,20 +48,12 @@ class DatatablesController extends Controller
 
     public function getProcessedPayments()
     {
-        return Datatables::of(Payment::whereStatus(3)->orderBy('transaction_time', 'desc')->get())
+        return Datatables::of(Payment::whereStatus(1)->orderBy('transaction_time', 'desc')->get())
             ->editColumn('transaction_time', function ($payment) {
                 return Carbon::parse($payment->transaction_time)->format('j F Y h:i A');
             })->editColumn('amount', function ($payment) {
                 return number_format($payment->amount);
-            })->editColumn('action', function($id) {
-                return '<ul class="list-unstyled list-inline">
-                            <li>
-                                <a href="'.url('makePayment/unrecognized/'.$id->id).'" class="btn btn-xs btn-info"><i class="icon-ban"></i> Mark as Unrecognized</a>
-                            </li>
-                            <li>
-                        </ul>';
-            })
-            ->make(true);
+            })->make(true);
     }
 
 

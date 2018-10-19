@@ -34,6 +34,12 @@ class UssdController extends Controller
     {
 
 
+        $url = MIFOS_URL . "/clients?sqlSearch=(c.externalId=" . $externalid . ")&" . MIFOS_tenantIdentifier;
+
+
+        $client = Hooks::MifosGetTransaction($url);
+        print_r($client);
+        exit;
         error_reporting(0);
         header('Content-type: text/plain');
         set_time_limit(100000);

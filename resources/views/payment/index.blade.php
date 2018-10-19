@@ -38,21 +38,17 @@
 				<div class="panel-body">
 					<div class="tabs">
 						<ul class="nav nav-tabs">
-							<li class="active">
-								<a href="#unprocessed" role="tab" data-toggle="tab">
+                            <li class="active">
+                                <a href="#processed" role="tab" data-toggle="tab" onclick="processedPaymentsDataTables()">
+                                    <i class="icon-user-following"></i> Processed Payments
+                                </a>
+                            </li>
+							<li>
+								<a href="#unrecognized" role="tab" data-toggle="tab" onclick="unrecognizedPaymentsDataTables()">
 									<i class="icon-user-follow"></i> Unprocessed Payments
 								</a>
 							</li>
-							<li>
-								<a href="#processed" role="tab" data-toggle="tab" onclick="processedPaymentsDataTables()">
-									<i class="icon-user-following"></i> Processed Payments
-								</a>
-							</li>
-							<li>
-								<a href="#unrecognized" role="tab" data-toggle="tab" onclick="unrecognizedPaymentsDataTables()">
-									<i class="icon-user-unfollow"></i> Unrecognized Payments
-								</a>
-							</li>
+
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane fade active in" id="unprocessed">
@@ -69,7 +65,7 @@
 												<th>Amount</th>
 												<th>Transaction Time</th>
 												{{--<th>Comment</th>--}}
-												<th>Actions</th>
+												<th>Status</th>
 											</tr>
 											</thead>
 										</table>
@@ -90,7 +86,7 @@
 												<th>Amount</th>
 												<th>Transaction Time</th>
 												{{--<th>Comment</th>--}}
-												<th>Actions</th>
+												<th>Status</th>
 											</tr>
 											</thead>
 										</table>
@@ -111,7 +107,7 @@
 												<th>Amount</th>
 												<th>Transaction Time</th>
 												{{--<th>Comment</th>--}}
-												<th>Actions</th>
+												<th>Status</th>
 											</tr>
 											</thead>
 										</table>
@@ -158,8 +154,9 @@
 					{data: 'account_no', name: 'account_no',sClass:"numericCol"},
 					{data: 'amount', name: 'amount',sClass:"numericCol"},
 					{data: 'transaction_time', name: 'transaction_time',sClass:"numericCol"},
+                    {data: 'status', name: 'status',sClass:"numericCol", searchable: true}
 					// {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
-					{data: 'action', name: 'action',sClass:"numericCol", searchable: false}
+					// {data: 'action', name: 'action',sClass:"numericCol", searchable: false}
 				],
                 drawCallback: function(settings) {
 				    // Access Datatables API methods
@@ -253,7 +250,8 @@
 					{data: 'amount', name: 'amount',sClass:"numericCol"},
 					{data: 'transaction_time', name: 'transaction_time',sClass:"numericCol"},
 					// {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
-					{data: 'action', name: 'action',sClass:"numericCol", searchable: false}
+					// {data: 'action', name: 'action',sClass:"numericCol", searchable: false}
+					{data: 'status', name: 'status',sClass:"numericCol", searchable: true}
 				],
                 drawCallback: function(settings) {
 				    // Access Datatables API methods
@@ -346,7 +344,8 @@
 					{data: 'amount', name: 'amount',sClass:"numericCol"},
 					{data: 'transaction_time', name: 'transaction_time',sClass:"numericCol"},
 					// {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
-					{data: 'action', name: 'action',sClass:"numericCol", searchable: false}
+					// {data: 'action', name: 'action',sClass:"numericCol", searchable: false}
+                    {data: 'status', name: 'status',sClass:"numericCol", searchable: true}
 				],
                 drawCallback: function(settings) {
 				    // Access Datatables API methods
