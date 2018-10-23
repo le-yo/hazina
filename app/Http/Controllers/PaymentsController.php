@@ -72,7 +72,7 @@ class PaymentsController extends Controller
         $LastName = end($LastName);
 
         $xml = '<?xml version="1.0" encoding="utf-8" ?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><soapenv:Body><ns1:C2BPaymentConfirmationRequest xmlns:ns1="http://cps.huawei.com/cpsinterface/c2bpayment"><TransType>Pay Bill</TransType><TransID>'.$TransID.'</TransID><TransTime>'.$TransTime.'</TransTime><TransAmount>'.$TransAmount.'</TransAmount><BusinessShortCode>'.$BusinessShortCode.'</BusinessShortCode><BillRefNumber>'.$BillRefNumber.'</BillRefNumber><OrgAccountBalance>'.$OrgAccountBalance.'</OrgAccountBalance><MSISDN>'.$MSISDN.'</MSISDN><KYCInfo><KYCName>[Personal Details][First Name]</KYCName><KYCValue>'.$FirstName.'</KYCValue></KYCInfo><KYCInfo><KYCName>[Personal Details][Middle Name]</KYCName><KYCValue>'.$MiddleName.'</KYCValue></KYCInfo><KYCInfo><KYCName>[Personal Details][Last Name]</KYCName><KYCValue>'.$LastName.'</KYCValue></KYCInfo></ns1:C2BPaymentConfirmationRequest></soapenv:Body></soapenv:Envelope>';
-        
+
         $payment = (new PaymentReceived($xml))->delay(5);
         $this->dispatch($payment);
     }
