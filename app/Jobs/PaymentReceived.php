@@ -69,7 +69,7 @@ class PaymentReceived extends Job implements ShouldQueue
         if($transaction == null) {
             $payment = Payment::create($data);
 
-                if(self::processLoan($data)) {
+                if(self::processLoan($data,$payment)) {
                     $payment->status = 1;
                 } else {
                     $payment->status = 2;
@@ -227,12 +227,15 @@ class PaymentReceived extends Job implements ShouldQueue
         }
         return $user;
     }
-    public function processLoan($payment_data){
+    public function processLoan($payment_data,$payment=null){
 
         //get user
 
         $user = self::getTransactionClient($payment_data);
-
+        if(!$user){
+            $payment->comment = "No User found with either the account provided or phone number of the payee";
+            $payment->save();
+        }
         $loanAccounts = self::getClientLoanAccountsInAscendingOrder($user->client_id);
         $latest_loan = end($loanAccounts);
         $loan_id = '';
@@ -270,8 +273,13 @@ class PaymentReceived extends Job implements ShouldQueue
 
                 // check if posting was successful
                 if (array_key_exists('errors', $loanPayment)) {
+                    $payment->comment = "Problem processing loan repayment";
+                    $payment->save();
                     return false;
                 }
+            }else{
+                $payment->comment = "user has no active loan";
+                $payment->save();
             }
 
             if($loan_payment_received ==0){

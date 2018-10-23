@@ -65,7 +65,7 @@
 												<th>Amount</th>
 												<th>Transaction Time</th>
 												<th>Paybill</th>
-												<th>Status</th>
+												<th>Comment</th>
 											</tr>
 											</thead>
 										</table>
@@ -86,7 +86,7 @@
 												<th>Amount</th>
 												<th>Transaction Time</th>
                                                 <th>Paybill</th>
-												<th>Status</th>
+												<th>Comment</th>
 											</tr>
 											</thead>
 										</table>
@@ -107,7 +107,7 @@
 												<th>Amount</th>
 												<th>Transaction Time</th>
                                                 <th>Paybill</th>
-												<th>Status</th>
+												<th>Comment</th>
 											</tr>
 											</thead>
 										</table>
@@ -154,9 +154,9 @@
 					{data: 'account_no', name: 'account_no',sClass:"numericCol"},
 					{data: 'amount', name: 'amount',sClass:"numericCol"},
 					{data: 'transaction_time', name: 'transaction_time',sClass:"numericCol"},
-                    {data: 'paybill', name: 'paybill',sClass:"numericCol"}, 
-                    {data: 'status', name: 'status',sClass:"numericCol", searchable: true},
-					// {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
+                    {data: 'paybill', name: 'paybill',sClass:"numericCol"},
+                    // {data: 'status', name: 'status',sClass:"numericCol", searchable: true},
+					{data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i></i>'},
 					// {data: 'action', name: 'action',sClass:"numericCol", searchable: false}
 				],
                 drawCallback: function(settings) {
@@ -251,9 +251,10 @@
 					{data: 'amount', name: 'amount',sClass:"numericCol"},
 					{data: 'transaction_time', name: 'transaction_time',sClass:"numericCol"},
 					{data: 'paybill', name: 'paybill',sClass:"numericCol"},
+                    {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i></i>'},
 					// {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
 					// {data: 'action', name: 'action',sClass:"numericCol", searchable: false}
-					{data: 'status', name: 'status',sClass:"numericCol", searchable: true}
+					// {data: 'status', name: 'status',sClass:"numericCol", searchable: true}
 				],
                 drawCallback: function(settings) {
 				    // Access Datatables API methods
@@ -346,9 +347,10 @@
 					{data: 'amount', name: 'amount',sClass:"numericCol"},
 					{data: 'transaction_time', name: 'transaction_time',sClass:"numericCol"},
                     {data: 'paybill', name: 'paybill',sClass:"numericCol"},
+                    {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i></i>'},
 					// {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
 					// {data: 'action', name: 'action',sClass:"numericCol", searchable: false}
-                    {data: 'status', name: 'status',sClass:"numericCol", searchable: true}
+                    // {data: 'status', name: 'status',sClass:"numericCol", searchable: true}
 				],
                 drawCallback: function(settings) {
 				    // Access Datatables API methods
