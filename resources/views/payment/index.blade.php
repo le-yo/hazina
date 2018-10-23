@@ -154,8 +154,8 @@
 					{data: 'account_no', name: 'account_no',sClass:"numericCol"},
 					{data: 'amount', name: 'amount',sClass:"numericCol"},
 					{data: 'transaction_time', name: 'transaction_time',sClass:"numericCol"},
+                    {data: 'paybill', name: 'paybill',sClass:"numericCol"}, 
                     {data: 'status', name: 'status',sClass:"numericCol", searchable: true},
-                    {data: 'paybill', name: 'paybill',sClass:"numericCol"},
 					// {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
 					// {data: 'action', name: 'action',sClass:"numericCol", searchable: false}
 				],
