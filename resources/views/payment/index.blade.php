@@ -108,6 +108,7 @@
 												<th>Transaction Time</th>
                                                 <th>Paybill</th>
 												<th>Comment</th>
+												<th>Action</th>
 											</tr>
 											</thead>
 										</table>
@@ -349,7 +350,7 @@
                     {data: 'paybill', name: 'paybill',sClass:"numericCol"},
                     {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i></i>'},
 					// {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
-					// {data: 'action', name: 'action',sClass:"numericCol", searchable: false}
+					{data: 'action', name: 'action',sClass:"numericCol", searchable: false}
                     // {data: 'status', name: 'status',sClass:"numericCol", searchable: true}
 				],
                 drawCallback: function(settings) {

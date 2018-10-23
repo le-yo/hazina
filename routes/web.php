@@ -161,6 +161,7 @@ Route::post('collectionSheetPost', ['as' => 'payments.receiver', 'uses' => 'Paym
 // Process Payments and Payments functions
 Route::get('makePayment/{note}/{id}/', 'PaymentsController@loanRepayment');
 Route::post('payments/comment/{id}', 'PaymentsController@getComment');
+Route::post('payments/editExternalid/{id}', 'PaymentsController@editExternalid');
 Route::get('payments/calculator/{id}', 'PaymentsController@getOutstandingLoan');
 Route::get('payments/extend/{id}', 'PaymentsController@extendLoan');
 

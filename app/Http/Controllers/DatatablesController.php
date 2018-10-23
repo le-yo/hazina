@@ -22,7 +22,7 @@ class DatatablesController extends Controller
     {
 
 
-        return Datatables::of(Payment::whereStatus(1)->orderBy('transaction_time', 'desc')->get())
+        return Datatables::of(Payment::whereStatus(1)->orderBy('updated_at', 'desc')->get())
             ->editColumn('transaction_time', function ($payment) {
                 return Carbon::parse($payment->transaction_time)->format('j F Y h:i A');
             })->editColumn('amount', function ($payment) {
@@ -48,7 +48,7 @@ class DatatablesController extends Controller
 
     public function getProcessedPayments()
     {
-        return Datatables::of(Payment::whereStatus(1)->orderBy('transaction_time', 'desc')->get())
+        return Datatables::of(Payment::whereStatus(1)->orderBy('updated_at', 'desc')->get())
             ->editColumn('transaction_time', function ($payment) {
                 return Carbon::parse($payment->transaction_time)->format('j F Y h:i A');
             })->editColumn('amount', function ($payment) {
@@ -60,20 +60,16 @@ class DatatablesController extends Controller
     public function getUnrecognizedPayments()
     {
 
-        return Datatables::of(Payment::whereStatus(0)->orderBy('transaction_time', 'desc')->get())
+        return Datatables::of(Payment::whereStatus(0)->orderBy('updated_at', 'desc')->get())
             ->editColumn('transaction_time', function ($payment) {
                 return Carbon::parse($payment->transaction_time)->format('j F Y h:i A');
             })->editColumn('amount', function ($payment) {
                 return number_format($payment->amount);
             })->editColumn('action', function($id) {
                 return '<ul class="list-unstyled list-inline">
-                         <li>
-                                <a href="'.url('makePayment/manual/'.$id->id).'" class="btn btn-xs btn-info"><i class="icon-map"></i> Mark as Processed</a>
-                            </li>
                              <li>
-                                <a data-url="'.url('payments/comment/'.$id->id).'" class="btn btn-xs btn-info comment"><i class="icon-note"></i> Add Comment</a>
+                                <a data-url="'.url('payments/comment/'.$id->id).'" class="btn btn-xs btn-info comment"><i class="icon-note"></i>Enter Correct Account</a>
                             </li>
-                            <li>
                         </ul>';
             })
             ->make(true);
