@@ -110,27 +110,27 @@ class PaymentReceived extends Job implements ShouldQueue
     }
     public function getTransactionClient($data){
         $externalid = $data['externalId'];
+
         $url = MIFOS_URL . "/clients?sqlSearch=(c.external_id%20like%20%27" . $externalid . "%27)&" . MIFOS_tenantIdentifier;
         // Get all clients
         $client = Hooks::MifosGetTransaction($url, $post_data = '');
 
         if ($client->totalFilteredRecords == 0) {
             //search by phone
+            $no = substr($data['phone'],-9);
 
-            $no = $data['phone'];
-            $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%27" . $no . "%27)&" . MIFOS_tenantIdentifier;
+            $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%27254" . $no . "%27)&" . MIFOS_tenantIdentifier;
 
             // Get all clients
             $client = Hooks::MifosGetTransaction($url, $post_data = '');
 
             if ($client->totalFilteredRecords == 0) {
-                $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%27254" . $no . "%27)&" . MIFOS_tenantIdentifier;
+                $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%27254" . substr($externalid,-9) . "%27)&" . MIFOS_tenantIdentifier;
 
                 // Get all clients
                 $client = Hooks::MifosGetTransaction($url, $post_data = '');
             }
         }
-
         $user = FALSE;
         if ($client->totalFilteredRecords > 0) {
             $client = $client->pageItems[0];
@@ -146,7 +146,6 @@ class PaymentReceived extends Job implements ShouldQueue
 
         return $user;
     }
-
 
     public function verifyPhonefromMifos($no)
     {
