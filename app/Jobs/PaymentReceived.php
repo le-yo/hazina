@@ -115,6 +115,8 @@ class PaymentReceived extends Job implements ShouldQueue
         // Get all clients
         $client = Hooks::MifosGetTransaction($url, $post_data = '');
 
+        print_r($client);
+        exit;
         if ($client->totalFilteredRecords == 0) {
             //search by phone
             $no = substr($data['phone'],-9);
