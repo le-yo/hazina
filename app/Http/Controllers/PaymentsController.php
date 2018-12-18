@@ -367,7 +367,7 @@ class PaymentsController extends Controller
         $loan = '';
         $loan_payment_received = $payment_data['amount'];
         foreach ($loanAccounts as $la) {
-            if (($la->status->active == 1) && ($loan_payment_received>0)) {
+            if ((($la->status->active == 1) || (($la->status->active == 'Active'))) && ($loan_payment_received>0)) {
 
                 if(($la->loanBalance < $loan_payment_received) && ($la->id !=$latest_loan->id)){
                     $loan_payment_received = $loan_payment_received - $la->loanBalance;
