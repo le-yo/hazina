@@ -459,60 +459,62 @@ class PaymentsController extends Controller
         //get user
 
         $user = self::getTransactionClient($payment_data);
-        if(!$user){
-            $payment->comment = "No User found with either the account provided or phone number of the payee";
-            $payment->save();
-        }
-        $loanAccounts = self::getClientLoanAccountsInAscendingOrder($user->client_id);
-        $latest_loan = end($loanAccounts);
-        $loan_id = '';
-        $loan = '';
-        $loan_payment_received = $payment_data['amount'];
-        foreach ($loanAccounts as $la) {
-            if (($la->status->active == 1) && ($loan_payment_received>0)) {
+//        if(!$user){
+//            $payment->comment = "No User found with either the account provided or phone number of the payee";
+//            $payment->save();
+//        }
 
-                if(($la->loanBalance < $loan_payment_received) && ($la->id !=$latest_loan->id)){
-                    $loan_payment_received = $loan_payment_received - $la->loanBalance;
-                    $amount = $la->loanBalance;
-                }else{
-                    $amount = $loan_payment_received;
-                    $loan_payment_received=0;
-                }
-                // get repayment details
-                $repayment_data = [];
-                $repayment_data['dateFormat'] = 'dd MMMM yyyy';
-                $repayment_data['locale'] = 'en_GB';
-                $repayment_data['transactionDate'] = Carbon::parse($payment_data['transaction_time'])->format('j F Y');
-                $repayment_data['transactionAmount'] = $amount;
-                $repayment_data['paymentTypeId'] = 1;
-                $repayment_data['note'] = 'Payment';
-                $repayment_data['accountNumber'] = $payment_data['phone'];
-                $repayment_data['receiptNumber'] = $payment_data['transaction_id'];
+        if($user) { 
+            $loanAccounts = self::getClientLoanAccountsInAscendingOrder($user->client_id);
+            $latest_loan = end($loanAccounts);
+            $loan_id = '';
+            $loan = '';
+            $loan_payment_received = $payment_data['amount'];
+            foreach ($loanAccounts as $la) {
+                if (($la->status->active == 1) && ($loan_payment_received > 0)) {
 
-                // json encode repayment details
-                $loan_data = json_encode($repayment_data);
+                    if (($la->loanBalance < $loan_payment_received) && ($la->id != $latest_loan->id)) {
+                        $loan_payment_received = $loan_payment_received - $la->loanBalance;
+                        $amount = $la->loanBalance;
+                    } else {
+                        $amount = $loan_payment_received;
+                        $loan_payment_received = 0;
+                    }
+                    // get repayment details
+                    $repayment_data = [];
+                    $repayment_data['dateFormat'] = 'dd MMMM yyyy';
+                    $repayment_data['locale'] = 'en_GB';
+                    $repayment_data['transactionDate'] = Carbon::parse($payment_data['transaction_time'])->format('j F Y');
+                    $repayment_data['transactionAmount'] = $amount;
+                    $repayment_data['paymentTypeId'] = 1;
+                    $repayment_data['note'] = 'Payment';
+                    $repayment_data['accountNumber'] = $payment_data['phone'];
+                    $repayment_data['receiptNumber'] = $payment_data['transaction_id'];
 
-                // url for posting the repayment details
-                $postURl = MIFOS_URL . "/loans/" . $la->id . "/transactions?command=repayment&" . MIFOS_tenantIdentifier;
+                    // json encode repayment details
+                    $loan_data = json_encode($repayment_data);
 
-                // post the encoded repayment details
-                $loanPayment = Hooks::MifosPostTransaction($postURl, $loan_data);
+                    // url for posting the repayment details
+                    $postURl = MIFOS_URL . "/loans/" . $la->id . "/transactions?command=repayment&" . MIFOS_tenantIdentifier;
 
-                // check if posting was successful
-                if (array_key_exists('errors', $loanPayment)) {
-                    $payment->comment = "Problem processing loan repayment";
+                    // post the encoded repayment details
+                    $loanPayment = Hooks::MifosPostTransaction($postURl, $loan_data);
+
+                    // check if posting was successful
+                    if (array_key_exists('errors', $loanPayment)) {
+                        $payment->comment = "Problem processing loan repayment";
+                        $payment->save();
+                        return false;
+                    }
+                } else {
+                    $payment->comment = "user has no active loan";
                     $payment->save();
-                    return false;
                 }
-            }else{
-                $payment->comment = "user has no active loan";
-                $payment->save();
-            }
 
-            if($loan_payment_received ==0){
-                break;
+                if ($loan_payment_received == 0) {
+                    break;
+                }
             }
-        }
 //                $ussd = new UssdController();
 //                $balance = $ussd->getLoanBalance($user->client_id);
 //
@@ -528,7 +530,8 @@ class PaymentsController extends Controller
 //                }
 //                $notify = new NotifyController();
 //                $notify->sendSms($payment_data['phone'],$msg);
-        return true;
+            return true;
+        }
     }
 
     public function editExternalid($id) {
