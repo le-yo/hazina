@@ -322,7 +322,7 @@ class PaymentsController extends Controller
                 }
                 $user = (object) $usr;
             }
-        } 
+        }
         return $user;
     }
 
@@ -373,69 +373,70 @@ class PaymentsController extends Controller
         //get user
 
         $user = self::getTransactionClient($payment_data);
-        if(!$user){
-            $payment->comment = "No User found with either the account provided or phone number of the payee";
-            $payment->save();
-        }
+//        if(!$user){
+//            $payment->comment = "No User found with either the account provided or phone number of the payee";
+//            $payment->save();
+//        }
 
 //        print_r($user);
 //        exit;
-        $loanAccounts = self::getClientLoanAccountsInAscendingOrder($user->client_id);
+        if($user) {
+            $loanAccounts = self::getClientLoanAccountsInAscendingOrder($user->client_id);
 
-        $latest_loan = end($loanAccounts);
-        $loan_id = '';
-        $loan = '';
-        $loan_payment_received = $payment_data['amount'];
+            $latest_loan = end($loanAccounts);
+            $loan_id = '';
+            $loan = '';
+            $loan_payment_received = $payment_data['amount'];
 //        print_r(json_encode($loanAccounts));
 //        exit;
-        foreach ($loanAccounts as $la) {
+            foreach ($loanAccounts as $la) {
 //            echo $la->status->id.PHP_EOL;
 //            continue;
-            if ($la->status->id == 300) {
-                if(($la->loanBalance < $loan_payment_received) && ($la->id !=$latest_loan->id)){
-                    $loan_payment_received = $loan_payment_received - $la->loanBalance;
-                    $amount = $la->loanBalance;
-                }else{
-                    $amount = $loan_payment_received;
-                    $loan_payment_received=0;
-                }
-                // get repayment details
-                $repayment_data = [];
-                $repayment_data['dateFormat'] = 'dd MMMM yyyy';
-                $repayment_data['locale'] = 'en_GB';
-                $repayment_data['transactionDate'] = Carbon::parse($payment_data['transaction_time'])->format('j F Y');
-                $repayment_data['transactionAmount'] = $amount;
-                $repayment_data['paymentTypeId'] = 1;
-                $repayment_data['note'] = 'Payment';
-                $repayment_data['accountNumber'] = $payment_data['phone'];
-                $repayment_data['receiptNumber'] = $payment_data['transaction_id'];
+                if ($la->status->id == 300) {
+                    if (($la->loanBalance < $loan_payment_received) && ($la->id != $latest_loan->id)) {
+                        $loan_payment_received = $loan_payment_received - $la->loanBalance;
+                        $amount = $la->loanBalance;
+                    } else {
+                        $amount = $loan_payment_received;
+                        $loan_payment_received = 0;
+                    }
+                    // get repayment details
+                    $repayment_data = [];
+                    $repayment_data['dateFormat'] = 'dd MMMM yyyy';
+                    $repayment_data['locale'] = 'en_GB';
+                    $repayment_data['transactionDate'] = Carbon::parse($payment_data['transaction_time'])->format('j F Y');
+                    $repayment_data['transactionAmount'] = $amount;
+                    $repayment_data['paymentTypeId'] = 1;
+                    $repayment_data['note'] = 'Payment';
+                    $repayment_data['accountNumber'] = $payment_data['phone'];
+                    $repayment_data['receiptNumber'] = $payment_data['transaction_id'];
 
-                // json encode repayment details
-                $loan_data = json_encode($repayment_data);
+                    // json encode repayment details
+                    $loan_data = json_encode($repayment_data);
 
-                // url for posting the repayment details
-                $postURl = MIFOS_URL . "/loans/" . $la->id . "/transactions?command=repayment&" . MIFOS_tenantIdentifier;
+                    // url for posting the repayment details
+                    $postURl = MIFOS_URL . "/loans/" . $la->id . "/transactions?command=repayment&" . MIFOS_tenantIdentifier;
 
-                // post the encoded repayment details
-                $loanPayment = Hooks::MifosPostTransaction($postURl, $loan_data);
+                    // post the encoded repayment details
+                    $loanPayment = Hooks::MifosPostTransaction($postURl, $loan_data);
 
-                // check if posting was successful
-                if (array_key_exists('errors', $loanPayment)) {
-                    $payment->comment = "Problem processing loan repayment";
-                    $payment->save();
-                    return false;
-                }else{
-                    echo "processed successfully";
-                    if($loan_payment_received ==0){
-                      return true;
+                    // check if posting was successful
+                    if (array_key_exists('errors', $loanPayment)) {
+                        $payment->comment = "Problem processing loan repayment";
+                        $payment->save();
+                        return false;
+                    } else {
+                        echo "processed successfully";
+                        if ($loan_payment_received == 0) {
+                            return true;
+                        }
                     }
                 }
-            }
 
-            if($loan_payment_received ==0){
-                break;
+                if ($loan_payment_received == 0) {
+                    break;
+                }
             }
-        }
 //                $ussd = new UssdController();
 //                $balance = $ussd->getLoanBalance($user->client_id);
 //
@@ -451,7 +452,8 @@ class PaymentsController extends Controller
 //                }
 //                $notify = new NotifyController();
 //                $notify->sendSms($payment_data['phone'],$msg);
-        return true;
+            return true;
+        }  
     }
 
 
