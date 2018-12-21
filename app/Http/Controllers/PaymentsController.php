@@ -287,6 +287,7 @@ class PaymentsController extends Controller
      * @return mixed
      */
     public function getTransactionClient($data){
+        $user = FALSE;
         $externalid = $data['externalId'];
 
         $url = MIFOS_URL . "/clients?sqlSearch=(c.external_id%20like%20%27" . $externalid . "%27)&" . MIFOS_tenantIdentifier;
@@ -310,20 +311,18 @@ class PaymentsController extends Controller
                 $client = Hooks::MifosGetTransaction($url, $post_data = '');
             }
         }
-        }
-        $user = FALSE;
-        if ($client->totalFilteredRecords > 0) {
-            $client = $client->pageItems[0];
-            $usr = array();
-            $usr['client_id'] = $client->id;
-            if ($client->status->code == 'clientStatusType.active') {
-                $usr['active_status'] = 1;
-            } else {
-                $usr['active_status'] = 0;
+            if ($client->totalFilteredRecords > 0) {
+                $client = $client->pageItems[0];
+                $usr = array();
+                $usr['client_id'] = $client->id;
+                if ($client->status->code == 'clientStatusType.active') {
+                    $usr['active_status'] = 1;
+                } else {
+                    $usr['active_status'] = 0;
+                }
+                $user = (object) $usr;
             }
-            $user = (object) $usr;
-        }
-
+        } 
         return $user;
     }
 
