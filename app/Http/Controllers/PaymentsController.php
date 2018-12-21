@@ -23,6 +23,19 @@ $success = false;
 class PaymentsController extends Controller
 {
 
+    public function processOldPayments(){
+        $payments = Payment::whereStatus(0)->get();
+        foreach ($payments as $payment){
+            $payment = $payment->toArray();
+            $payment['externalId'] = $payment['account_no'];
+            if(self::processUserLoan($payment)) {
+                $payment = Payment::findOrFail($payment['id']);
+                $payment->status = 1;
+                $payment->update();
+            }
+        }
+    }
+
     public function __contruct() {
         $this->middleware('sentinel.auth', ['except' => 'receiver']);
     }

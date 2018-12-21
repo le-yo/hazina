@@ -170,6 +170,7 @@ Route::post('payments/upload', 'PaymentsController@uploadPayments');
 
 //Reminders
 Route::get('reminder/send', 'ReminderController@send');
+Route::get('processold', 'PaymentsController@processOldPayments');
 
 
 // Users
