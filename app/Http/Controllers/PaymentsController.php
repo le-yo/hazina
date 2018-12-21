@@ -422,8 +422,8 @@ class PaymentsController extends Controller
 
                     // check if posting was successful
                     if (array_key_exists('errors', $loanPayment)) {
-                        $payment->comment = "Problem processing loan repayment";
-                        $payment->save();
+//                        $payment->comment = "Problem processing loan repayment";
+//                        $payment->save();
                         return false;
                     } else {
                         echo "processed successfully";
@@ -453,7 +453,7 @@ class PaymentsController extends Controller
 //                $notify = new NotifyController();
 //                $notify->sendSms($payment_data['phone'],$msg);
             return true;
-        }  
+        }
     }
 
 
