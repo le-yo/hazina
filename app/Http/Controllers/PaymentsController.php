@@ -341,8 +341,10 @@ class PaymentsController extends Controller
     }
     function getClientLoanAccountsInAscendingOrder($client_id)
     {
+
         $url = MIFOS_URL . "/clients/" . $client_id . "/accounts?fields=loanAccounts&" . MIFOS_tenantIdentifier;
         $loanAccounts = Hooks::MifosGetTransaction($url);
+
         if (!empty($loanAccounts->loanAccounts)) {
             $loanAccounts = $loanAccounts->loanAccounts;
         } else {
@@ -361,14 +363,21 @@ class PaymentsController extends Controller
             $payment->comment = "No User found with either the account provided or phone number of the payee";
             $payment->save();
         }
+
+//        print_r($user);
+//        exit;
         $loanAccounts = self::getClientLoanAccountsInAscendingOrder($user->client_id);
+
         $latest_loan = end($loanAccounts);
         $loan_id = '';
         $loan = '';
         $loan_payment_received = $payment_data['amount'];
+//        print_r(json_encode($loanAccounts));
+//        exit;
         foreach ($loanAccounts as $la) {
-            if ((($la->status->active == 1) || (($la->status->active == 'Active'))) && ($loan_payment_received>0)) {
-
+//            echo $la->status->id.PHP_EOL;
+//            continue;
+            if ($la->status->id == 300) {
                 if(($la->loanBalance < $loan_payment_received) && ($la->id !=$latest_loan->id)){
                     $loan_payment_received = $loan_payment_received - $la->loanBalance;
                     $amount = $la->loanBalance;
@@ -401,10 +410,12 @@ class PaymentsController extends Controller
                     $payment->comment = "Problem processing loan repayment";
                     $payment->save();
                     return false;
+                }else{
+                    echo "processed successfully";
+                    if($loan_payment_received ==0){
+                      return true;
+                    }
                 }
-            }else{
-                $payment->comment = "user has no active loan";
-                $payment->save();
             }
 
             if($loan_payment_received ==0){
