@@ -146,7 +146,7 @@ class PaymentReceived extends Job implements ShouldQueue
             }
         }
         return $user;
-    } 
+    }
 //    public function getTransactionClient($data){
 //        $externalid = $data['externalId'];
 //
@@ -280,8 +280,9 @@ class PaymentReceived extends Job implements ShouldQueue
         $loan = '';
         $loan_payment_received = $payment_data['amount'];
         foreach ($loanAccounts as $la) {
-            if (($la->status->active == 1) && ($loan_payment_received>0)) {
+//            if (($la->status->active == 1) && ($loan_payment_received>0)) {
 
+                if ($la->status->id == 300) {
                 if(($la->loanBalance < $loan_payment_received) && ($la->id !=$latest_loan->id)){
                     $loan_payment_received = $loan_payment_received - $la->loanBalance;
                     $amount = $la->loanBalance;
