@@ -23,19 +23,6 @@ $success = false;
 class PaymentsController extends Controller
 {
 
-    public function processOldPayments(){
-        $payments = Payment::whereStatus(0)->orderBy('id', 'DESC')->get();
-        foreach ($payments as $payment){
-            $payment = $payment->toArray();
-            $payment['externalId'] = $payment['account_no'];
-            if(self::processUserLoan($payment)) {
-                $payment = Payment::findOrFail($payment['id']);
-                $payment->status = 1;
-                $payment->update();
-            }
-        }
-    }
-
     public function __contruct() {
         $this->middleware('sentinel.auth', ['except' => 'receiver']);
     }
@@ -728,5 +715,70 @@ class PaymentsController extends Controller
     public function paydayLoanPaymentsIndex()
     {
         return view('payments.payday_loan');
+    }
+
+    public function depositToDrawDownAccount($client_id,$amount,$data){
+
+        $savingsaccounts = self::getClientSavingsAccountsInAscendingOrder($client_id);
+
+        foreach ($savingsaccounts as $sa) {
+            if ($sa->status->id == 300) {
+                $deposit_data = [];
+                $deposit_data['locale'] = 'en_GB';
+                $deposit_data['dateFormat'] = 'dd MMMM yyyy';
+                $deposit_data['transactionDate'] = Carbon::parse($data['transaction_time'])->format('j F Y');
+                $deposit_data['transactionAmount'] = $amount;
+                $deposit_data['paymentTypeId'] = 1;
+                $deposit_data['accountNumber'] = $data['phone'];
+                $deposit_data['receiptNumber'] = $data['transaction_id'];
+                $deposit_data = json_encode($deposit_data);
+
+                // url for posting the repayment details
+                $postURl = MIFOS_URL . "/savingsaccounts/" . $sa->id . "/transactions?command=deposit&" . MIFOS_tenantIdentifier;
+                // post the encoded repayment details
+                $savingsPayment = Hooks::MifosPostTransaction($postURl, $deposit_data);
+
+                // check if posting was successful
+                if (array_key_exists('errors', $savingsPayment)) {
+//                        $payment->comment = "Problem processing loan repayment";
+//                        $payment->save();
+                    return false;
+                } else {
+                    print_r($savingsPayment);
+                    exit;
+                    echo "processed successfully";
+                }
+                exit;
+            }
+
+        }
+
+    }
+
+    function getClientSavingsAccountsInAscendingOrder($client_id)
+    {
+
+        $url = MIFOS_URL . "/clients/" . $client_id . "/accounts?fields=savingsAccounts&" . MIFOS_tenantIdentifier;
+        $savingsAccounts = Hooks::MifosGetTransaction($url);
+
+        if (!empty($savingsAccounts->savingsAccounts)) {
+            $savingsAccounts = $savingsAccounts->savingsAccounts;
+        } else {
+            $savingsAccounts = array();
+        }
+        return $savingsAccounts;
+    }
+
+    public function processOldPayments(){
+        $payments = Payment::whereStatus(0)->orderBy('id', 'DESC')->get();
+        foreach ($payments as $payment){
+            $payment = $payment->toArray();
+            $payment['externalId'] = $payment['account_no'];
+            if(self::processUserLoan($payment)) {
+                $payment = Payment::findOrFail($payment['id']);
+                $payment->status = 1;
+                $payment->update();
+            }
+        }
     }
 }

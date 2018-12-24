@@ -286,11 +286,12 @@ class PaymentReceived extends Job implements ShouldQueue
         foreach ($loanAccounts as $la) {
 //            if (($la->status->active == 1) && ($loan_payment_received>0)) {
 
-                if (($la->status->id == 300) && ($loan_payment_received>0)) { 
-                if(($la->loanBalance < $loan_payment_received) && ($la->id !=$latest_loan->id)){
+                if (($la->status->id == 300) && ($loan_payment_received>0)) {
+//                if(($la->loanBalance < $loan_payment_received) && ($la->id !=$latest_loan->id)){
+                if(($la->loanBalance <= $loan_payment_received)){
                     $loan_payment_received = $loan_payment_received - $la->loanBalance;
                     $amount = $la->loanBalance;
-                }else{
+                }elseif(($la->loanBalance > $loan_payment_received)){ 
                     $amount = $loan_payment_received;
                     $loan_payment_received=0;
                 }
@@ -325,6 +326,12 @@ class PaymentReceived extends Job implements ShouldQueue
             if($loan_payment_received ==0){
                 break;
             }
+        }
+        if($loan_payment_received >0){
+            //send to savings
+            $paymentController = new PaymentsController();
+            $paymentController->depositToDrawDownAccount($user->client_id,$loan_payment_received,$payment_data);
+
         }
 //                $ussd = new UssdController();
 //                $balance = $ussd->getLoanBalance($user->client_id);
