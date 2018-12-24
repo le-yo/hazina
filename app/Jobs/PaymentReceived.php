@@ -109,43 +109,82 @@ class PaymentReceived extends Job implements ShouldQueue
         return ucfirst($clientName);
     }
     public function getTransactionClient($data){
+        $user = FALSE;
         $externalid = $data['externalId'];
 
         $url = MIFOS_URL . "/clients?sqlSearch=(c.external_id%20like%20%27" . $externalid . "%27)&" . MIFOS_tenantIdentifier;
         // Get all clients
         $client = Hooks::MifosGetTransaction($url, $post_data = '');
 
-        if ($client->totalFilteredRecords == 0) {
-            //search by phone
-            $no = substr($data['phone'],-9);
-
-            $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%27254" . $no . "%27)&" . MIFOS_tenantIdentifier;
-
-            // Get all clients
-            $client = Hooks::MifosGetTransaction($url, $post_data = '');
-
+        if (isset($client->totalFilteredRecords)) {
             if ($client->totalFilteredRecords == 0) {
-                $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%27254" . substr($externalid,-9) . "%27)&" . MIFOS_tenantIdentifier;
+                //search by phone
+                $no = substr($data['phone'], -9);
+
+                $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%27254" . $no . "%27)&" . MIFOS_tenantIdentifier;
 
                 // Get all clients
                 $client = Hooks::MifosGetTransaction($url, $post_data = '');
-            }
-        }
-        $user = FALSE;
-        if ($client->totalFilteredRecords > 0) {
-            $client = $client->pageItems[0];
-            $usr = array();
-            $usr['client_id'] = $client->id;
-            if ($client->status->code == 'clientStatusType.active') {
-                $usr['active_status'] = 1;
-            } else {
-                $usr['active_status'] = 0;
-            }
-            $user = (object) $usr;
-        }
 
+                if ($client->totalFilteredRecords == 0) {
+                    $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%27254" . substr($externalid, -9) . "%27)&" . MIFOS_tenantIdentifier;
+
+                    // Get all clients
+                    $client = Hooks::MifosGetTransaction($url, $post_data = '');
+                }
+            }
+            if ($client->totalFilteredRecords > 0) {
+                $client = $client->pageItems[0];
+                $usr = array();
+                $usr['client_id'] = $client->id;
+                if ($client->status->code == 'clientStatusType.active') {
+                    $usr['active_status'] = 1;
+                } else {
+                    $usr['active_status'] = 0;
+                }
+                $user = (object) $usr;
+            }
+        }
         return $user;
-    }
+    } 
+//    public function getTransactionClient($data){
+//        $externalid = $data['externalId'];
+//
+//        $url = MIFOS_URL . "/clients?sqlSearch=(c.external_id%20like%20%27" . $externalid . "%27)&" . MIFOS_tenantIdentifier;
+//        // Get all clients
+//        $client = Hooks::MifosGetTransaction($url, $post_data = '');
+//
+//        if ($client->totalFilteredRecords == 0) {
+//            //search by phone
+//            $no = substr($data['phone'],-9);
+//
+//            $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%27254" . $no . "%27)&" . MIFOS_tenantIdentifier;
+//
+//            // Get all clients
+//            $client = Hooks::MifosGetTransaction($url, $post_data = '');
+//
+//            if ($client->totalFilteredRecords == 0) {
+//                $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%27254" . substr($externalid,-9) . "%27)&" . MIFOS_tenantIdentifier;
+//
+//                // Get all clients
+//                $client = Hooks::MifosGetTransaction($url, $post_data = '');
+//            }
+//        }
+//        $user = FALSE;
+//        if ($client->totalFilteredRecords > 0) {
+//            $client = $client->pageItems[0];
+//            $usr = array();
+//            $usr['client_id'] = $client->id;
+//            if ($client->status->code == 'clientStatusType.active') {
+//                $usr['active_status'] = 1;
+//            } else {
+//                $usr['active_status'] = 0;
+//            }
+//            $user = (object) $usr;
+//        }
+//
+//        return $user;
+//    }
 
     public function verifyPhonefromMifos($no)
     {
