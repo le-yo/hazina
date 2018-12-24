@@ -111,7 +111,7 @@ class PaymentReceived extends Job implements ShouldQueue
     public function getTransactionClient($data){
 
         $PaymentController = new PaymentsController();
-        return $PaymentController->getTransactionClient($data); 
+        return $PaymentController->getTransactionClient($data);
 
         $user = FALSE;
         $externalid = $data['externalId'];
@@ -286,7 +286,7 @@ class PaymentReceived extends Job implements ShouldQueue
         foreach ($loanAccounts as $la) {
 //            if (($la->status->active == 1) && ($loan_payment_received>0)) {
 
-                if ($la->status->id == 300) {
+                if (($la->status->id == 300) && ($loan_payment_received>0)) { 
                 if(($la->loanBalance < $loan_payment_received) && ($la->id !=$latest_loan->id)){
                     $loan_payment_received = $loan_payment_received - $la->loanBalance;
                     $amount = $la->loanBalance;
@@ -320,9 +320,6 @@ class PaymentReceived extends Job implements ShouldQueue
                     $payment->save();
                     return false;
                 }
-            }else{
-                $payment->comment = "user has no active loan";
-                $payment->save();
             }
 
             if($loan_payment_received ==0){
