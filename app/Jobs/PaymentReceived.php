@@ -121,13 +121,13 @@ class PaymentReceived extends Job implements ShouldQueue
                 //search by phone
                 $no = substr($data['phone'], -9);
 
-                $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%27254" . $no . "%27)&" . MIFOS_tenantIdentifier;
+                $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%27" . $no . "%27)&" . MIFOS_tenantIdentifier;
 
                 // Get all clients
                 $client = Hooks::MifosGetTransaction($url, $post_data = '');
 
                 if ($client->totalFilteredRecords == 0) {
-                    $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%27254" . substr($externalid, -9) . "%27)&" . MIFOS_tenantIdentifier;
+                    $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%27" . substr($externalid, -9) . "%27)&" . MIFOS_tenantIdentifier;
 
                     // Get all clients
                     $client = Hooks::MifosGetTransaction($url, $post_data = '');
