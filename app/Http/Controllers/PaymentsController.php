@@ -427,13 +427,14 @@ class PaymentsController extends Controller
                         foreach ($loanPayment->errors as $error) {
                             if ($error->userMessageGlobalisationCode == 'error.msg.loan.transaction.cannot.be.before.disbursement.date') {
                                 //send the payment to savings
-                                self::depositToDrawDownAccount($user->client_id,$loan_payment_received,$payment_data);
-                                $loan_payment_received = 0;
-                                $payment = Payment::find($payment_data['id']);
-                                $payment->status = 1;
-                                $payment->update();
-                                return redirect('/')->with('error', 'We had a problem processing repayment for '.$payment->client_name.' but have pushed the payment to draw down account');
-                                break;
+                                if(self::depositToDrawDownAccount($user->client_id,$loan_payment_received,$payment_data)){ 
+                                    $loan_payment_received = 0;
+                                    $payment = Payment::find($payment_data['id']);
+                                    $payment->status = 1;
+                                    $payment->update();
+                                    return redirect('/')->with('error', 'We had a problem processing repayment for '.$payment->client_name.' but have pushed the payment to draw down account');
+                                    break;
+                                }
                             }
                         }
 //                        $payment->comment = "Problem processing loan repayment";
@@ -442,7 +443,7 @@ class PaymentsController extends Controller
                     } else {
                         if (($la->loanBalance < $loan_payment_received) && ($la->id != $latest_loan->id)) {
                             $loan_payment_received = $loan_payment_received - $la->loanBalance;
-                        } else { 
+                        } else {
                             $loan_payment_received = 0;
                         }
                         echo "processed successfully";
@@ -761,9 +762,7 @@ class PaymentsController extends Controller
 //                        $payment->save();
                     return false;
                 } else {
-                    print_r($savingsPayment);
-                    exit;
-                    echo "processed successfully";
+                    return $savingsPayment;
                 }
                 exit;
             }
