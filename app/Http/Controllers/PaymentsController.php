@@ -350,9 +350,9 @@ class PaymentsController extends Controller
         return redirect('/')->with('success', 'Payment Procesed successfully');
         } else {
             $payment = Payment::findOrFail($id);
-            $payment->status = 2;
+            $payment->status = 0;
             $payment->update();
-        return redirect('/')->with('error', 'We gad a problem processing payment for '.$payment->client_name);
+        return redirect('/')->with('error', 'We had a problem processing payment for '.$payment->client_name);
         }
     }
     function getClientLoanAccountsInAscendingOrder($client_id)
