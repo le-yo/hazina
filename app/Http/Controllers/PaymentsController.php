@@ -396,11 +396,11 @@ class PaymentsController extends Controller
 //            continue;
                 if ($la->status->id == 300) {
                     if (($la->loanBalance < $loan_payment_received) && ($la->id != $latest_loan->id)) {
-                        $loan_payment_received = $loan_payment_received - $la->loanBalance;
+//                        $loan_payment_received = $loan_payment_received - $la->loanBalance;
                         $amount = $la->loanBalance;
                     } else {
                         $amount = $loan_payment_received;
-                        $loan_payment_received = 0;
+//                        $loan_payment_received = 0;
                     }
                     // get repayment details
                     $repayment_data = [];
@@ -440,6 +440,11 @@ class PaymentsController extends Controller
 //                        $payment->save();
                         return false;
                     } else {
+                        if (($la->loanBalance < $loan_payment_received) && ($la->id != $latest_loan->id)) {
+                            $loan_payment_received = $loan_payment_received - $la->loanBalance;
+                        } else { 
+                            $loan_payment_received = 0;
+                        }
                         echo "processed successfully";
                         if ($loan_payment_received == 0) {
                             return true;
