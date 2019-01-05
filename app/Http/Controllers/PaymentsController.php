@@ -424,6 +424,18 @@ class PaymentsController extends Controller
 
                     // check if posting was successful
                     if (array_key_exists('errors', $loanPayment)) {
+                        foreach ($loanPayment->errors as $error) {
+                            if ($error->userMessageGlobalisationCode == 'error.msg.loan.transaction.cannot.be.before.disbursement.date') {
+                                //send the payment to savings
+                                self::depositToDrawDownAccount($user->client_id,$loan_payment_received,$payment_data);
+                                $loan_payment_received = 0;
+                                $payment = Payment::find($payment_data['id']);
+                                $payment->status = 1;
+                                $payment->update();
+                                return redirect('/')->with('error', 'We had a problem processing repayment for '.$payment->client_name.' but have pushed the payment to draw down account');
+                                break;
+                            }
+                        }
 //                        $payment->comment = "Problem processing loan repayment";
 //                        $payment->save();
                         return false;
