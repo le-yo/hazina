@@ -72,7 +72,7 @@ class PaymentReceived extends Job implements ShouldQueue
                 if(self::processLoan($data,$payment)) {
                     $payment->status = 1;
                 } else {
-                    $payment->status = 2;
+                    $payment->status = 0;
                 }
             $payment->save();
         }
