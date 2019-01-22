@@ -184,3 +184,6 @@ Route::get('preapproved-clients','ClientsController@index');
 Route::get('collectionSheet/{id}','PaymentsController@collectionSheet');
 Route::get('preapproved-clients/upload','ClientsController@upload');
 Route::post('preapproved-clients/upload','ClientsController@storeUpload');
+
+Route::post('payments/upload', ['as' => 'payments.upload', 'uses' => 'PaymentsController@uploadPayments']);
+

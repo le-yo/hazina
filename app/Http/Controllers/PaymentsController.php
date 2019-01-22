@@ -608,7 +608,10 @@ class PaymentsController extends Controller
      * @param Request $request
      * @return mixed
      */
+
     public function uploadPayments(Request $request){
+        $count = 0;
+        ini_set('max_execution_time',0);
 
         $validator = Validator::make($request->all(), [
             'xls' => 'required',
@@ -619,102 +622,119 @@ class PaymentsController extends Controller
                 ->with('error', 'Please upload an EXCEL file!');
         }
 
-        // getting the file extension
-        $extension = $request->file('xls')->getClientOriginalExtension();
+        $extension = $request->file('xls')->getClientOriginalExtension(); // getting the file extension
 
-        // validate if it is a valid excel sheet
-        if ($extension != 'xls') {
+        if ($extension != 'xls' && $extension != 'xlsx') {
             return Redirect::back()
                 ->with('error', 'Please upload a valid EXCEL file!');
         }
 
-        // get the original name
-        $originalName = $request->file('xls')->getClientOriginalName();
-        $exploaded_name = explode(".", $originalName);
-        $paybill = $exploaded_name[0];
+        $fileName = rand(11111,99999).'.'.$extension; // renaming the file
 
-        // check if the excel has been named accordingly
-        if($paybill !== STL_PAYBILL && $paybill !== BLP_PAYBILL && $paybill !== PCL_PAYBILL) {
-            return Redirect::back()->with('error', 'Please rename the excel to the respective paybill number and make sure all transactions are of that number!');
-        }
+        $request->file('xls')->move('storage',$fileName); // move it to the storage folder in the public assets
 
-        // renaming the file
-        $fileName = rand(11111,99999).'.'.$extension;
+        Excel::load('storage/'.$fileName, function($reader){
+//          Excel::filter('chunk')->load('file.csv')->chunk(250, function($results)
+//          Excel::filter('chunk')->load('storage/'.$fileName)->chunk(98,function ($reader){
+//              foreach($reader as $row){
 
-        // move it to the storage folder in the public assets
-        $request->file('xls')->move('storage',$fileName);
-
-        // Load the excel
-        Excel::load('storage/'.$fileName, function($reader) use ($paybill) {
+//              }
             $results = $reader->get();
-
-            // Loop through each row in the sheet
-            $results -> each(function($sheet) use ($paybill) {
-                // Check if the excel loaded has the required format
+            $results -> each(function($sheet,$count) {
+//                print_r($sheet);
+//exit;
                 if(!isset($sheet->receipt_no)){
-                    return Redirect::back()->with('error', 'Please upload the right excel file!');
+                    return Redirect::back()
+                        ->with('error', 'please upload the right excel file!');
                 }
 
                 $transaction_id = $sheet->receipt_no;
                 $payments = Payment::where('transaction_id', '=',$transaction_id)->first();
 
-                // Check if the payment transaction exists
                 if(is_null($payments)){
-                    $exploded_other_party_info = explode("-",$sheet->other_party_info);
+                    $exploded_other_party_info =  explode("-",$sheet->other_party_info);
 
                     $phone = '+'.trim($exploded_other_party_info[0]);
+
                     $client_name = $exploded_other_party_info[1];
                     $amount = $sheet->paid_in;
-                    if ($paybill == BLP_PAYBILL || $paybill == PCL_PAYBILL) {
-                        $data = [];
-                        $data['phone'] = $phone;
-                        $data['paybill'] = $paybill;
-                        if(self::processLoan($data) == true){
-                            $status = 1;
-                        } else {
-                            $status = 2;
-                        }
-                    } else {
-                        $status = null;
-                    }
+                    $status = $sheet->transaction_status;
                     $account_no = $sheet->ac_no;
                     if(!isset($account_no)){
-                       $account_no = 'NULL';
+                        $account_no = 'NULL';
                     }
                     $transaction_time = $sheet->completion_time;
 
-                    // Add the payment object to the payments table
-                    DB::table('payments')->insert([
-                        'phone' => $phone,
-                        'client_name' => $client_name,
-                        'transaction_id' => $transaction_id,
-                        'status' => $status,
-                        'amount' => $amount,
-                        'paybill' => $paybill,
-                        'account_no' => $account_no,
-                        'transaction_time' => Carbon::createFromFormat('d/m/Y H:i:s', $transaction_time)->format('Y-m-d H:i:s'),
-                        'created_at' => Carbon::now(),
-                        'updated_at' => Carbon::now()
-                    ]);
+//                    $transact_time=date('d/m/Y H:i:s', strtotime($transaction_time));
+
+//                    $transact_time=Carbon::parse($transaction_time)->toDateTimeString();
+                    $transaction_time=Carbon::createFromFormat('d-m-Y H:i:s', $transaction_time)->format('Y-m-d H:i:s');
+//                    print_r($transaction_time);
+//                    exit;
+//
+//                       print_r($transact_time);
+//                         exit;
+                    if($amount != null) {
+
+
+                        DB::table('payments')->insert([
+                            'phone' => $phone,
+                            'client_name' => $client_name,
+                            'transaction_id' => $transaction_id,
+                            'amount' => $amount,
+                            'account_no' => $account_no,
+                            'transaction_time' => $transaction_time,
+                            'created_at' => Carbon::now(),
+                            'updated_at' => Carbon::now()
+                        ]);
+
+                        $payment = Payment::whereTransactionId($transaction_id)->first()->toArray();
+                        $data = array();
+                        $data['externalId'] = $account_no;
+                        $data['phone'] = $phone;
+                        $user = self::getTransactionClient($data);
+
+                        if(!$user){
+                        $payment['externalId'] = $account_no;
+                        if(self::processUserLoan($payment)) {
+                            $payment = Payment::whereTransactionId($transaction_id)->first();
+                            $payment->status = 1;
+                            $payment->update();
+                            $count = $count+1;
+                        }
+                        }
+
+//                        $data = array(
+//                            'phone' => $phone,
+//                            'client_name' => $client_name,
+//                            'transaction_id' => $transaction_id,
+//                            'paybill' => '949494',
+//                            'account_no' => $account_no,
+//                            'externalId' => $account_no,
+//                            'amount' => $amount,
+//                            'transaction_time' => $transaction_time,
+////                            'api_key' => 'bSVff??$3CX-W&DQ=qvqfNg58#D2=3',
+//                        );
+//                        print_r($data);
+//                        exit;
+//                        $url = 'http://dev.oldstarehians.org/mpesa-payments/payment-notification';
+//                        $url = 'http://oldstarehians.org/index.php/mpesa-payments/payment-notification';
+//                        self::execute($data, $url);
+                    }
 
                     global $success;
                     $success = true;
                 }
             });
         });
-
-        // deletes the excel once it has been used
-        File::delete('public/storage/'.$fileName);
-
+        File::delete('storage/'.$fileName);
         global $success;
         if($success){
-            return Redirect::back()->with('success', 'Transactions successfully uploaded!');
+            return Redirect::back()->with('success', $count.' transactions successfully processed!');
         } else {
-            return Redirect::back()->with('error', 'Some transactions already exist!');
-
+            return Redirect::back()->with('error', 'Transactions already exists!');
         }
     }
-
     /**
      * Lists payments made for Business Loans
      *

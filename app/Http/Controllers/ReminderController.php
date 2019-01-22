@@ -15,8 +15,6 @@ class ReminderController extends Controller
         $mifos = new MifosXController();
         $response = $mifos->listAllDueAndOverdueClients();
 
-//        print_r($response);
-//        exit;
         foreach ($response as $sd){
             $exploded = explode("-",$sd['Due Date']);
             $due_date = Carbon::createFromDate($exploded[0], $exploded[1], $exploded[2]);

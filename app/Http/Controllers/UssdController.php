@@ -33,6 +33,12 @@ class UssdController extends Controller
     public function index()
     {
 
+        $payment_data = array();
+        $payment_data['externalId'] = "254705337894";
+        $payment_data['phone'] = "254705337894";
+        $payment_controller = new PaymentsController();
+        $user = $payment_controller->getTransactionClient($payment_data);
+        exit;
 
         $url = MIFOS_URL . "/clients?sqlSearch=(c.externalId=" . $externalid . ")&" . MIFOS_tenantIdentifier;
 

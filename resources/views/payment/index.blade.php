@@ -3,32 +3,32 @@
 @section('title', 'Payments')
 
 @section('content')
-	{{--<div class="page-header">--}}
-		{{--<div class='btn-toolbar pull-right'>--}}
-			{{--<a class="btn btn-info btn-lg" href="">--}}
-				{{--<span class="icon-refresh" aria-hidden="true"></span>--}}
-				{{--Refresh--}}
-			{{--</a>--}}
-		{{--</div>--}}
-		{{--<h1><i class="icon-wallet"></i>&nbsp;Short Term Payments</h1>--}}
-	{{--</div>--}}
-	{{--<div class="page-header">--}}
-		{{--<div class="pull-right">--}}
-			{{--{!! Form::open(array('url'=>'payments/upload','method'=>'POST', 'files'=>true, 'class'=>'form-inline')) !!}--}}
-				{{--<div class="col-md-12">--}}
-					{{--<div class="col-xs-10">--}}
-						{{--<span id="filename">Select your file</span>--}}
-						{{--<label for="file-upload">Browse<input type="file" id="file-upload" name="xls"></label>--}}
-					{{--</div>--}}
+	<div class="page-header">
+		<div class='btn-toolbar pull-right'>
+			<a class="btn btn-info" href="">
+				<span class="icon-refresh" aria-hidden="true"></span>
+				Refresh
+			</a>
+		</div>
+		<h3>Dashboard</h3>
+	</div>
+	<div class="page-header">
+		<div class="pull-right">
+			{!! Form::open(array('url'=>'payments/upload','method'=>'POST', 'files'=>true, 'class'=>'form-inline')) !!}
+				<div class="col-md-12">
+					<div class="col-xs-10">
+						<span id="filename">Select your file</span>
+						<label for="file-upload">Browse<input type="file" id="file-upload" name="xls"></label>
+					</div>
 
-					{{--<div class="col-xs-2">--}}
-						{{--<button type="submit" class="btn btn-info pull-right">Upload</button>--}}
-					{{--</div>--}}
-				{{--</div>--}}
-			{{--{!! Form::close() !!}--}}
-		{{--</div>--}}
-		{{--<h3>Excel Upload</h3>--}}
-	{{--</div>--}}
+					<div class="col-xs-2">
+						<button type="submit" class="btn btn-info pull-right">Upload</button>
+					</div>
+				</div>
+			{!! Form::close() !!}
+		</div>
+		<h3>Excel Upload</h3>
+	</div>
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-info">
