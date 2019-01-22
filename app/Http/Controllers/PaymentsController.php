@@ -457,6 +457,12 @@ class PaymentsController extends Controller
                     break;
                 }
             }
+
+            if($loan_payment_received >0){ 
+                //send to savings
+                self::depositToDrawDownAccount($user->client_id,$loan_payment_received,$payment_data);
+
+            }
 //                $ussd = new UssdController();
 //                $balance = $ussd->getLoanBalance($user->client_id);
 //
