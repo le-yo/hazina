@@ -458,7 +458,7 @@ class PaymentsController extends Controller
                 }
             }
 
-            if($loan_payment_received >0){ 
+            if($loan_payment_received >0){
                 //send to savings
                 self::depositToDrawDownAccount($user->client_id,$loan_payment_received,$payment_data);
 
@@ -665,6 +665,7 @@ class PaymentsController extends Controller
                     $client_name = $exploded_other_party_info[1];
                     $amount = $sheet->paid_in;
                     $status = $sheet->transaction_status;
+                    $paybill = $sheet->paybill;
                     $account_no = $sheet->ac_no;
                     if(!isset($account_no)){
                         $account_no = 'NULL';
@@ -690,6 +691,7 @@ class PaymentsController extends Controller
                             'amount' => $amount,
                             'account_no' => $account_no,
                             'transaction_time' => $transaction_time,
+                            'paybill' => $paybill,
                             'created_at' => Carbon::now(),
                             'updated_at' => Carbon::now()
                         ]);
