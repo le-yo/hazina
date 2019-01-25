@@ -814,7 +814,7 @@ class PaymentsController extends Controller
     }
 
     public function processOldPayments(){
-        $payments = Payment::whereStatus(0)->orderBy('id', 'DESC')->get();
+        $payments = Payment::whereStatus(0)->where('id','>',13000)->orderBy('id', 'DESC')->get();
         foreach ($payments as $payment){
             $payment = $payment->toArray();
             $payment['externalId'] = $payment['account_no'];
