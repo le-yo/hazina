@@ -814,6 +814,7 @@ class PaymentsController extends Controller
     }
 
     public function processOldPayments(){
+        ini_set('max_execution_time',0); 
         $payments = Payment::whereStatus(0)->where('id','>',13000)->orderBy('id', 'DESC')->get();
         foreach ($payments as $payment){
             $payment->status = 3;
