@@ -22,7 +22,7 @@ class DatatablesController extends Controller
     {
 
 
-        return Datatables::of(Payment::whereStatus(1)->orderBy('updated_at', 'desc')->get())
+        return Datatables::of(Payment::whereStatus(1)->orderBy('updated_at', 'desc')->take(5000)->get())
             ->editColumn('transaction_time', function ($payment) {
                 return Carbon::parse($payment->transaction_time)->format('j F Y h:i A');
             })->editColumn('amount', function ($payment) {
@@ -48,7 +48,7 @@ class DatatablesController extends Controller
 
     public function getProcessedPayments()
     {
-        return Datatables::of(Payment::whereStatus(1)->orderBy('updated_at', 'desc')->get())
+        return Datatables::of(Payment::whereStatus(1)->orderBy('updated_at', 'desc')->take(5000)->get())
             ->editColumn('transaction_time', function ($payment) {
                 return Carbon::parse($payment->transaction_time)->format('j F Y h:i A');
             })->editColumn('amount', function ($payment) {
@@ -60,7 +60,7 @@ class DatatablesController extends Controller
     public function getUnrecognizedPayments()
     {
 
-        return Datatables::of(Payment::whereStatus(0)->orderBy('updated_at', 'desc')->get())
+        return Datatables::of(Payment::whereStatus(0)->orderBy('updated_at', 'desc')->take(5000)->get())
             ->editColumn('transaction_time', function ($payment) {
                 return Carbon::parse($payment->transaction_time)->format('j F Y h:i A');
             })->editColumn('amount', function ($payment) {
