@@ -83,3 +83,17 @@ circle {
 .fill-default {
     fill: #eee;
 }
+
+div.dataTables_wrapper div.dataTables_paginate {
+
+    margin-top: 40px;
+    white-space: nowrap;
+    text-align: right;
+
+}
+
+div.dataTables_wrapper div.dataTables_paginate ul.pagination.li.a {
+
+    padding: 30px;
+
+}
