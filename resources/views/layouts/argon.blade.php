@@ -15,6 +15,8 @@
     <!-- Icons -->
     <link href="{{ asset('argon') }}/vendor/nucleo/css/nucleo.css" rel="stylesheet">
     <link href="{{ asset('argon') }}/vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ asset('plugins/jquery.dataTables/dataTables.bootstrap.min.css') }}">
     <!-- Argon CSS -->
     <link type="text/css" href="{{ asset('argon') }}/css/argon.css?v=1.0.0" rel="stylesheet">
     <link type="text/css" href="{{ asset('argon') }}/css/custom.css?v=1.0.0" rel="stylesheet">
@@ -38,8 +40,20 @@
 
 <script src="{{ asset('argon') }}/vendor/jquery/dist/jquery.min.js"></script>
 <script src="{{ asset('argon') }}/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="{{ asset('plugins/jquery/jquery-2.1.3.min.js') }}"></script>
+<!-- Datatables -->
+<script src="{{ asset('plugins/jquery.dataTables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('plugins/jquery.dataTables/dataTables.bootstrap.min.js') }}"></script>
+<!-- Latest compiled and minified Bootstrap JavaScript -->
+<script src="{{ asset('plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+<!-- Restfulizer.js - A tool for simulating put,patch and delete requests -->
+<script src="{{ asset('js/restfulizer.js') }}"></script>
+<!-- Custom Javascript -->
+<script src="{{ asset('js/custom-scripts.js') }}"></script>
 
 @stack('js')
+@stack('scripts')
 
 <!-- Argon JS -->
 <script src="{{ asset('argon') }}/js/argon.js?v=1.0.0"></script>

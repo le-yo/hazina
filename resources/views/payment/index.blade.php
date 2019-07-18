@@ -1,6 +1,6 @@
-@extends('centaur.layout')
+@extends('layouts.argon')
 
-@section('title', 'Payments')
+{{--@section('title', 'Payments')--}}
 
 @section('content')
 	<div class="page-header">
