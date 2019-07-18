@@ -95,7 +95,7 @@ Route::get('/', ['as' => '/', 'uses' => function() {
     if (!Auth::check()) {
         return view('welcome');
     } else {
-        return view('payment.index');
+//        return view('payment.index');
         $now = \Carbon\Carbon::now();
         //today
         $today_sum = \App\Payment::where('transaction_time','>=',$now->subDay(1))->sum('amount');
@@ -112,7 +112,7 @@ Route::get('/', ['as' => '/', 'uses' => function() {
         $to_date_sum = \App\Payment::all()->sum('amount');
         $to_date_count = \App\Payment::all()->count();
 
-        return view('dashboard', compact('today_sum','today_count','week_sum','week_count','month_count','month_sum','to_date_count','to_date_sum'));
+        return view('payment.index', compact('today_sum','today_count','week_sum','week_count','month_count','month_sum','to_date_count','to_date_sum'));
     }
 }]);
 
