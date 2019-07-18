@@ -3,125 +3,219 @@
 {{--@section('title', 'Payments')--}}
 
 @section('content')
-	<div class="page-header">
-		<div class='btn-toolbar pull-right'>
-			<a class="btn btn-info" href="">
-				<span class="icon-refresh" aria-hidden="true"></span>
-				Refresh
-			</a>
-		</div>
-		<h3>Dashboard</h3>
-	</div>
-	<div class="page-header">
-		<div class="pull-right">
-			{!! Form::open(array('url'=>'payments/upload','method'=>'POST', 'files'=>true, 'class'=>'form-inline')) !!}
-				<div class="col-md-12">
-					<div class="col-xs-10">
-						<span id="filename">Select your file</span>
-						<label for="file-upload">Browse<input type="file" id="file-upload" name="xls"></label>
-					</div>
-
-					<div class="col-xs-2">
-						<button type="submit" class="btn btn-info pull-right">Upload</button>
-					</div>
-				</div>
-			{!! Form::close() !!}
-		</div>
-		<h3>Excel Upload</h3>
-	</div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-info">
-				<div class="panel-heading">
-					<h3 class="panel-title">Payments</h3>
-				</div>
-				<div class="panel-body">
-					<div class="tabs">
-						<ul class="nav nav-tabs">
-                            <li class="active">
-                                <a href="#processed" role="tab" data-toggle="tab" onclick="processedPaymentsDataTables()">
-                                    <i class="icon-user-following"></i> Processed Payments
-                                </a>
-                            </li>
-							<li>
-								<a href="#unrecognized" role="tab" data-toggle="tab" onclick="unrecognizedPaymentsDataTables()">
-									<i class="icon-user-follow"></i> Unprocessed Payments
-								</a>
-							</li>
-
-						</ul>
-						<div class="tab-content">
-							<div class="tab-pane fade active in" id="unprocessed">
-								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-									{{--<div class="table-responsive">--}}
-										<table class="table table-bordered table-condensed unprocessed-payments-table" id="unprocessed-payments-table" cellspacing="0" width="100%">
-											<thead>
-											<tr>
-												<th>Id</th>
-												<th>Phone</th>
-												<th nowrap="">Client Name</th>
-												<th>Trans. ID</th>
-												<th>Account</th>
-												<th>Amount</th>
-												<th>Transaction Time</th>
-												<th>Paybill</th>
-												<th>Comment</th>
-											</tr>
-											</thead>
-										</table>
-									{{--</div>--}}
-								</div>
-							</div>
-							<div class="tab-pane fade" id="processed">
-								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-									{{--<div class="table-responsive">--}}
-										<table class="table table-bordered table-condensed processed-payments-table" id="processed-payments-table" cellspacing="0" width="100%">
-											<thead>
-											<tr>
-												<th>Id</th>
-												<th>Phone</th>
-												<th nowrap="">Client Name</th>
-												<th>Trans. ID</th>
-												<th>Account</th>
-												<th>Amount</th>
-												<th>Transaction Time</th>
-                                                <th>Paybill</th>
-												<th>Comment</th>
-											</tr>
-											</thead>
-										</table>
-									{{--</div>--}}
-								</div>
-							</div>
-							<div class="tab-pane fade" id="unrecognized">
-								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-									{{--<div class="table-responsive">--}}
-										<table class="table table-bordered table-condensed unrecognized-payments-table" id="unrecognized-payments-table" cellspacing="0" width="100%">
-											<thead>
-											<tr>
-												<th>Id</th>
-												<th>Phone</th>
-												<th nowrap="">Client Name</th>
-												<th>Trans. ID</th>
-												<th>Account</th>
-												<th>Amount</th>
-												<th>Transaction Time</th>
-                                                <th>Paybill</th>
-												<th>Comment</th>
-												<th>Action</th>
-											</tr>
-											</thead>
-										</table>
-									{{--</div>--}}
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+        <div class="container-fluid">
+            <div class="header-body">
+                <!-- Card stats -->
+                <div class="row">
+                    <div class="col-xl-3 col-lg-6">
+                        <div class="card card-stats mb-4 mb-xl-0">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Tx Today</h5>
+                                        <span class="h2 font-weight-bold mb-0">No: {{$today_count}}</span><br>
+                                        <span class="h2 font-weight-bold mb-0">Value: {{$today_sum}}</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                                            <i class="fas fa-chart-bar"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-muted text-sm">
+                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> {{$today_count/1000}}%</span>
+                                    <span class="text-nowrap">Utilization</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6">
+                        <div class="card card-stats mb-4 mb-xl-0">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Tx This week</h5>
+                                        <span class="h2 font-weight-bold mb-0">No: {{$week_count}}</span><br>
+                                        <span class="h2 font-weight-bold mb-0">Value: {{$week_sum}}</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
+                                            <i class="fas fa-chart-pie"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-muted text-sm">
+                                    <span class="text-info mr-2"><i class="fas fa-arrow-up"></i>{{$week_count/1000}}%</span>
+                                    <span class="text-nowrap">Since last week</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6">
+                        <div class="card card-stats mb-4 mb-xl-0">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Sales</h5>
+                                        <span class="h2 font-weight-bold mb-0">No: {{$month_count}}</span><br>
+                                        <span class="h2 font-weight-bold mb-0">Value: {{$month_sum}}</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-muted text-sm">
+                                    <span class="text-warning mr-2"><i class="fas fa-arrow-up"></i> {{$month_count/1000}}%</span>
+                                    <span class="text-nowrap">Since last month</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6">
+                        <div class="card card-stats mb-4 mb-xl-0">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance</h5>
+                                        <span class="h2 font-weight-bold mb-0">No: {{$to_date_count}}</span><br>
+                                        <span class="h2 font-weight-bold mb-0">Value: {{$to_date_sum}}</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-info text-white rounded-circle shadow">
+                                            <i class="fas fa-percent"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 mb-0 text-muted text-sm">
+{{--                                    <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> {{$to_date_count/1000}}%</span>--}}
+                                    <span class="text-nowrap">All time</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-	<!-- Modal -->
+    <div class="container-fluid mt--7">
+	{{--<div class="page-header">--}}
+		{{--<div class='btn-toolbar pull-right'>--}}
+			{{--<a class="btn btn-info" href="">--}}
+				{{--<span class="icon-refresh" aria-hidden="true"></span>--}}
+				{{--Refresh--}}
+			{{--</a>--}}
+		{{--</div>--}}
+		{{--<h3>Dashboard</h3>--}}
+	{{--</div>--}}
+	<div class="page-header">
+		<div class="pull-right">
+			{{--{!! Form::open(array('url'=>'payments/upload','method'=>'POST', 'files'=>true, 'class'=>'form-inline')) !!}--}}
+				{{--<div class="col-md-12">--}}
+					{{--<div class="col-xs-10">--}}
+						{{--<span id="filename">Select your file</span>--}}
+						{{--<label for="file-upload">Browse<input type="file" id="file-upload" name="xls"></label>--}}
+					{{--</div>--}}
+
+					{{--<div class="col-xs-2">--}}
+						{{--<button type="submit" class="btn btn-info pull-right">Upload</button>--}}
+					{{--</div>--}}
+				{{--</div>--}}
+			{{--{!! Form::close() !!}--}}
+            <br>
+            <br>
+            <br>
+		</div>
+		<h3>Payments</h3>
+	</div>
+
+    <div class="nav-wrapper">
+        <ul class="nav nav-pills nav-fill flex-column flex-md-row" id="tabs-icons-text" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link mb-sm-3 mb-md-0 active" id="tabs-icons-text-1-tab" data-toggle="tab" href="#processed" role="tab" aria-controls="tabs-icons-text-1" aria-selected="true"><i class="ni ni-cloud-upload-96 mr-2" onclick="processedPaymentsDataTables()"></i>Processed Payments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-2-tab" data-toggle="tab" href="#unprocessed" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false"><i class="ni ni-bell-55 mr-2" onclick="unrecognizedPaymentsDataTables()"></i>Unprocessed Payments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-3-tab" data-toggle="tab" href="#unrecognized" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false" onclick="unrecognizedPaymentsDataTables()"><i class="ni ni-calendar-grid-58 mr-2"></i>Unrecognized Payments</a>
+            </li>
+        </ul>
+    </div>
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="tab-content" id="myTabContent">
+                <div class="table-responsive active" id="unprocessed">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        {{--<div class="table-responsive">--}}
+                        <table class="table align-items-center unprocessed-payments-table" id="unprocessed-payments-table" cellspacing="0" width="100%">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">Phone</th>
+                                <th nowrap="" scope="col">Client Name</th>
+                                <th scope="col">Trans. ID</th>
+                                <th scope="col">Account</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Transaction Time</th>
+                                <th scope="col">Paybill</th>
+                                <th scope="col">Comment</th>
+                            </tr>
+                            </thead>
+                        </table>
+                        {{--</div>--}}
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="processed">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        {{--<div class="table-responsive">--}}
+                        <table class="table align-items-center processed-payments-table" id="processed-payments-table" cellspacing="0" width="100%">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">Phone</th>
+                                <th nowrap="" scope="col">Client Name</th>
+                                <th scope="col">Trans. ID</th>
+                                <th scope="col">Account</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Transaction Time</th>
+                                <th scope="col">Paybill</th>
+                                <th scope="col">Comment</th>
+                            </tr>
+                            </thead>
+                        </table>
+                        {{--</div>--}}
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="unrecognized">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        {{--<div class="table-responsive">--}}
+                        <table class="table align-items-center unrecognized-payments-table" id="unrecognized-payments-table" cellspacing="0" width="100%">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">Phone</th>
+                                <th nowrap="" scope="col">Client Name</th>
+                                <th scope="col">Trans. ID</th>
+                                <th scope="col">Account</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Transaction Time</th>
+                                <th scope="col">Paybill</th>
+                                <th scope="col">Comment</th>
+                            </tr>
+                            </thead>
+                        </table>
+                        {{--</div>--}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+        <!-- Modal -->
 	@include('partials.modal')
 	<!-- End of Modal -->
 @stop
