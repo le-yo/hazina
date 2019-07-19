@@ -238,7 +238,7 @@
 				destroy: true,
 				processing: true,
 				serverSide: true,
-				ajax: '{!! route('payments.datatables', [STL_PAYBILL]) !!}',
+				ajax: '{!! route('payments.datatables.unprocessed', [STL_PAYBILL]) !!}',
 				"order": [[0,'desc']],
 				"lengthMenu": [[50, 25, 10], [50, 25, 10]],
 				columns: [

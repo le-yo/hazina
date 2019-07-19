@@ -119,7 +119,8 @@ Route::get('/', ['as' => '/', 'uses' => function() {
 
 //Datatables
 Route::get('payments/datatables', ['as' => 'payments.datatables', 'uses' => 'DatatablesController@getPayments']);
-Route::get('payments/datatables/unprocessed', ['as' => 'payments.datatables.processed', 'uses' => 'DatatablesController@getProcessedPayments']);
+Route::get('payments/datatables/processed', ['as' => 'payments.datatables.processed', 'uses' => 'DatatablesController@getProcessedPayments']);
+Route::get('payments/datatables/unprocessed', ['as' => 'payments.datatables.unprocessed', 'uses' => 'DatatablesController@getUnProcessedPayments']);
 Route::get('payments/datatables/unrecognized', ['as' => 'payments.datatables.unrecognized', 'uses' => 'DatatablesController@getUnrecognizedPayments']);
 
 
