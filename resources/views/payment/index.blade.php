@@ -161,7 +161,7 @@
                                 <th scope="col">Amount</th>
                                 <th scope="col">Transaction Time</th>
                                 <th scope="col">Paybill</th>
-                                <th scope="col">Comment</th>
+                                {{--<th scope="col">Comment</th>--}}
                             </tr>
                             </thead>
                         </table>
@@ -182,28 +182,7 @@
                                 <th scope="col">Amount</th>
                                 <th scope="col">Transaction Time</th>
                                 <th scope="col">Paybill</th>
-                                <th scope="col">Comment</th>
-                            </tr>
-                            </thead>
-                        </table>
-                        {{--</div>--}}
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="unprocessed">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        {{--<div class="table-responsive">--}}
-                        <table class="table align-items-center unprocessed-payments-table" id="unprocessed-payments-table" cellspacing="0" width="100%">
-                            <thead class="thead-light">
-                            <tr>
-                                {{--<th scope="col">Id</th>--}}
-                                <th scope="col">Phone</th>
-                                <th nowrap="" scope="col">Client Name</th>
-                                <th scope="col">Trans. ID</th>
-                                <th scope="col">Account</th>
-                                <th scope="col">Amount</th>
-                                <th scope="col">Transaction Time</th>
-                                <th scope="col">Paybill</th>
-                                <th scope="col">Comment</th>
+                                {{--<th scope="col">Comment</th>--}}
                             </tr>
                             </thead>
                         </table>
@@ -224,7 +203,7 @@
                                 <th scope="col">Amount</th>
                                 <th scope="col">Transaction Time</th>
                                 <th scope="col">Paybill</th>
-                                <th scope="col">Comment</th>
+                                {{--<th scope="col">Comment</th>--}}
                             </tr>
                             </thead>
                         </table>
@@ -272,7 +251,7 @@
 					{data: 'transaction_time', name: 'transaction_time',sClass:"numericCol"},
                     {data: 'paybill', name: 'paybill',sClass:"numericCol"},
                     // {data: 'status', name: 'status',sClass:"numericCol", searchable: true},
-					{data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i></i>'},
+                    // {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i></i>'},
 					// {data: 'action', name: 'action',sClass:"numericCol", searchable: false}
 				],
                 drawCallback: function(settings) {
