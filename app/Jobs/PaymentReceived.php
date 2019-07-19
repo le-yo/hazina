@@ -276,6 +276,7 @@ class PaymentReceived extends Job implements ShouldQueue
         $user = self::getTransactionClient($payment_data);
         if(!$user){
             $payment->comment = "No User found with either the account provided or phone number of the payee";
+            $payment->status = 2;
             $payment->save();
         }
         $loanAccounts = self::getClientLoanAccountsInAscendingOrder($user->client_id);

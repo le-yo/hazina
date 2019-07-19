@@ -57,10 +57,28 @@ class DatatablesController extends Controller
     }
 
 
-    public function getUnrecognizedPayments()
+    public function getUnProcessedPayments()
     {
 
         return Datatables::of(Payment::whereStatus(0)->orderBy('updated_at', 'desc')->take(50)->get())
+            ->editColumn('transaction_time', function ($payment) {
+                return Carbon::parse($payment->transaction_time)->format('j F Y h:i A');
+            })->editColumn('amount', function ($payment) {
+                return number_format($payment->amount);
+            })->editColumn('action', function($id) {
+                return '<ul class="list-unstyled list-inline">
+                             <li>
+                                <a data-url="'.url('payments/comment/'.$id->id).'" class="btn btn-xs btn-info comment"><i class="icon-note"></i>Enter Correct Account</a>
+                            </li>
+                        </ul>';
+            })
+            ->make(true);
+    }
+
+    public function getUnrecognizedPayments()
+    {
+
+        return Datatables::of(Payment::whereStatus(2)->orderBy('updated_at', 'desc')->take(50)->get())
             ->editColumn('transaction_time', function ($payment) {
                 return Carbon::parse($payment->transaction_time)->format('j F Y h:i A');
             })->editColumn('amount', function ($payment) {
