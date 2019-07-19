@@ -153,7 +153,7 @@
                         <table class="table align-items-center unprocessed-payments-table" id="unprocessed-payments-table" cellspacing="0" width="100%">
                             <thead class="thead-light">
                             <tr>
-                                <th scope="col">Id</th>
+                                {{--<th scope="col">Id</th>--}}
                                 <th scope="col">Phone</th>
                                 <th nowrap="" scope="col">Client Name</th>
                                 <th scope="col">Trans. ID</th>
