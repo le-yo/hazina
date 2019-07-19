@@ -57,7 +57,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Sales</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Tx This Month</h5>
                                         <span class="h2 font-weight-bold mb-0">No: {{$month_count}}</span><br>
                                         <span class="h2 font-weight-bold mb-0">Value: {{$month_sum}}</span>
                                     </div>
@@ -79,7 +79,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <h5 class="card-title text-uppercase text-muted mb-0">Performance</h5>
+                                        <h5 class="card-title text-uppercase text-muted mb-0">Total</h5>
                                         <span class="h2 font-weight-bold mb-0">No: {{$to_date_count}}</span><br>
                                         <span class="h2 font-weight-bold mb-0">Value: {{$to_date_sum}}</span>
                                     </div>
@@ -174,7 +174,28 @@
                         <table class="table align-items-center processed-payments-table" id="processed-payments-table" cellspacing="0" width="100%">
                             <thead class="thead-light">
                             <tr>
-                                <th scope="col">Id</th>
+                                {{--<th scope="col">Id</th>--}}
+                                <th scope="col">Phone</th>
+                                <th nowrap="" scope="col">Client Name</th>
+                                <th scope="col">Trans. ID</th>
+                                <th scope="col">Account</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Transaction Time</th>
+                                <th scope="col">Paybill</th>
+                                <th scope="col">Comment</th>
+                            </tr>
+                            </thead>
+                        </table>
+                        {{--</div>--}}
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="unprocessed">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        {{--<div class="table-responsive">--}}
+                        <table class="table align-items-center unprocessed-payments-table" id="unprocessed-payments-table" cellspacing="0" width="100%">
+                            <thead class="thead-light">
+                            <tr>
+                                {{--<th scope="col">Id</th>--}}
                                 <th scope="col">Phone</th>
                                 <th nowrap="" scope="col">Client Name</th>
                                 <th scope="col">Trans. ID</th>
@@ -195,7 +216,7 @@
                         <table class="table align-items-center unrecognized-payments-table" id="unrecognized-payments-table" cellspacing="0" width="100%">
                             <thead class="thead-light">
                             <tr>
-                                <th scope="col">Id</th>
+                                {{--<th scope="col">Id</th>--}}
                                 <th scope="col">Phone</th>
                                 <th nowrap="" scope="col">Client Name</th>
                                 <th scope="col">Trans. ID</th>
@@ -242,7 +263,7 @@
 				"order": [[0,'desc']],
 				"lengthMenu": [[50, 25, 10], [50, 25, 10]],
 				columns: [
-					{data: 'id', name: 'id'},
+					// {data: 'id', name: 'id'},
 					{data: 'phone', name: 'phone',sClass:"numericCol" },
 					{data: 'client_name', name: 'client_name',sClass:"numericCol display-name"},
 					{data: 'transaction_id', name: 'transaction_id',sClass:"numericCol"},
@@ -338,7 +359,7 @@
 				"order": [[0, 'desc']],
 				"lengthMenu": [[50, 25, 10], [50, 25, 10]],
 				columns: [
-					{data: 'id', name: 'id'},
+					// {data: 'id', name: 'id'},
 					{data: 'phone', name: 'phone',sClass:"numericCol" },
 					{data: 'client_name', name: 'client_name',sClass:"numericCol display-name"},
 					{data: 'transaction_id', name: 'transaction_id',sClass:"numericCol"},
@@ -434,7 +455,7 @@
 				"order": [[0, 'desc']],
 				"lengthMenu": [[50, 25, 10], [50, 25, 10]],
 				columns: [
-					{data: 'id', name: 'id'},
+					// {data: 'id', name: 'id'},
 					{data: 'phone', name: 'phone',sClass:"numericCol display-name" },
 					{data: 'client_name', name: 'client_name',sClass:"numericCol"},
 					{data: 'transaction_id', name: 'transaction_id',sClass:"numericCol"},
