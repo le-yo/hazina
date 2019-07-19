@@ -234,11 +234,11 @@
 
 		});
 		$(document).ready(function () {
-			$('#unprocessed-payments-table').DataTable({
+			$('#processed-payments-table').DataTable({
 				destroy: true,
 				processing: true,
 				serverSide: true,
-				ajax: '{!! route('payments.datatables.unprocessed', [STL_PAYBILL]) !!}',
+				ajax: '{!! route('payments.datatables.processed', [STL_PAYBILL]) !!}',
 				"order": [[0,'desc']],
 				"lengthMenu": [[50, 25, 10], [50, 25, 10]],
 				columns: [
@@ -326,15 +326,113 @@
                     });
                 }
             });
+
 		});
 
-		function processedPaymentsDataTables() {
-		    var $processedPaymentsTable = $('#processed-payments-table');
+        function processedPaymentsDataTables() {
+            var $processedPaymentsTable = $('#processed-payments-table');
             var table = $processedPaymentsTable.DataTable({
+                destroy: true,
+                processing: true,
+                serverSide: true,
+                ajax: '{!! route('payments.datatables.processed', [PCL_PAYBILL]) !!}',
+                "order": [[0, 'desc']],
+                "lengthMenu": [[50, 25, 10], [50, 25, 10]],
+                columns: [
+                    // {data: 'id', name: 'id'},
+                    {data: 'phone', name: 'phone',sClass:"numericCol" },
+                    {data: 'client_name', name: 'client_name',sClass:"numericCol display-name"},
+                    {data: 'transaction_id', name: 'transaction_id',sClass:"numericCol"},
+                    {data: 'account_no', name: 'account_no',sClass:"numericCol"},
+                    {data: 'amount', name: 'amount',sClass:"numericCol"},
+                    {data: 'transaction_time', name: 'transaction_time',sClass:"numericCol"},
+                    {data: 'paybill', name: 'paybill',sClass:"numericCol"},
+                    {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i></i>'},
+                    // {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
+                    // {data: 'action', name: 'action',sClass:"numericCol", searchable: false}
+                    // {data: 'status', name: 'status',sClass:"numericCol", searchable: true}
+                ],
+                drawCallback: function(settings) {
+                    // Access Datatables API methods
+                    var $api = new $.fn.dataTable.Api(settings);
+
+                    var $calculator = $('.calculator');
+
+                    $calculator.on('mouseenter', function () {
+                        var row = $api.row($(this).closest('tr')).data();
+                        var $calc = $(this);
+                        var phone_no = row.phone;
+                        var amount_paid = parseInt(row.amount.replace(/\,/g, ''));
+                        var loan_url = '{!! recipients_STL_URL !!}' + phone_no;
+
+                        $.ajax({
+                            url: loan_url,
+                            dataType: 'jsonp',
+                            jsonp: 'callback',
+                            jsonpCallback: 'loanCallback',
+                            success: function(data) {
+                                var response = {};
+
+                                if (data.success !== undefined)
+                                {
+                                    var loan = data.loan.loanBalance;
+                                    var ext = ((amount_paid*0.1) - (loan*0.1))/(0.1-1);
+                                    var num = amount_paid - ext;
+                                    var reduction = roundDown(num, -1);
+                                    var fee = amount_paid - reduction;
+
+                                    response["loan"] = loan;
+                                    response["amount"] = amount_paid;
+                                    response["reduction"] = reduction;
+                                    response["fee"] = fee;
+                                } else {
+                                    response["loan"] = 'Not Found';
+                                    response["amount"] = amount_paid;
+                                    response["reduction"] = 0;
+                                    response["fee"] = 0;
+                                }
+
+                                $calc.popover({
+                                    'html': 'true',
+                                    'title': row.client_name,
+                                    'trigger': 'click',
+                                    'placement': 'top',
+                                    'container': 'body',
+                                    'content': function () {
+                                        return '<p class="outstanding"><b>Outstanding Loan: </b>'+response.loan+'</p>'+
+                                            '<p class="amount"><b>Amount Paid: </b>'+response.amount+'</p>'+
+                                            '<p class="reduction"><b>Loan Reduction: </b>'+response.reduction+'</p>'+
+                                            '<p class="extension"><b>Extension Fee: </b>'+response.fee+'</p>';
+                                    }
+                                });
+                            }
+                        });
+
+                        function roundDown(number, decimals) {
+                            decimals = decimals || 0;
+                            return ( Math.floor( number * Math.pow(10, decimals) ) / Math.pow(10, decimals) );
+                        }
+                    });
+
+                    $('.comment').on('click', function(e) {
+                        var url = $(this).attr('data-url');
+
+                        $("#form").attr('action', url);
+                        $("#modal-comment").modal('show');
+
+                        e.preventDefault();
+                    });
+                }
+            });
+        }
+
+		function unprocessedPaymentsDataTables() {
+		    var $unprocessedPaymentsTable = $('#unprocessed-payments-table');
+            var table = $unprocessedPaymentsTable.DataTable({
 				destroy: true,
 				processing: true,
 				serverSide: true,
-				ajax: '{!! route('payments.datatables.processed', [PCL_PAYBILL]) !!}',
+				ajax: '{!! route('payments.datatables.unprocessed', [PCL_PAYBILL]) !!}',
 				"order": [[0, 'desc']],
 				"lengthMenu": [[50, 25, 10], [50, 25, 10]],
 				columns: [
