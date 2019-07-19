@@ -123,9 +123,9 @@ Route::get('payments/datatables/unprocessed', ['as' => 'payments.datatables.proc
 Route::get('payments/datatables/unrecognized', ['as' => 'payments.datatables.unrecognized', 'uses' => 'DatatablesController@getUnrecognizedPayments']);
 
 
-Auth::routes();
+//Auth::routes();
 
-
+Auth::routes(['register' => false]);
 //toreview
 
 // Payments
