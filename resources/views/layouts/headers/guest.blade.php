@@ -3,7 +3,7 @@
         <div class="header-body text-center mb-7">
             <div class="row justify-content-center">
                 <div class="col-lg-5 col-md-6">
-                    <h1 class="text-white">{{ __('Welcome to Hela+ Mifos <-> MPESA Platform.') }}</h1>
+                    <h1 class="text-white">{{ __('Welcome to Mifos Mobi') }} <br>{{ __('Login') }}</h1>
                 </div>
             </div>
         </div>

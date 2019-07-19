@@ -7,9 +7,9 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('Hela+ Mifos->MPESA', 'Hela+ Mifos->MPESA') }}</title>
+    <title>{{ config('Mifos Mobi', 'Mifos Mobi') }}</title>
     <!-- Favicon -->
-    <link href="{{ asset('argon') }}/img/brand/helaplus.jpg" rel="icon" type="image/jpg">
+    <link href="{{ asset('argon') }}/img/brand/mifos.mobi.logo.png" rel="icon" type="image/jpg">
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
 {{--    <link rel="stylesheet" href="{{ asset('plugins/font-awesome/css/font-awesome.min.css') }}">--}}
 {{--    <link rel="stylesheet" href="{{ asset('plugins/simple-line-icons/css/simple-line-icons.css') }}">--}}
