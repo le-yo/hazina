@@ -134,10 +134,10 @@
     <div class="nav-wrapper">
         <ul class="nav nav-pills nav-fill flex-column flex-md-row" id="tabs-icons-text" role="tablist">
             <li class="nav-item">
-                <a class="nav-link mb-sm-3 mb-md-0 active" id="tabs-icons-text-1-tab" data-toggle="tab" href="#processed" role="tab" aria-controls="tabs-icons-text-1" aria-selected="true"><i class="ni ni-cloud-upload-96 mr-2" onclick="processedPaymentsDataTables()"></i>Processed Payments</a>
+                <a class="nav-link mb-sm-3 mb-md-0 active" id="tabs-icons-text-1-tab" data-toggle="tab" href="#processed" role="tab" aria-controls="tabs-icons-text-1" aria-selected="true" onclick="processedPaymentsDataTables()"><i class="ni ni-cloud-upload-96 mr-2"></i>Processed Payments</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-2-tab" data-toggle="tab" href="#unprocessed" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false"><i class="ni ni-bell-55 mr-2" onclick="unrecognizedPaymentsDataTables()"></i>Unprocessed Payments</a>
+                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-2-tab" data-toggle="tab" href="#unprocessed" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false" onclick="unprocessedPaymentsDataTables()"><i class="ni ni-bell-55 mr-2"></i>Unprocessed Payments</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-3-tab" data-toggle="tab" href="#unrecognized" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false" onclick="unrecognizedPaymentsDataTables()"><i class="ni ni-calendar-grid-58 mr-2"></i>Unrecognized Payments</a>
@@ -147,28 +147,7 @@
     <div class="card shadow">
         <div class="card-body">
             <div class="tab-content" id="myTabContent">
-                <div class="table-responsive active" id="unprocessed">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        {{--<div class="table-responsive">--}}
-                        <table class="table align-items-center unprocessed-payments-table" id="unprocessed-payments-table" cellspacing="0" width="100%">
-                            <thead class="thead-light">
-                            <tr>
-                                {{--<th scope="col">Id</th>--}}
-                                <th scope="col">Phone</th>
-                                <th nowrap="" scope="col">Client Name</th>
-                                <th scope="col">Trans. ID</th>
-                                <th scope="col">Account</th>
-                                <th scope="col">Amount</th>
-                                <th scope="col">Transaction Time</th>
-                                <th scope="col">Paybill</th>
-                                {{--<th scope="col">Comment</th>--}}
-                            </tr>
-                            </thead>
-                        </table>
-                        {{--</div>--}}
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="processed">
+                <div class="tab-pane fade show active" id="processed" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         {{--<div class="table-responsive">--}}
                         <table class="table align-items-center processed-payments-table" id="processed-payments-table" cellspacing="0" width="100%">
@@ -189,7 +168,28 @@
                         {{--</div>--}}
                     </div>
                 </div>
-                <div class="tab-pane fade" id="unrecognized">
+                <div class="tab-pane fade" id="unprocessed" role="tabpanel" aria-labelledby="tabs-icons-text-2-tab">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        {{--<div class="table-responsive">--}}
+                        <table class="table align-items-center unprocessed-payments-table" id="unprocessed-payments-table" cellspacing="0" width="100%">
+                            <thead class="thead-light">
+                            <tr>
+                                {{--<th scope="col">Id</th>--}}
+                                <th scope="col">Phone</th>
+                                <th nowrap="" scope="col">Client Name</th>
+                                <th scope="col">Trans. ID</th>
+                                <th scope="col">Account</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Transaction Time</th>
+                                <th scope="col">Paybill</th>
+                                {{--<th scope="col">Comment</th>--}}
+                            </tr>
+                            </thead>
+                        </table>
+                        {{--</div>--}}
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="unrecognized" role="tabpanel" aria-labelledby="tabs-icons-text-3-tab">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         {{--<div class="table-responsive">--}}
                         <table class="table align-items-center unrecognized-payments-table" id="unrecognized-payments-table" cellspacing="0" width="100%">
@@ -430,7 +430,7 @@
 				destroy: true,
 				processing: true,
 				serverSide: true,
-				ajax: '{!! route('payments.datatables.unrecognized', [PCL_PAYBILL]) !!}',
+				ajax: '{!! route('payments.datatables.unrecognized', [STL_PAYBILL]) !!}',
 				"order": [[0, 'desc']],
 				"lengthMenu": [[50, 25, 10], [50, 25, 10]],
 				columns: [
