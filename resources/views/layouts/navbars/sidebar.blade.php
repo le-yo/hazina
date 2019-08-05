@@ -6,7 +6,8 @@
         </button>
         <!-- Brand -->
         <a class="navbar-brand pt-0" href="{{ route('home') }}">
-            <img src="{{ asset('argon') }}/img/brand/mifos.mobi.logo.png" class="navbar-brand-img" alt="...">
+            Mifos Mobi
+            {{--<img src="{{ asset('argon') }}/img/brand/mifos.mobi.logo.png" class="navbar-brand-img" alt="...">--}}
         </a>
         <!-- User -->
         <ul class="nav align-items-center d-md-none">
@@ -96,6 +97,7 @@
                         <i class="ni ni-tv-2 text-primary"></i> {{ __('Dashboard') }}
                     </a>
                 </li>
+
                 {{--<li class="nav-item">--}}
                     {{--<a class="nav-link active" href="#navbar-examples" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-examples">--}}
                         {{--<i class="fab fa-laravel" style="color: #f4645f;"></i>--}}
@@ -143,6 +145,24 @@
                         {{--<i class="ni ni-cloud-download-95"></i> Upgrade to PRO--}}
                     {{--</a>--}}
                 {{--</li>--}}
+            </ul>
+            <!-- Divider -->
+            <hr class="my-3">
+            <!-- Heading -->
+            <h6 class="navbar-heading text-muted">Modules</h6>
+            <!-- Navigation -->
+            <ul class="navbar-nav mb-md-3">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('payments/recon') }}">
+                        <i class="ni ni-tv-2 text-primary"></i> {{ __('Reconciliation') }}
+                    </a>
+                </li>
+                {{--<li class="nav-item">--}}
+                {{--<a class="nav-link" href="https://demos.creative-tim.com/argon-dashboard/docs/foundation/colors.html">--}}
+                {{--<i class="ni ni-palette"></i> Foundation--}}
+                {{--</a>--}}
+                {{--</li>--}}
+
             </ul>
             <!-- Divider -->
             <hr class="my-3">

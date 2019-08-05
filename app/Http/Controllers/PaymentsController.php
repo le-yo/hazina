@@ -614,13 +614,18 @@ class PaymentsController extends Controller
      * @param Request $request
      * @return mixed
      */
+    public function reconPayments(){
 
+        return view('payment.reconupload');
+    }
     public function uploadPayments(Request $request){
+
+
         $count = 0;
         ini_set('max_execution_time',0);
 
         $validator = Validator::make($request->all(), [
-            'xls' => 'required',
+            'mpesa_xls' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -628,7 +633,7 @@ class PaymentsController extends Controller
                 ->with('error', 'Please upload an EXCEL file!');
         }
 
-        $extension = $request->file('xls')->getClientOriginalExtension(); // getting the file extension
+        $extension = $request->file('mpesa_xls')->getClientOriginalExtension(); // getting the file extension
 
         if ($extension != 'xls' && $extension != 'xlsx') {
             return Redirect::back()
@@ -637,7 +642,7 @@ class PaymentsController extends Controller
 
         $fileName = rand(11111,99999).'.'.$extension; // renaming the file
 
-        $request->file('xls')->move('storage',$fileName); // move it to the storage folder in the public assets
+        $request->file('mpesa_xls')->move('storage',$fileName); // move it to the storage folder in the public assets
 
         Excel::load('storage/'.$fileName, function($reader){
 //          Excel::filter('chunk')->load('file.csv')->chunk(250, function($results)
@@ -646,13 +651,14 @@ class PaymentsController extends Controller
 
 //              }
             $results = $reader->get();
+
             $results -> each(function($sheet,$count) {
-//                print_r($sheet);
-//exit;
+
                 if(!isset($sheet->receipt_no)){
-                    return Redirect::back()
-                        ->with('error', 'please upload the right excel file!');
-                }
+//                    return Redirect::back()
+//                        ->with('error', 'please upload the right excel file!');
+                }else{
+
 
                 $transaction_id = $sheet->receipt_no;
                 $payments = Payment::where('transaction_id', '=',$transaction_id)->first();
@@ -660,13 +666,15 @@ class PaymentsController extends Controller
                 if(is_null($payments)){
                     $exploded_other_party_info =  explode("-",$sheet->other_party_info);
 
-                    $phone = '+'.trim($exploded_other_party_info[0]);
+                    $phone = '+254'.trim(substr($exploded_other_party_info[0],1,9));
 
                     $client_name = $exploded_other_party_info[1];
                     $amount = $sheet->paid_in;
+
                     $status = $sheet->transaction_status;
-                    $paybill = $sheet->paybill;
+                    $paybill = "189779";
                     $account_no = $sheet->ac_no;
+
                     if(!isset($account_no)){
                         $account_no = 'NULL';
                     }
@@ -732,6 +740,8 @@ class PaymentsController extends Controller
 
                     global $success;
                     $success = true;
+                }
+
                 }
             });
         });

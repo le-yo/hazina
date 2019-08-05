@@ -54,6 +54,7 @@ Route::post('payments/comment/{id}', 'PaymentsController@getComment');
 Route::get('payments/calculator/{id}', 'PaymentsController@getOutstandingLoan');
 
 // Excel payments upload
+Route::get('payments/recon', 'PaymentsController@reconPayments');
 Route::post('payments/upload', 'PaymentsController@uploadPayments');
 /*
 |--------------------------------------------------------------------------
