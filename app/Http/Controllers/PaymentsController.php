@@ -53,7 +53,6 @@ class PaymentsController extends Controller
         $collectionSheet = Hooks::MifosPostTransaction($postURl, json_encode($data));
 
 
-
         if(count($collectionSheet) == 0){
             session(['error' => 'Invalid account or centre ID']);
             return redirect()->back()->with('Error', 'Invalid account or centre ID');
@@ -128,7 +127,7 @@ class PaymentsController extends Controller
             $totals_sum['loan'][6] =0;
         }
         $success = 'CollectionSheet retrieved successfully';
-        return view('payment.collection',compact('collectionSheet','success','sum','final_array','totals_sum'));
+        return view('payment.collection',compact('collectionSheet','success','sum','final_array','totals_sum','payment'));
     }
 
     public function saveCollectionSheet($id){
