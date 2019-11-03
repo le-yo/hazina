@@ -12,6 +12,8 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+{{--    <link rel="stylesheet" href="{{ asset('emaus/css/font-icons.css') }}">--}}
+    {{--<link rel="stylesheet" href="{{ asset('emaus/css/style.css') }}">--}}
 </head>
 <body>
     <div id="app">

@@ -68,7 +68,7 @@ Route::post('payments/upload', 'PaymentsController@uploadPayments');
 
 Route::get('/home', ['as' => 'home', 'uses' => function() {
     if (!Auth::check()) {
-        return view('welcome');
+        return view('landing');
     } else {
         return view('payment.index');
         $now = \Carbon\Carbon::now();
@@ -93,7 +93,7 @@ Route::get('/home', ['as' => 'home', 'uses' => function() {
 
 Route::get('/', ['as' => '/', 'uses' => function() {
     if (!Auth::check()) {
-        return view('welcome');
+        return view('landing');
     } else {
         return view('payment.index');
         $now = \Carbon\Carbon::now();
