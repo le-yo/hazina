@@ -9,6 +9,16 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">{!! $payment->amount !!}</h3>
+            </div>
+            <div class="panel-body">
+                This is a test
+            </div>
+                <br>
+                <br>
+            </div>
+            <div class="panel panel-info">
             @foreach($collectionSheet->groups as $group)
 
 				<div class="panel-heading">
@@ -181,8 +191,16 @@
     <script>
         $('.edittable').editable({
             type: 'text',
+            mode:'inline',
             url: '/collectionSheetPost',
             title: 'Enter new value',
+        });
+        $('.editable').on('hidden', function(e, reason){
+            if(reason === 'save' || reason === 'nochange') {
+
+                var that = this;
+                $(".editable:visible").eq($(".editable:visible").index(that) + 1).editable('show');
+            }
         });
     </script>
 @endpush
