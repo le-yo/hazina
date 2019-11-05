@@ -46,7 +46,7 @@ class PaymentsController extends Controller
         $data = array();
         $data['dateFormat'] = 'dd MMMM yyyy';
         $data['locale'] = 'en_GB';
-        $data['calendarId'] = 6;
+        $data['calendarId'] = 7;
         $data['transactionDate'] = Carbon::now()->format('d M Y');
 
         // post the encoded application details
@@ -57,17 +57,31 @@ class PaymentsController extends Controller
             session(['error' => 'Invalid account or centre ID']);
             return redirect()->back()->with('Error', 'Invalid account or centre ID');
         }
+
+//        print_r($collectionSheet);
+//        exit;
+//        print_r($collectionSheet);
+//        exit;
         //get totals
         $sum = array();
         $final_array = array();
         $totals_sum = array();
+        //initialization
+        foreach ($collectionSheet->loanProducts as $lp){
+            $totals_sum['loan'][$lp->id] =0;
+        }
+        foreach ($collectionSheet->savingsProducts as $sp){
+            $totals_sum['savings'][$sp->id] =0;
+        }
         foreach ($collectionSheet->groups as $group){
             $final_group = array();
-            $group_sum = [
-                'loan'=>array(),
-                'savings'=> array(),
-            ];
 
+            foreach ($collectionSheet->loanProducts as $lp){
+                $group_sum['loan'][$lp->id] =0;
+            }
+            foreach ($collectionSheet->savingsProducts as $sp){
+                $group_sum['savings'][$sp->id] =0;
+            }
 
             foreach ($group->clients as $client){
                 $final_client = array();
@@ -77,11 +91,16 @@ class PaymentsController extends Controller
                     foreach ($client->loans as $loan) {
 
                         if(count($loan)>0) {
-                            if(!isset($group_sum['loan'][$loan->productId])){
-                                $group_sum['loan'][$loan->productId] = 0;
-                            }
-                            if(!isset($totals_sum['loan'][$loan->productId])){
-                                $totals_sum['loan'][$loan->productId] = 0;
+//                            if(!isset($group_sum['loan'][$loan->productId])){
+//                                $group_sum['loan'][$loan->productId] = 0;
+//                            }
+//                            if(!isset($totals_sum['loan'][$loan->productId])){
+//                                $totals_sum['loan'][$loan->productId] = 0;
+//                            }
+                            if(!isset($loan->chargesDue)){
+                                $loan->chargesDue = 0;
+                            }else{
+                                $loan->totalDue = $loan->totalDue + $loan->chargesDue;
                             }
                             $final_client['loan'][$loan->productId] = $loan;
                             $group_sum['loan'][$loan->productId] = $group_sum['loan'][$loan->productId] + $loan->totalDue;
@@ -93,15 +112,15 @@ class PaymentsController extends Controller
                 //rearrange client savings
                 if(isset($client->savings)) {
                     foreach ($client->savings as $saving) {
-                        if(!isset($group_sum['savings'][$saving->productId])) {
-                            $group_sum['savings'][$saving->productId] =0;
-                        }
-                        if(!isset($totals_sum['savings'][$saving->productId])) {
-                            $totals_sum['savings'][$saving->productId] =0;
-                        }
+//                        if(!isset($group_sum['savings'][$saving->productId])) {
+//                            $group_sum['savings'][$saving->productId] =0;
+//                        }
+//                        if(!isset($totals_sum['savings'][$saving->productId])) {
+//                            $totals_sum['savings'][$saving->productId] =0;
+//                        }
                         $final_client['savings'][$saving->productId] = $saving;
-                            $group_sum['savings'][$saving->productId] = $group_sum['savings'][$saving->productId] + $saving->dueAmount;
-                            $totals_sum['savings'][$saving->productId] = $totals_sum['savings'][$saving->productId] + $saving->dueAmount;
+                        $group_sum['savings'][$saving->productId] = $group_sum['savings'][$saving->productId] + $saving->dueAmount;
+                        $totals_sum['savings'][$saving->productId] = $totals_sum['savings'][$saving->productId] + $saving->dueAmount;
                     }
                 }
                 $final_group[$client->clientId] = $final_client;
@@ -109,6 +128,14 @@ class PaymentsController extends Controller
             $sum[$group->groupId] = $group_sum;
             $final_array[$group->groupId]=$final_group;
         }
+        $total_due=0;
+       foreach ($totals_sum['loan'] as $ts){
+            $total_due = $total_due + $ts;
+       }
+        foreach ($totals_sum['savings'] as $ts){
+            $total_due = $total_due + $ts;
+        }
+
 
         //initializing loans
         if(!isset($totals_sum['savings'][7])) {
@@ -127,7 +154,7 @@ class PaymentsController extends Controller
             $totals_sum['loan'][6] =0;
         }
         $success = 'CollectionSheet retrieved successfully';
-        return view('payment.collection',compact('collectionSheet','success','sum','final_array','totals_sum','payment'));
+        return view('payment.collection',compact('collectionSheet','success','sum','final_array','totals_sum','payment','total_due'));
     }
 
     public function saveCollectionSheet($id){
