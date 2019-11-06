@@ -95,51 +95,37 @@
                             </td>
                         </tr>
             @endforeach
+            <tr>
+                <td>Total Total</td>
+                @foreach ($collectionSheet->loanProducts as $lp)
+                    @if(isset($totals_sum['loan'][$lp->id]))
+                        <td>{!! number_format($totals_sum['loan'][$lp->id],2) !!}</td>
+                    @else
+                        <td>0</td>
+                    @endif
+                @endforeach
+                @foreach ($collectionSheet->savingsProducts as $sp)
+                    @if(isset($totals_sum['savings'][$sp->id]))
+                        <td>{!! $totals_sum['savings'][$sp->id] !!}</td>
+                    @else
+                        <td>0</td>
+                    @endif
+                @endforeach
+                <td>
+                </td>
+            </tr>
                     </tbody>
                 </table>
-                <div class="panel-heading">
-                    <h3 class="panel-title">Totals</h3>
-                </div>
-                <div class="panel-body">
-
-                <table id="searchData" class = "table table-bordered table-condensed" style = 'background:#fff'>
-                    <thead>
-                    <th>Groups/Clients</th>
-                    <th>MML/Charges</th>
-                    <th>CFL/Charges</th>
-                    <th>MIL/Charges</th>
-                    <th>TAC (Saving Deposit)</th>
-                    <th>CCF (Saving Deposit)</th>
-                    <th>Attendance</th>
-                    </thead>
-                    <tbody>
-                <tr>
-                    <td>Total Total</td>
-                    @foreach ($collectionSheet->loanProducts as $lp)
-                        @if(isset($totals_sum['loan'][$lp->id]))
-                            <td>{!! number_format($totals_sum['loan'][$lp->id],2) !!}</td>
-                        @else
-                            <td>0</td>
-                        @endif
-                    @endforeach
-                    @foreach ($collectionSheet->savingsProducts as $sp)
-                        @if(isset($totals_sum['savings'][$sp->id]))
-                            <td>{!! $totals_sum['savings'][$sp->id] !!}</td>
-                        @else
-                            <td>0</td>
-                        @endif
-                    @endforeach
-                    <td>
-                    </td>
-                </tr>
-                </table>
                 </div>
 
                 <div class="panel-body">
-                   <h3>Total Due Collections: </h3> <h3 class="panel-title total_due" id="total_due">{!! number_format($total_due,2) !!}</h3>
+                   <h3>Total Due Collections: </h3> <h3 class="panel-title total_due" id="total_due">{!! $total_due !!}</h3>
                 </div>
                 <div class="panel-body">
-                    <h3 class="panel-title">Total Payment made: {!! number_format($payment->amount,2) !!}</h3>
+                   <h3>Total Payment made:</h3> <h3 class="panel-title" id="total_payment">{!! $payment->amount !!}</h3>
+                </div>
+                <div class="panel-body">
+                <button type="button" id="submit_payments" class="btn btn-success">Submit Payments</button>
                 </div>
             </div>
         </div>
@@ -157,6 +143,7 @@
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
     <script>
+        checkPayments();
         $('.edittable').editable({
             type: 'text',
             mode:'inline',
@@ -166,10 +153,22 @@
         $('.editable').on('hidden', function(e, reason){
             if(reason === 'save' || reason === 'nochange') {
                 var that = this;
+                checkPayments();
                 calculateTotal();
                 $(".editable:visible").eq($(".editable:visible").index(that) + 1).editable('show');
             }
         });
+        function checkPayments(){
+            var payment = document.getElementById("total_payment").innerText;
+            alert(payment);
+            var total_due = document.getElementById("total_due").innerText;
+            alert(total_due);
+            if(Number(payment) == Number(total_due)){
+            document.getElementById("submit_payments").disabled = false;
+            }else{
+            document.getElementById("submit_payments").disabled = true;
+            }
+        }
         function calculateTotal(){
             var sum = 0;
 
