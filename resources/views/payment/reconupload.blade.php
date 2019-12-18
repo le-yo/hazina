@@ -26,7 +26,7 @@
                     <ul>
                         <li>{!! \Session::get('success') !!}</li>
                     </ul>
-                </div> 
+                </div>
             @endif
             @if (\Session::has('error'))
                 <div class="alert alert-info">

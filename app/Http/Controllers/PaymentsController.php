@@ -328,6 +328,33 @@ class PaymentsController extends Controller
         return $user;
     }
 
+    public function editAccount($id) {
+        $payment = Payment::find($id)->toArray();
+        $data = array();
+        $data['externalId'] = Input::get('comment');
+        $data['phone'] = 'invalid';
+        $user = self::getTransactionClient($data);
+
+        if(!$user){
+            return redirect('/')->with('error', 'No user found with the given external id');
+        }
+        $payment['account_no'] = Input::get('comment');
+        $payment['externalId'] = Input::get('comment');
+
+        if(self::processUserLoan($payment)) {
+            $payment = Payment::findOrFail($id);
+            $payment->status = 1;
+            $payment->account_no = Input::get('comment');
+            $payment->update();
+            return redirect('/')->with('success', 'Payment Procesed successfully');
+        } else {
+            $payment = Payment::findOrFail($id);
+            $payment->status = 0;
+            $payment->update();
+            return redirect('/')->with('error', 'We had a problem processing payment for '.$payment->client_name);
+        }
+    }
+
     public function getComment($id) {
         $payment = Payment::find($id)->toArray();
 
@@ -659,8 +686,9 @@ class PaymentsController extends Controller
 //                        ->with('error', 'please upload the right excel file!');
                 }else{
 
-
                 $transaction_id = $sheet->receipt_no;
+
+
                 $payments = Payment::where('transaction_id', '=',$transaction_id)->first();
 
                 if(is_null($payments)){

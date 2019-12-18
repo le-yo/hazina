@@ -19,11 +19,13 @@
 </div>
 <div class="row">
     <div class="modal fade" id="modal-comment" role="dialog" tabindex="-1" aria-labelledby="paymentConfirmLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><img src="{{ asset('images/close.gif') }}" alt="close button" class="img-responsive"/></button>
-                    <h4 class="modal-title">Please Confirm</h4>
+                    <h5 class="modal-title" id="exampleModalLabel">Please confirm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -37,7 +39,7 @@
                             <form action="" method="POST" class="form-horizontal" role="form" id="form">
                                 <input name="_token" value="{{ csrf_token() }}" type="hidden">
                                 <div class="modal-footer">
-                                    <div class="col-md-12">
+                                    <div class="col-md-8">
                                         <div class="form-group">
                                             <textarea class="form-control" placeholder="Enter External Id" name="comment" rows="1"></textarea>
                                         </div>

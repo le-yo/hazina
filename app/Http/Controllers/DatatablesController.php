@@ -68,7 +68,10 @@ class DatatablesController extends Controller
             })->editColumn('action', function($id) {
                 return '<ul class="list-unstyled list-inline">
                              <li>
-                                <a data-url="'.url('payments/comment/'.$id->id).'" class="btn btn-xs btn-info comment"><i class="icon-note"></i>Enter Correct Account</a>
+                                <a data-toggle="modal" data-url="'.url('payments/editAccount/'.$id->id).'" data-target="#modal-comment" class="btn btn-info comment btn-sm"><i class="icon-note"></i>Enter Correct Account</a>
+                            </li>
+                            <li>
+                                <a href="'.url('makePayment/manual/'.$id->id).'" class="btn btn-sm btn-info"><i class="icon-map"></i> Mark as processed</a>
                             </li>
                         </ul>';
             })
@@ -86,7 +89,7 @@ class DatatablesController extends Controller
             })->editColumn('action', function($id) {
                 return '<ul class="list-unstyled list-inline">
                              <li>
-                                <a data-url="'.url('payments/comment/'.$id->id).'" class="btn btn-xs btn-info comment"><i class="icon-note"></i>Enter Correct Account</a>
+                                <a data-url="'.url('payments/editAccount/'.$id->id).'" class="btn btn-info comment btn-sm"><i class="icon-note"></i>Enter Correct Account</a>
                             </li>
                         </ul>';
             })

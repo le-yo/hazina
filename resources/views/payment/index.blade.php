@@ -4,8 +4,10 @@
 
 @section('content')
     <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
-        <div class="container-fluid">
+        <div class="container">
             <div class="header-body">
+
+            @include('partials.notify')
                 <!-- Card stats -->
                 <div class="row">
                     <div class="col-xl-3 col-lg-6">
@@ -149,7 +151,7 @@
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="processed" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        {{--<div class="table-responsive">--}}
+                        <div class="table-responsive">
                         <table class="table align-items-center processed-payments-table" id="processed-payments-table" cellspacing="0" width="100%">
                             <thead class="thead-light">
                             <tr>
@@ -160,17 +162,17 @@
                                 <th scope="col">Account</th>
                                 <th scope="col">Amount</th>
                                 <th scope="col">Transaction Time</th>
-                                <th scope="col">Paybill</th>
+                                {{--<th scope="col">Paybill</th>--}}
                                 {{--<th scope="col">Comment</th>--}}
                             </tr>
                             </thead>
                         </table>
-                        {{--</div>--}}
+                        </div>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="unprocessed" role="tabpanel" aria-labelledby="tabs-icons-text-2-tab">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        {{--<div class="table-responsive">--}}
+                <div class="tab-pane flex-sm-fill fade" id="unprocessed" role="tabpanel" aria-labelledby="tabs-icons-text-2-tab">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
                         <table class="table align-items-center unprocessed-payments-table" id="unprocessed-payments-table" cellspacing="0" width="100%">
                             <thead class="thead-light">
                             <tr>
@@ -181,17 +183,17 @@
                                 <th scope="col">Account</th>
                                 <th scope="col">Amount</th>
                                 <th scope="col">Transaction Time</th>
-                                <th scope="col">Paybill</th>
-                                {{--<th scope="col">Comment</th>--}}
+                                {{--<th scope="col">Paybill</th>--}}
+                                <th scope="col">Action</th>
                             </tr>
                             </thead>
                         </table>
-                        {{--</div>--}}
+                        </div>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="unrecognized" role="tabpanel" aria-labelledby="tabs-icons-text-3-tab">
+                <div class="tab-pane fade tab-responsive" id="unrecognized" role="tabpanel" aria-labelledby="tabs-icons-text-3-tab">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        {{--<div class="table-responsive">--}}
+                        <div class="table-responsive">
                         <table class="table align-items-center unrecognized-payments-table" id="unrecognized-payments-table" cellspacing="0" width="100%">
                             <thead class="thead-light">
                             <tr>
@@ -202,12 +204,12 @@
                                 <th scope="col">Account</th>
                                 <th scope="col">Amount</th>
                                 <th scope="col">Transaction Time</th>
-                                <th scope="col">Paybill</th>
-                                {{--<th scope="col">Comment</th>--}}
+                                {{--<th scope="col">Paybill</th>--}}
+                                <th scope="col">Action</th>
                             </tr>
                             </thead>
                         </table>
-                        {{--</div>--}}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -249,7 +251,7 @@
 					{data: 'account_no', name: 'account_no',sClass:"numericCol"},
 					{data: 'amount', name: 'amount',sClass:"numericCol"},
 					{data: 'transaction_time', name: 'transaction_time',sClass:"numericCol"},
-                    {data: 'paybill', name: 'paybill',sClass:"numericCol"},
+                    // {data: 'paybill', name: 'paybill',sClass:"numericCol"},
                     // {data: 'status', name: 'status',sClass:"numericCol", searchable: true},
                     // {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i></i>'},
 					// {data: 'action', name: 'action',sClass:"numericCol", searchable: false}
@@ -346,12 +348,53 @@
                     {data: 'account_no', name: 'account_no',sClass:"numericCol"},
                     {data: 'amount', name: 'amount',sClass:"numericCol"},
                     {data: 'transaction_time', name: 'transaction_time',sClass:"numericCol"},
-                    {data: 'paybill', name: 'paybill',sClass:"numericCol"},
+                    // {data: 'paybill', name: 'paybill',sClass:"numericCol"},
                     // {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i></i>'},
                     // {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
                     // {data: 'action', name: 'action',sClass:"numericCol", searchable: false}
                     // {data: 'status', name: 'status',sClass:"numericCol", searchable: true}
                 ],
+                drawCallback: function(settings) {
+                    // Access Datatables API methods
+                    var $api = new $.fn.dataTable.Api(settings);
+
+                    var $calculator = $('.calculator');
+
+                    $('.comment').on('click', function(e) {
+                        var url = $(this).attr('data-url');
+
+                        $("#form").attr('action', url);
+                        $("#modal-comment").modal('show');
+
+                        e.preventDefault();
+                    });
+                }
+            });
+        }
+
+		function unprocessedPaymentsDataTables() {
+            $('#unprocessed-payments-table').DataTable({
+				destroy: true,
+				processing: true,
+				serverSide: true,
+				ajax: '{!! route('payments.datatables.unprocessed', [PCL_PAYBILL]) !!}',
+				"order": [[5, 'desc']],
+				"lengthMenu": [[50, 25, 10], [50, 25, 10]],
+				columns: [
+					// {data: 'id', name: 'id'},
+					{data: 'phone', name: 'phone',sClass:"numericCol" },
+					{data: 'client_name', name: 'client_name',sClass:"numericCol display-name"},
+					{data: 'transaction_id', name: 'transaction_id',sClass:"numericCol"},
+					{data: 'account_no', name: 'account_no',sClass:"numericCol"},
+					{data: 'amount', name: 'amount',sClass:"numericCol"},
+					{data: 'transaction_time', name: 'transaction_time',sClass:"numericCol"},
+					// {data: 'paybill', name: 'paybill',sClass:"numericCol"},
+                    // {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i></i>'},
+					// {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
+					{data: 'action', name: 'action',sClass:"numericCol", searchable: false}
+					// {data: 'status', name: 'status',sClass:"numericCol", searchable: true}
+				],
+
                 drawCallback: function(settings) {
                     // Access Datatables API methods
                     var $api = new $.fn.dataTable.Api(settings);
@@ -415,39 +458,15 @@
                     });
 
                     $('.comment').on('click', function(e) {
+                        // alert('this');
                         var url = $(this).attr('data-url');
 
                         $("#form").attr('action', url);
-                        $("#modal-comment").modal('show');
+                        // $("#modal-comment").modal('show');
 
                         e.preventDefault();
                     });
                 }
-            });
-        }
-
-		function unprocessedPaymentsDataTables() {
-            $('#unprocessed-payments-table').DataTable({
-				destroy: true,
-				processing: true,
-				serverSide: true,
-				ajax: '{!! route('payments.datatables.unprocessed', [PCL_PAYBILL]) !!}',
-				"order": [[5, 'desc']],
-				"lengthMenu": [[50, 25, 10], [50, 25, 10]],
-				columns: [
-					// {data: 'id', name: 'id'},
-					{data: 'phone', name: 'phone',sClass:"numericCol" },
-					{data: 'client_name', name: 'client_name',sClass:"numericCol display-name"},
-					{data: 'transaction_id', name: 'transaction_id',sClass:"numericCol"},
-					{data: 'account_no', name: 'account_no',sClass:"numericCol"},
-					{data: 'amount', name: 'amount',sClass:"numericCol"},
-					{data: 'transaction_time', name: 'transaction_time',sClass:"numericCol"},
-					{data: 'paybill', name: 'paybill',sClass:"numericCol"},
-                    // {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i></i>'},
-					// {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
-					// {data: 'action', name: 'action',sClass:"numericCol", searchable: false}
-					// {data: 'status', name: 'status',sClass:"numericCol", searchable: true}
-				]
 			});
 		}
 
@@ -470,7 +489,7 @@
                     {data: 'paybill', name: 'paybill',sClass:"numericCol"},
                     // {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i></i>'},
 					// {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
-					// {data: 'action', name: 'action',sClass:"numericCol", searchable: false}
+					{data: 'action', name: 'action',sClass:"numericCol", searchable: false}
                     // {data: 'status', name: 'status',sClass:"numericCol", searchable: true}
 				],
                 drawCallback: function(settings) {
@@ -536,6 +555,7 @@
                     });
 
                     $('.comment').on('click', function(e) {
+                        alert('this');
                         var url = $(this).attr('data-url');
 
                         $("#form").attr('action', url);
