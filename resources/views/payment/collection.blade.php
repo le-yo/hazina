@@ -49,16 +49,16 @@
                                 <td>({!! $client->clientId !!}) {!! $client->clientName !!}</td>
                                 @foreach ($collectionSheet->loanProducts as $lp)
                                     @if(isset($final_array[$group->groupId][$client->clientId]['loan'][$lp->id]->totalDue))
-                                        <td><a href="#" class="edittable" id="{!! 'loan_'.$group->groupId.'_'.$client->clientId.'_'.$lp->id !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">{!! $final_array[$group->groupId][$client->clientId]['loan'][$lp->id]->totalDue !!}</a></td>
+                                        <td><a href="#" class="edittable {!! 'loan_'.$group->groupId.'_'.$lp->id !!}" id="{!! 'loan_'.$group->groupId.'_'.$client->clientId.'_'.$lp->id !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">{!! $final_array[$group->groupId][$client->clientId]['loan'][$lp->id]->totalDue !!}</a></td>
                                     @else
-                                        <td><a href="#" class="edittable" id="{!! 'loan_'.$group->groupId.'_'.$client->clientId.'_'.$lp->id !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">0</a></td>
+                                        <td><a href="#" class="edittable {!! 'loan_'.$group->groupId.'_'.$lp->id !!}" id="{!! 'loan_'.$group->groupId.'_'.$client->clientId.'_'.$lp->id !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">0</a></td>
                                     @endif
                                 @endforeach
                                 @foreach ($collectionSheet->savingsProducts as $sp)
                                     @if(isset($final_array[$group->groupId][$client->clientId]['savings'][$sp->id]->dueAmount))
-                                        <td><a href="#" class="edittable" id="{!! 'savings_'.$group->groupId.'_'.$client->clientId.'_'.$sp->id !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">{!! $final_array[$group->groupId][$client->clientId]['savings'][$sp->id]->dueAmount !!}</a></td>
+                                        <td><a href="#" class="edittable {!! 'savings_'.$group->groupId.'_'.$sp->id !!}" id="{!! 'savings_'.$group->groupId.'_'.$client->clientId.'_'.$sp->id !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">{!! $final_array[$group->groupId][$client->clientId]['savings'][$sp->id]->dueAmount !!}</a></td>
                                     @else
-                                        <td><a href="#" class="edittable" id="{!! 'savings_'.$group->groupId.'_'.$client->clientId.'_'.$sp->id !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">0</a></td>
+                                        <td><a href="#" class="edittable {!! 'savings_'.$group->groupId.'_'.$sp->id !!}" id="{!! 'savings_'.$group->groupId.'_'.$client->clientId.'_'.$sp->id !!}" data-type="text" data-pk="1" data-url="/collectionSheetPost" data-title="Total Due">0</a></td>
                                     @endif
                                 @endforeach
 
@@ -78,16 +78,16 @@
                             <th>Group Total</th>
                             @foreach ($collectionSheet->loanProducts as $lp)
                                 @if(isset($sum[$group->groupId]['loan'][$lp->id]))
-                                    <th>{!! number_format($sum[$group->groupId]['loan'][$lp->id],2) !!}</th>
+                                    <th class="{!! 'loan_sum_'.$group->groupId.'_'.$lp->id !!}">{!! number_format($sum[$group->groupId]['loan'][$lp->id],2) !!}</th>
                                 @else
-                                    <th>0</th>
+                                    <th class="{!! 'loan_sum_'.$group->groupId.'_'.$lp->id !!}>0</th>
                                 @endif
                             @endforeach
                             @foreach ($collectionSheet->savingsProducts as $sp)
                                 @if(isset($sum[$group->groupId]['savings'][$sp->id]))
-                                    <th>{!! number_format($sum[$group->groupId]['savings'][$sp->id],2) !!}</th>
+                                    <th class="{!! 'savings_sum_'.$group->groupId.'_'.$sp->id !!}>{!! number_format($sum[$group->groupId]['savings'][$sp->id],2) !!}</th>
                                 @else
-                                    <th>0</th>
+                                    <th class="{!! 'loan_sum_'.$group->groupId.'_'.$lp->id !!}>0</th>
                                 @endif
                             @endforeach
 
@@ -144,6 +144,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
     <script>
         checkPayments();
+        calculateGroupTotal();
         $('.edittable').editable({
             type: 'text',
             mode:'inline',
@@ -155,19 +156,42 @@
                 var that = this;
                 checkPayments();
                 calculateTotal();
+                calculateGroupTotal();
                 $(".editable:visible").eq($(".editable:visible").index(that) + 1).editable('show');
             }
         });
         function checkPayments(){
             var payment = document.getElementById("total_payment").innerText;
-            alert(payment);
+            // alert(payment);
             var total_due = document.getElementById("total_due").innerText;
-            alert(total_due);
+            // alert(total_due);
             if(Number(payment) == Number(total_due)){
             document.getElementById("submit_payments").disabled = false;
             }else{
             document.getElementById("submit_payments").disabled = true;
             }
+        }
+
+        function calculateGroupTotal(){
+            var myClass = $(this).attr("class");
+            var res = myClass.split(" ");
+            // var details = res[1].split("_");
+            // alert(res[1]);
+            var cls = res[1];
+            var sum = 0;
+
+            $("."+cls).each(function() {
+                var val = $.trim( $(this).text() );
+
+                if ( val ) {
+                    val = parseFloat( val.replace( /^\$/, "" ) );
+
+                    sum += !isNaN( val ) ? val : 0;
+                }
+            });
+
+            alert(sum);
+            document.getElementById('total_due').innerHTML=sum;
         }
         function calculateTotal(){
             var sum = 0;
