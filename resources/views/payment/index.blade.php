@@ -472,26 +472,26 @@
 
 		function unrecognizedPaymentsDataTables() {
 			var table = $('#unrecognized-payments-table').DataTable({
-				destroy: true,
-				processing: true,
-				serverSide: true,
-				ajax: '{!! route('payments.datatables.unrecognized', [STL_PAYBILL]) !!}',
-				"order": [[5, 'desc']],
-				"lengthMenu": [[50, 25, 10], [50, 25, 10]],
-				columns: [
-					// {data: 'id', name: 'id'},
-					{data: 'phone', name: 'phone',sClass:"numericCol display-name" },
-					{data: 'client_name', name: 'client_name',sClass:"numericCol"},
-					{data: 'transaction_id', name: 'transaction_id',sClass:"numericCol"},
-					{data: 'account_no', name: 'account_no',sClass:"numericCol"},
-					{data: 'amount', name: 'amount',sClass:"numericCol"},
-					{data: 'transaction_time', name: 'transaction_time',sClass:"numericCol"},
-                    {data: 'paybill', name: 'paybill',sClass:"numericCol"},
+                destroy: true,
+                processing: true,
+                serverSide: true,
+                ajax: '{!! route('payments.datatables.unrecognized', [PCL_PAYBILL]) !!}',
+                "order": [[5, 'desc']],
+                "lengthMenu": [[50, 25, 10], [50, 25, 10]],
+                columns: [
+                    // {data: 'id', name: 'id'},
+                    {data: 'phone', name: 'phone',sClass:"numericCol" },
+                    {data: 'client_name', name: 'client_name',sClass:"numericCol display-name"},
+                    {data: 'transaction_id', name: 'transaction_id',sClass:"numericCol"},
+                    {data: 'account_no', name: 'account_no',sClass:"numericCol"},
+                    {data: 'amount', name: 'amount',sClass:"numericCol"},
+                    {data: 'transaction_time', name: 'transaction_time',sClass:"numericCol"},
+                    // {data: 'paybill', name: 'paybill',sClass:"numericCol"},
                     // {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i></i>'},
-					// {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
-					{data: 'action', name: 'action',sClass:"numericCol", searchable: false}
+                    // {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
+                    {data: 'action', name: 'action',sClass:"numericCol", searchable: false}
                     // {data: 'status', name: 'status',sClass:"numericCol", searchable: true}
-				],
+                ],
                 drawCallback: function(settings) {
 				    // Access Datatables API methods
                 	var $api = new $.fn.dataTable.Api(settings);
