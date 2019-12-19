@@ -91,6 +91,9 @@ class DatatablesController extends Controller
                              <li>
                                 <a data-url="'.url('payments/editAccount/'.$id->id).'" class="btn btn-info comment btn-sm"><i class="icon-note"></i>Enter Correct Account</a>
                             </li>
+                             <li>
+                                <a href="'.url('makePayment/manual/'.$id->id).'" class="btn btn-sm btn-info"><i class="icon-map"></i> Mark as processed</a>
+                            </li>
                         </ul>';
             })
             ->make(true);
