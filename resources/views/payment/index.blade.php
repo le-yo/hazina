@@ -555,10 +555,11 @@
                     });
 
                     $('.comment').on('click', function(e) {
+                        // alert('this');
                         var url = $(this).attr('data-url');
 
                         $("#form").attr('action', url);
-                        $("#modal-comment").modal('show');
+                        // $("#modal-comment").modal('show');
 
                         e.preventDefault();
                     });

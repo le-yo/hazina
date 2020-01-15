@@ -48,7 +48,7 @@ class DatatablesController extends Controller
 
     public function getProcessedPayments()
     {
-        return Datatables::of(Payment::whereStatus(1)->orderBy('updated_at', 'desc')->take(50)->get())
+        return Datatables::of(Payment::whereStatus(1)->orderBy('updated_at', 'desc')->take(500)->get())
             ->editColumn('transaction_time', function ($payment) {
                 return Carbon::parse($payment->transaction_time)->format('j F Y h:i A');
             })->editColumn('amount', function ($payment) {
@@ -60,7 +60,7 @@ class DatatablesController extends Controller
     public function getUnProcessedPayments()
     {
 
-        return Datatables::of(Payment::whereStatus(0)->orderBy('updated_at', 'desc')->take(50)->get())
+        return Datatables::of(Payment::whereStatus(0)->orderBy('updated_at', 'desc')->take(500)->get())
             ->editColumn('transaction_time', function ($payment) {
                 return Carbon::parse($payment->transaction_time)->format('j F Y h:i A');
             })->editColumn('amount', function ($payment) {
@@ -81,7 +81,7 @@ class DatatablesController extends Controller
     public function getUnrecognizedPayments()
     {
 
-        return Datatables::of(Payment::whereStatus(2)->orderBy('updated_at', 'desc')->take(50)->get())
+        return Datatables::of(Payment::whereStatus(2)->orderBy('updated_at', 'desc')->take(500)->get())
             ->editColumn('transaction_time', function ($payment) {
                 return Carbon::parse($payment->transaction_time)->format('j F Y h:i A');
             })->editColumn('amount', function ($payment) {
@@ -89,9 +89,9 @@ class DatatablesController extends Controller
             })->editColumn('action', function($id) {
                 return '<ul class="list-unstyled list-inline">
                              <li>
-                                <a data-url="'.url('payments/editAccount/'.$id->id).'" class="btn btn-info comment btn-sm"><i class="icon-note"></i>Enter Correct Account</a>
+                                <a data-toggle="modal" data-url="'.url('payments/editAccount/'.$id->id).'" data-target="#modal-comment" class="btn btn-info comment btn-sm"><i class="icon-note"></i>Enter Correct Account</a>
                             </li>
-                             <li>
+                            <li>
                                 <a href="'.url('makePayment/manual/'.$id->id).'" class="btn btn-sm btn-info"><i class="icon-map"></i> Mark as processed</a>
                             </li>
                         </ul>';
