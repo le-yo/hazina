@@ -555,7 +555,6 @@
                     });
 
                     $('.comment').on('click', function(e) {
-                        alert('this');
                         var url = $(this).attr('data-url');
 
                         $("#form").attr('action', url);
