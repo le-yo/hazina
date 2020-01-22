@@ -131,11 +131,11 @@
         <div class="col-md-12 padded>
             <div class="c-tabs">
                 <ul class="c-tabs__list nav nav-tabs" id="myTab" role="tablist">
-                    <li><a class="c-tabs__link active" id="nav-home-tab" data-toggle="tab" href="#unprocessed" role="tab" aria-controls="nav-home" aria-selected="true">Processed</a></li>
+                    <li><a class="c-tabs__link active" id="nav-home-tab" data-toggle="tab" href="#unprocessed" role="tab" aria-controls="nav-home" aria-selected="true">Unprocessed</a></li>
 
-                    <li><a class="c-tabs__link" id="nav-profile-tab" data-toggle="tab" href="#processed" role="tab" aria-controls="nav-profile" aria-selected="false">Unprocessed</a></li>
+                    <li><a class="c-tabs__link" id="nav-profile-tab" data-toggle="tab" href="#processed" role="tab" aria-controls="nav-profile" aria-selected="false" onclick="processedPaymentsDataTables();">Processed</a></li>
 
-                    <li><a class="c-tabs__link" id="nav-contact-tab" data-toggle="tab" href="#unrecognized" role="tab" aria-controls="nav-contact" aria-selected="false">Unrecognized</a></li>
+                    <li><a class="c-tabs__link" id="nav-contact-tab" data-toggle="tab" href="#unrecognized" role="tab" aria-controls="nav-contact" aria-selected="false" onclick="unrecognizedPaymentsDataTables();">Unrecognized</a></li>
                 </ul>
                 <div class="c-tabs__content tab-content" id="nav-tabContent">
                     <div class="c-tabs__pane active" id="unprocessed" role="tabpanel" aria-labelledby="nav-home-tab">
@@ -161,10 +161,56 @@
                             </table>
                         </div><!-- // .c-card -->
                     </div>
-
-                    <div class="c-tabs__pane" id="processed" role="tabpanel" aria-labelledby="nav-profile-tab">ducimus quam fuga, vero atque, error laboriosam odio provident eveniet nemo reiciendis non optio, laborum enim ipsum dolorum, voluptatem ducimus quam fuga, vero atque, error laboriosam odio provident eveniet nemo!</div>
-
-                    <div class="c-tabs__pane" id="unrecognized" role="tabpanel" aria-labelledby="nav-contact-tab">optio, laborum enim ipsum dolorum, voluptatem ducimus quam fuga, vero atque, error laboriosam odio provident eveniet nemo reicienoptio, laborum enim ipsum dolorum, voluptatem ducimus quam fuga, vero atque, error laboriosam odio provident eveniet nemo reicien</div>
+                    <div class="c-tabs__pane" id="processed" role="tabpanel" aria-labelledby="nav-profile-tab">
+                        <div class="c-tabs__pane active" id="processed" role="tabpanel" aria-labelledby="nav-home-tab">
+                            <div class="c-table-responsive@wide">
+                                <table class="c-table processed-payments-table" id="processed-payments-table">
+                                    <caption class="c-table__title">
+                                        Payments
+                                    </caption>
+                                    <thead class="c-table__head c-table__head--slim">
+                                    <tr class="c-table__row">
+                                        <th class="c-table__cell c-table__cell--head">Id</th>
+                                        <th class="c-table__cell c-table__cell--head">Phone</th>
+                                        <th class="c-table__cell c-table__cell--head">Client Name</th>
+                                        <th class="c-table__cell c-table__cell--head">Trans. ID</th>
+                                        <th class="c-table__cell c-table__cell--head">Account</th>
+                                        <th class="c-table__cell c-table__cell--head">Amount</th>
+                                        <th class="c-table__cell c-table__cell--head">Transaction Time</th>
+                                        <th class="c-table__cell c-table__cell--head">
+                                            <span class="u-hidden-visually">Actions</span>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div><!-- // .c-card -->
+                        </div>
+                    </div>
+                    <div class="c-tabs__pane" id="unrecognized" role="tabpanel" aria-labelledby="nav-profile-tab">
+                            <div class="c-tabs__pane active" id="unrecognized" role="tabpanel" aria-labelledby="nav-home-tab">
+                                <div class="c-table-responsive@wide">
+                                    <table class="c-table unrecognized-payments-table" id="unrecognized-payments-table">
+                                        <caption class="c-table__title">
+                                            Payments
+                                        </caption>
+                                        <thead class="c-table__head c-table__head--slim">
+                                        <tr class="c-table__row">
+                                            <th class="c-table__cell c-table__cell--head">Id</th>
+                                            <th class="c-table__cell c-table__cell--head">Phone</th>
+                                            <th class="c-table__cell c-table__cell--head">Client Name</th>
+                                            <th class="c-table__cell c-table__cell--head">Trans. ID</th>
+                                            <th class="c-table__cell c-table__cell--head">Account</th>
+                                            <th class="c-table__cell c-table__cell--head">Amount</th>
+                                            <th class="c-table__cell c-table__cell--head">Transaction Time</th>
+                                            <th class="c-table__cell c-table__cell--head">
+                                                <span class="u-hidden-visually">Actions</span>
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div><!-- // .c-card -->
+                            </div>
+                        </div>
                 </div>
         </div>
     </div>
@@ -290,17 +336,17 @@
 				ajax: '{!! route('payments.datatables.processed', [PCL_PAYBILL]) !!}',
 				"order": [[0, 'desc']],
 				"lengthMenu": [[50, 25, 10], [50, 25, 10]],
-				columns: [
-					{data: 'id', name: 'id'},
-					{data: 'phone', name: 'phone',sClass:"numericCol" },
-					{data: 'client_name', name: 'client_name',sClass:"numericCol display-name"},
-					{data: 'transaction_id', name: 'transaction_id',sClass:"numericCol"},
-					{data: 'account_no', name: 'account_no',sClass:"numericCol"},
-					{data: 'amount', name: 'amount',sClass:"numericCol"},
-					{data: 'transaction_time', name: 'transaction_time',sClass:"numericCol"},
-					// {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
-					{data: 'action', name: 'action',sClass:"numericCol", searchable: false}
-				],
+                columns: [
+                    {data: 'id', name: 'id',sClass:"numericCol c-table__cell u-text-mute" },
+                    {data: 'phone', name: 'phone',sClass:"numericCol c-table__cell u-text-mute" },
+                    {data: 'client_name', name: 'client_name',sClass:"numericCol c-table__cell display-name"},
+                    {data: 'transaction_id', name: 'transaction_id',sClass:"numericCol c-table__cell"},
+                    {data: 'account_no', name: 'account_no',sClass:"numericCol c-table__cell"},
+                    {data: 'amount', name: 'amount',sClass:"numericCol c-table__cell"},
+                    {data: 'transaction_time', name: 'transaction_time',sClass:"numericCol c-table__cell"},
+                    // {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
+                    {data: 'action', name: 'action',sClass:"numericCol c-table__cell u-text-right", searchable: false}
+                ],
                 drawCallback: function(settings) {
 				    // Access Datatables API methods
                 	var $api = new $.fn.dataTable.Api(settings);
@@ -376,24 +422,26 @@
 		}
 
 		function unrecognizedPaymentsDataTables() {
-			var table = $('#unrecognized-payments-table').DataTable({
-				destroy: true,
-				processing: true,
-				serverSide: true,
-				ajax: '{!! route('payments.datatables.unrecognized', [PCL_PAYBILL]) !!}',
-				"order": [[0, 'desc']],
-				"lengthMenu": [[50, 25, 10], [50, 25, 10]],
-				columns: [
-					{data: 'id', name: 'id'},
-					{data: 'phone', name: 'phone',sClass:"numericCol display-name" },
-					{data: 'client_name', name: 'client_name',sClass:"numericCol"},
-					{data: 'transaction_id', name: 'transaction_id',sClass:"numericCol"},
-					{data: 'account_no', name: 'account_no',sClass:"numericCol"},
-					{data: 'amount', name: 'amount',sClass:"numericCol"},
-					{data: 'transaction_time', name: 'transaction_time',sClass:"numericCol"},
-					// {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
-					{data: 'action', name: 'action',sClass:"numericCol", searchable: false}
-				],
+            var $unrecognizedPaymentsTable = $('#unrecognized-payments-table');
+			var table = $unrecognizedPaymentsTable.DataTable({
+                destroy: true,
+                processing: true,
+                serverSide: true,
+                footer:true,
+                ajax: '{!! route('payments.datatables', [STL_PAYBILL]) !!}',
+                "order": [[0,'desc']],
+                "lengthMenu": [[10,25,50], [10,25,50]],
+                columns: [
+                    {data: 'id', name: 'id',sClass:"numericCol c-table__cell u-text-mute" },
+                    {data: 'phone', name: 'phone',sClass:"numericCol c-table__cell u-text-mute" },
+                    {data: 'client_name', name: 'client_name',sClass:"numericCol c-table__cell display-name"},
+                    {data: 'transaction_id', name: 'transaction_id',sClass:"numericCol c-table__cell"},
+                    {data: 'account_no', name: 'account_no',sClass:"numericCol c-table__cell"},
+                    {data: 'amount', name: 'amount',sClass:"numericCol c-table__cell"},
+                    {data: 'transaction_time', name: 'transaction_time',sClass:"numericCol c-table__cell"},
+                    // {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
+                    {data: 'action', name: 'action',sClass:"numericCol c-table__cell u-text-right", searchable: false}
+                ],
                 drawCallback: function(settings) {
 				    // Access Datatables API methods
                 	var $api = new $.fn.dataTable.Api(settings);
