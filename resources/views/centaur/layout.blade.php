@@ -104,12 +104,12 @@
         </div>
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <script src="{{ asset('plugins/jquery/jquery-2.1.3.min.js') }}"></script>
+{{--        <script src="{{ asset('plugins/jquery/jquery-2.1.3.min.js') }}"></script>--}}
         <!-- Datatables -->
         <script src="{{ asset('plugins/jquery.dataTables/jquery.dataTables.min.js') }}"></script>
         <script src="{{ asset('plugins/jquery.dataTables/dataTables.bootstrap.min.js') }}"></script>
         <!-- Latest compiled and minified Bootstrap JavaScript -->
-        <script src="{{ asset('plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+{{--        <script src="{{ asset('plugins/bootstrap/js/bootstrap.min.js') }}"></script>--}}
         <!-- Restfulizer.js - A tool for simulating put,patch and delete requests -->
         <script src="{{ asset('js/restfulizer.js') }}"></script>
         <!-- Custom Javascript -->

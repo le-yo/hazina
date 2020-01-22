@@ -140,7 +140,7 @@
             <div class="footer__bottom top-divider">
                 <div class="container text-center">
             <span class="copyright">
-              &copy; 2019 Hazina
+              &copy; {{ $year  }} Hazina
             </span>
                 </div>
             </div> <!-- end footer bottom -->

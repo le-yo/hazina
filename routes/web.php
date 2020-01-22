@@ -68,9 +68,10 @@ Route::post('payments/upload', 'PaymentsController@uploadPayments');
 
 Route::get('/home', ['as' => 'home', 'uses' => function() {
     if (!Auth::check()) {
-        return view('landing');
+        $year = \Carbon\Carbon::now()->year;
+        return view('landing',['year' => $year]);
     } else {
-        return view('payment.index');
+        return view('payment.dashboard');
         $now = \Carbon\Carbon::now();
         //today
         $today_sum = \App\Payment::where('transaction_time','>=',$now->subDay(1))->sum('amount');
@@ -95,7 +96,7 @@ Route::get('/', ['as' => '/', 'uses' => function() {
     if (!Auth::check()) {
         return view('landing');
     } else {
-        return view('payment.index');
+        return view('payment.dashboard');
         $now = \Carbon\Carbon::now();
         //today
         $today_sum = \App\Payment::where('transaction_time','>=',$now->subDay(1))->sum('amount');
@@ -180,3 +181,7 @@ Route::get('preapproved-clients','ClientsController@index');
 Route::get('collectionSheet/{id}','PaymentsController@collectionSheet');
 Route::get('preapproved-clients/upload','ClientsController@upload');
 Route::post('preapproved-clients/upload','ClientsController@storeUpload');
+
+//Apps
+Route::get('apps','AppsController@index');
+
