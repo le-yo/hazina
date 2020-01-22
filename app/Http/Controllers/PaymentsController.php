@@ -154,7 +154,7 @@ class PaymentsController extends Controller
             $totals_sum['loan'][6] =0;
         }
         $success = 'CollectionSheet retrieved successfully';
-        return view('payment.collection',compact('collectionSheet','success','sum','final_array','totals_sum','payment','total_due'));
+        return view('payment.newcollection',compact('collectionSheet','success','sum','final_array','totals_sum','payment','total_due'));
     }
 
     public function saveCollectionSheet($id){

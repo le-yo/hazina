@@ -1,7 +1,7 @@
 @extends('dashboardui.layouts.nosidebar')
 @section('title', 'Payments')
 @push('styles')
-    <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+    {{--<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>--}}
 @endpush
 
 @section('content')
@@ -137,70 +137,47 @@
 		}
 	</style>
     <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
-    <script>
-        checkPayments();
-        calculateGroupTotal();
-        $('.edittable').editable({
-            type: 'text',
-            mode:'inline',
-            url: '/collectionSheetPost',
-            title: 'Enter new value',
-        });
-        $('.editable').on('hidden', function(e, reason){
-            if(reason === 'save' || reason === 'nochange') {
-                var that = this;
-                checkPayments();
-                calculateTotal();
-                calculateGroupTotal();
-                $(".editable:visible").eq($(".editable:visible").index(that) + 1).editable('show');
-            }
-        });
-        function checkPayments(){
-            var payment = document.getElementById("total_payment").innerText;
-            // alert(payment);
-            var total_due = document.getElementById("total_due").innerText;
-            // alert(total_due);
-            if(Number(payment) == Number(total_due)){
-            document.getElementById("submit_payments").disabled = false;
-            }else{
-            document.getElementById("submit_payments").disabled = true;
-            }
-        }
+                                            <script>
+                                                checkPayments();
+                                                calculateTotal();
+                                                $('.edittable').editable({
+                                                    type: 'text',
+                                                    mode:'inline',
+                                                    url: '/collectionSheetPost',
+                                                    title: 'Enter new value',
+                                                });
+                                                $('.editable').on('hidden', function(e, reason){
+                                                    if(reason === 'save' || reason === 'nochange') {
+                                                        var that = this;
+                                                        checkPayments();
+                                                        calculateTotal();
+                                                        $(".editable:visible").eq($(".editable:visible").index(that) + 1).editable('show');
+                                                    }
+                                                });
+                                                function checkPayments(){
+                                                    var payment = document.getElementById("total_payment").innerText;
+                                                    // alert(payment);
+                                                    var total_due = document.getElementById("total_due").innerText;
+                                                    // alert(total_due);
+                                                    if(Number(payment) == Number(total_due)){
+                                                        document.getElementById("submit_payments").disabled = false;
+                                                    }else{
+                                                        document.getElementById("submit_payments").disabled = true;
+                                                    }
+                                                }
+                                                function calculateTotal(){
+                                                    var sum = 0;
 
-        function calculateGroupTotal(){
-            var myClass = $(this).attr("class");
-            var res = myClass.split(" ");
-            // var details = res[1].split("_");
-            // alert(res[1]);
-            var cls = res[1];
-            var sum = 0;
+                                                    $(".edittable").each(function() {
+                                                        var val = $.trim( $(this).text() );
 
-            $("."+cls).each(function() {
-                var val = $.trim( $(this).text() );
+                                                        if ( val ) {
+                                                            val = parseFloat( val.replace( /^\$/, "" ) );
 
-                if ( val ) {
-                    val = parseFloat( val.replace( /^\$/, "" ) );
-
-                    sum += !isNaN( val ) ? val : 0;
-                }
-            });
-
-            alert(sum);
-            document.getElementById('total_due').innerHTML=sum;
-        }
-        function calculateTotal(){
-            var sum = 0;
-
-            $(".edittable").each(function() {
-                var val = $.trim( $(this).text() );
-
-                if ( val ) {
-                    val = parseFloat( val.replace( /^\$/, "" ) );
-
-                    sum += !isNaN( val ) ? val : 0;
-                }
-            });
-            document.getElementById('total_due').innerHTML=sum;
-        }
-    </script>
+                                                            sum += !isNaN( val ) ? val : 0;
+                                                        }
+                                                    });
+                                                    document.getElementById('total_due').innerHTML=sum;
+                                                }
+                                            </script>
 @endpush
