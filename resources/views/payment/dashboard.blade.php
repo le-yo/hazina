@@ -128,7 +128,7 @@
     {{--New content--}}
     <div class="container">
     <div class="row u-mb-large">
-        <div class="col-md-12">
+        <div class="col-md-12 padded>
             <div class="c-tabs">
                 <ul class="c-tabs__list nav nav-tabs" id="myTab" role="tablist">
                     <li><a class="c-tabs__link active" id="nav-home-tab" data-toggle="tab" href="#unprocessed" role="tab" aria-controls="nav-home" aria-selected="true">Processed</a></li>
@@ -168,147 +168,17 @@
                 </div>
         </div>
     </div>
-    <div class="row u-mb-large">
-        <div class="col-md-12">
-
-            <div class="c-table-responsive@wide">
-                <table class="c-table">
-                    <caption class="c-table__title">
-                        Payments
-                    </caption>
-                    <thead class="c-table__head c-table__head--slim">
-                    <tr class="c-table__row">
-                        <th class="c-table__cell c-table__cell--head">Id</th>
-                        <th class="c-table__cell c-table__cell--head">Phone</th>
-                        <th class="c-table__cell c-table__cell--head">Client Name</th>
-                        <th class="c-table__cell c-table__cell--head">Trans. ID</th>
-                        <th class="c-table__cell c-table__cell--head">Account</th>
-                        <th class="c-table__cell c-table__cell--head">Amount</th>
-                        <th class="c-table__cell c-table__cell--head">Transaction Time</th>
-                        <th class="c-table__cell c-table__cell--head">Comment</th>
-                        <th class="c-table__cell c-table__cell--head">
-                            <span class="u-hidden-visually">Actions</span>
-                        </th>
-                    </tr>
-                    <tr class="c-table__row">
-                        <td class="c-table__cell"><span class="u-text-mute">00450</span></td>
-                        <td class="c-table__cell">Design Works</td>
-                        <td class="c-table__cell">
-                            <span class="u-text-mute">Carlson Limited</span>
-                        </td>
-                        <td class="c-table__cell">
-                            <span class="u-text-mute">87956621</span>
-                        </td>
-                        <td class="c-table__cell">
-                            <span class="u-text-mute">15 Dec 2017</span>
-                        </td>
-                        <td class="c-table__cell">
-                            <span class="c-badge c-badge--small c-badge--success">Paid</span>
-                        </td>
-                        <td class="c-table__cell">$887</td>
-
-                        <td class="c-table__cell u-text-right">
-                            <a href="invoice.html" class="c-btn c-btn--info u-mr-xsmall">Manage</a>
-                            <div class="c-dropdown dropdown">
-                                <button class="c-btn c-btn--secondary has-dropdown dropdown-toggle" id="dropdownMenuButton10" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
-
-                                <div class="c-dropdown__menu dropdown-menu" aria-labelledby="dropdownMenuButton10">
-                                    <a class="c-dropdown__item dropdown-item" href="#">Complete</a>
-                                    <a class="c-dropdown__item dropdown-item" href="#">Share</a>
-                                    <a class="c-dropdown__item dropdown-item" href="#">Archive</a>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="c-table__cell">
-                            <a class="u-text-mute" href="invoice.html">
-                                <i class="fa fa-cloud-download"></i>
-                            </a>
-                        </td>
-                    </tr><!-- // .table__row -->
-
-                    <tr class="c-table__row">
-                        <td class="c-table__cell"><span class="u-text-mute">00450</span></td>
-                        <td class="c-table__cell">UX Wireframes</td>
-                        <td class="c-table__cell">
-                            <span class="u-text-mute">Adobe</span>
-                        </td>
-                        <td class="c-table__cell">
-                            <span class="u-text-mute">87956421</span>
-                        </td>
-                        <td class="c-table__cell">
-                            <span class="u-text-mute">12 Apr 2017</span>
-                        </td>
-                        <td class="c-table__cell">
-                            <span class="c-badge c-badge--small c-badge--warning">Pending</span>
-                        </td>
-                        <td class="c-table__cell">$1200</td>
-                        <td class="c-table__cell  u-text-right">
-                            <a href="invoice.html" class="c-btn c-btn--info u-mr-xsmall">Manage</a>
-                            <div class="c-dropdown dropdown">
-                                <button class="c-btn c-btn--secondary has-dropdown dropdown-toggle" id="dropdownMenuButton20" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
-
-                                <div class="c-dropdown__menu dropdown-menu" aria-labelledby="dropdownMenuButton20">
-                                    <a class="c-dropdown__item dropdown-item" href="#">Complete</a>
-                                    <a class="c-dropdown__item dropdown-item" href="#">Share</a>
-                                    <a class="c-dropdown__item dropdown-item" href="#">Archive</a>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="c-table__cell">
-                            <a class="u-text-mute" href="invoice.html">
-                                <i class="fa fa-cloud-download"></i>
-                            </a>
-                        </td>
-                    </tr><!-- // .table__row -->
-
-                    <tr class="c-table__row">
-                        <td class="c-table__cell"><span class="u-text-mute">00452</span></td>
-                        <td class="c-table__cell">New Dashboard</td>
-                        <td class="c-table__cell">
-                            <span class="u-text-mute">Bluewolf</span>
-                        </td>
-                        <td class="c-table__cell">
-                            <span class="u-text-mute">87952621</span>
-                        </td>
-                        <td class="c-table__cell">
-                            <span class="u-text-mute">23 Oct 2017</span>
-                        </td>
-                        <td class="c-table__cell">
-                            <span class="c-badge c-badge--small c-badge--warning">Pending</span>
-                        </td>
-                        <td class="c-table__cell">$534</td>
-                        <td class="c-table__cell u-text-right">
-                            <a href="invoice.html" class="c-btn c-btn--info u-mr-xsmall">Manage</a>
-                            <div class="c-dropdown dropdown">
-                                <button class="c-btn c-btn--secondary has-dropdown dropdown-toggle" id="dropdownMenuButton30" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
-
-                                <div class="c-dropdown__menu dropdown-menu" aria-labelledby="dropdownMenuButton30">
-                                    <a class="c-dropdown__item dropdown-item" href="#">Complete</a>
-                                    <a class="c-dropdown__item dropdown-item" href="#">Share</a>
-                                    <a class="c-dropdown__item dropdown-item" href="#">Archive</a>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="c-table__cell">
-                            <a class="u-text-mute" href="invoice.html">
-                                <i class="fa fa-cloud-download"></i>
-                            </a>
-                        </td>
-                    </tr><!-- // .table__row -->
-
-                    </thead>
-                </table>
-            </div><!-- // .c-card -->
-        </div>
-    </div><!-- // .row -->
     </div>
 	<!-- Modal -->
 	@include('partials.modal')
 	<!-- End of Modal -->
 @stop
 @push('scripts')
-	<style>
-	</style>
+    <style>
+        .padded{
+            padding-bottom: 30px;
+        }
+    </style>
 	<script>
 		$('#file-upload').change(function() {
 			var filepath = this.value;
@@ -322,19 +192,20 @@
 				destroy: true,
 				processing: true,
 				serverSide: true,
+                footer:true,
 				ajax: '{!! route('payments.datatables', [STL_PAYBILL]) !!}',
 				"order": [[0,'desc']],
-				"lengthMenu": [[50, 25, 10], [50, 25, 10]],
+				"lengthMenu": [[10,25,50], [10,25,50]],
 				columns: [
-					{data: 'id', name: 'id'},
-					{data: 'phone', name: 'phone',sClass:"numericCol" },
-					{data: 'client_name', name: 'client_name',sClass:"numericCol display-name"},
-					{data: 'transaction_id', name: 'transaction_id',sClass:"numericCol"},
-					{data: 'account_no', name: 'account_no',sClass:"numericCol"},
-					{data: 'amount', name: 'amount',sClass:"numericCol"},
-					{data: 'transaction_time', name: 'transaction_time',sClass:"numericCol"},
+					{data: 'id', name: 'id',sClass:"numericCol c-table__cell u-text-mute" },
+					{data: 'phone', name: 'phone',sClass:"numericCol c-table__cell u-text-mute" },
+					{data: 'client_name', name: 'client_name',sClass:"numericCol c-table__cell display-name"},
+					{data: 'transaction_id', name: 'transaction_id',sClass:"numericCol c-table__cell"},
+					{data: 'account_no', name: 'account_no',sClass:"numericCol c-table__cell"},
+					{data: 'amount', name: 'amount',sClass:"numericCol c-table__cell"},
+					{data: 'transaction_time', name: 'transaction_time',sClass:"numericCol c-table__cell"},
 					// {data: 'comments', name: 'comments',sClass:"numericCol display-comment", defaultContent: '<i>None provided</i>'},
-					{data: 'action', name: 'action',sClass:"numericCol", searchable: false}
+					{data: 'action', name: 'action',sClass:"numericCol c-table__cell u-text-right", searchable: false}
 				],
                 drawCallback: function(settings) {
 				    // Access Datatables API methods

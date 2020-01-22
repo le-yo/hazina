@@ -14,7 +14,7 @@
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="{{ asset('plugins/jquery.dataTables/dataTables.bootstrap.min.css') }}">
+{{--    <link rel="stylesheet" href="{{ asset('plugins/jquery.dataTables/dataTables.bootstrap.min.css') }}">--}}
     <link rel="stylesheet" href="dashboardui/css/main.min.css">
 </head>
 <body>
@@ -112,9 +112,7 @@
 {{--</div>--}}
 </body>
 <script src="dashboardui/js/main.min.js"></script>
-<script src="{{ asset('plugins/jquery/jquery-2.1.3.min.js') }}"></script>
 <script src="{{ asset('plugins/jquery.dataTables/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('plugins/jquery.dataTables/dataTables.bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/restfulizer.js') }}"></script>
 @stack('scripts')
 </html>
