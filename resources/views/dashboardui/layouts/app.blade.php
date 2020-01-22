@@ -10,12 +10,12 @@
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,600" rel="stylesheet">
 
     <!-- Favicon -->
-    <link rel="apple-touch-icon" href="dashboardui/img/apple-touch-icon.png">
+{{--    <link rel="apple-touch-icon" href="{{ asset('dashboardui/img/apple-touch-icon.png) }}">--}}
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 
     <!-- Stylesheet -->
 {{--    <link rel="stylesheet" href="{{ asset('plugins/jquery.dataTables/dataTables.bootstrap.min.css') }}">--}}
-    <link rel="stylesheet" href="dashboardui/css/main.min.css">
+    <link rel="stylesheet" href="{{ asset('dashboardui/css/main.css') }}">
 </head>
 <body>
 
@@ -111,7 +111,7 @@
     {{--@yield('content')--}}
 {{--</div>--}}
 </body>
-<script src="dashboardui/js/main.min.js"></script>
+<script href="{{ asset('dashboardui/js/main.min.js') }}"></script>
 <script src="{{ asset('plugins/jquery.dataTables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('js/restfulizer.js') }}"></script>
 @stack('scripts')
