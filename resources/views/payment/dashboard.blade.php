@@ -163,7 +163,7 @@
                     </div>
                     <div class="c-tabs__pane" id="processed" role="tabpanel" aria-labelledby="nav-profile-tab">
                         <div class="c-tabs__pane active" id="processed" role="tabpanel" aria-labelledby="nav-home-tab">
-                            <div class="c-table-responsive@wide">
+                            <div class="c-table-responsive@desktop">
                                 <table class="c-table processed-payments-table" id="processed-payments-table">
                                     <caption class="c-table__title">
                                         Payments
@@ -188,7 +188,7 @@
                     </div>
                     <div class="c-tabs__pane" id="unrecognized" role="tabpanel" aria-labelledby="nav-profile-tab">
                             <div class="c-tabs__pane active" id="unrecognized" role="tabpanel" aria-labelledby="nav-home-tab">
-                                <div class="c-table-responsive@wide">
+                                <div class="c-table-responsive@desktop">
                                     <table class="c-table unrecognized-payments-table" id="unrecognized-payments-table">
                                         <caption class="c-table__title">
                                             Payments
@@ -216,8 +216,9 @@
     {{--</div>--}}
     </div>
     </div>
+    </div>
 	<!-- Modal -->
-	@include('partials.modal')
+	{{--@include('partials.modal')--}}
 	<!-- End of Modal -->
 @stop
 @push('scripts')
@@ -319,7 +320,7 @@
 				destroy: true,
 				processing: true,
 				serverSide: true,
-				ajax: '{!! route('payments.datatables.processed', [PCL_PAYBILL]) !!}',
+				ajax: '{!! route('payments.datatables.processed', [STL_PAYBILL]) !!}',
 				"order": [[0, 'desc']],
 				"lengthMenu": [[50, 25, 10], [50, 25, 10]],
                 columns: [
