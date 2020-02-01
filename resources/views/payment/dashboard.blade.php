@@ -139,7 +139,7 @@
                 </ul>
                 <div class="c-tabs__content tab-content" id="nav-tabContent">
                     <div class="c-tabs__pane active" id="unprocessed" role="tabpanel" aria-labelledby="nav-home-tab">
-                        <div class="c-table-responsive@desktop">
+                        <div class="c-table-responsive@wide">
                             <table class="c-table unprocessed-payments-table" id="unprocessed-payments-table">
                                 <caption class="c-table__title">
                                     Payments
@@ -163,7 +163,7 @@
                     </div>
                     <div class="c-tabs__pane" id="processed" role="tabpanel" aria-labelledby="nav-profile-tab">
                         <div class="c-tabs__pane active" id="processed" role="tabpanel" aria-labelledby="nav-home-tab">
-                            <div class="c-table-responsive@desktop">
+                            <div class="c-table-responsive@wide">
                                 <table class="c-table processed-payments-table" id="processed-payments-table">
                                     <caption class="c-table__title">
                                         Payments
@@ -188,7 +188,7 @@
                     </div>
                     <div class="c-tabs__pane" id="unrecognized" role="tabpanel" aria-labelledby="nav-profile-tab">
                             <div class="c-tabs__pane active" id="unrecognized" role="tabpanel" aria-labelledby="nav-home-tab">
-                                <div class="c-table-responsive@desktop">
+                                <div class="c-table-responsive@wide">
                                     <table class="c-table unrecognized-payments-table" id="unrecognized-payments-table">
                                         <caption class="c-table__title">
                                             Payments
@@ -257,59 +257,6 @@
                 drawCallback: function(settings) {
 				    // Access Datatables API methods
                 	var $api = new $.fn.dataTable.Api(settings);
-
-				    var $calculator = $('.calculator');
-
-                    $calculator.on('mouseenter', function () {
-                        var row = $api.row($(this).closest('tr')).data();
-                        var $calc = $(this);
-                        var phone_no = row.phone;
-                        var amount_paid = parseInt(row.amount.replace(/\,/g, ''));
-                        var loan_url = '{!! recipients_STL_URL !!}' + phone_no;
-
-                        $.ajax({
-                            url: loan_url,
-                            dataType: 'jsonp',
-                            jsonp: 'callback',
-                            jsonpCallback: 'loanCallback',
-                            success: function(data) {
-                                var response = {};
-
-                                if (data.success !== undefined)
-                                {
-                                    var loan = data.loan.loanBalance;
-                                    var ext = ((amount_paid*0.1) - (loan*0.1))/(0.1-1);
-                                    var num = amount_paid - ext;
-                                    var reduction = roundDown(num, -1);
-                                    var fee = amount_paid - reduction;
-
-                                    response["loan"] = loan;
-                                    response["amount"] = amount_paid;
-                                    response["reduction"] = reduction;
-                                    response["fee"] = fee;
-                                } else {
-                                    response["loan"] = 'Not Found';
-                                    response["amount"] = amount_paid;
-                                    response["reduction"] = 0;
-                                    response["fee"] = 0;
-                                }
-                            }
-                        });
-
-                        function roundDown(number, decimals) {
-                            decimals = decimals || 0;
-                            return ( Math.floor( number * Math.pow(10, decimals) ) / Math.pow(10, decimals) );
-                        }
-                    });
-
-                    $('.comment').on('click', function(e) {
-                        var url = $(this).attr('data-url');
-
-                        $("#form").attr('action', url);
-                        $("#modal-comment").modal('show');
-
-                        e.preventDefault();
-                    });
                 }
             });
 		});
@@ -338,72 +285,6 @@
 				    // Access Datatables API methods
                 	var $api = new $.fn.dataTable.Api(settings);
 
-				    var $calculator = $('.calculator');
-
-                    $calculator.on('mouseenter', function () {
-                        var row = $api.row($(this).closest('tr')).data();
-                        var $calc = $(this);
-                        var phone_no = row.phone;
-                        var amount_paid = parseInt(row.amount.replace(/\,/g, ''));
-                        var loan_url = '{!! recipients_STL_URL !!}' + phone_no;
-
-                        $.ajax({
-                            url: loan_url,
-                            dataType: 'jsonp',
-                            jsonp: 'callback',
-                            jsonpCallback: 'loanCallback',
-                            success: function(data) {
-                                var response = {};
-
-                                if (data.success !== undefined)
-                                {
-                                    var loan = data.loan.loanBalance;
-                                    var ext = ((amount_paid*0.1) - (loan*0.1))/(0.1-1);
-                                    var num = amount_paid - ext;
-                                    var reduction = roundDown(num, -1);
-                                    var fee = amount_paid - reduction;
-
-                                    response["loan"] = loan;
-                                    response["amount"] = amount_paid;
-                                    response["reduction"] = reduction;
-                                    response["fee"] = fee;
-                                } else {
-                                    response["loan"] = 'Not Found';
-                                    response["amount"] = amount_paid;
-                                    response["reduction"] = 0;
-                                    response["fee"] = 0;
-                                }
-
-                                $calc.popover({
-                                    'html': 'true',
-                                    'title': row.client_name,
-                                    'trigger': 'click',
-                                    'placement': 'top',
-                                    'container': 'body',
-                                    'content': function () {
-                                        return '<p class="outstanding"><b>Outstanding Loan: </b>'+response.loan+'</p>'+
-                                            '<p class="amount"><b>Amount Paid: </b>'+response.amount+'</p>'+
-                                            '<p class="reduction"><b>Loan Reduction: </b>'+response.reduction+'</p>'+
-                                            '<p class="extension"><b>Extension Fee: </b>'+response.fee+'</p>';
-                                    }
-                                });
-                            }
-                        });
-
-                        function roundDown(number, decimals) {
-                            decimals = decimals || 0;
-                            return ( Math.floor( number * Math.pow(10, decimals) ) / Math.pow(10, decimals) );
-                        }
-                    });
-
-                    $('.comment').on('click', function(e) {
-                        var url = $(this).attr('data-url');
-
-                        $("#form").attr('action', url);
-                        $("#modal-comment").modal('show');
-
-                        e.preventDefault();
-                    });
                 }
 			});
 		}
@@ -415,7 +296,7 @@
                 processing: true,
                 serverSide: true,
                 footer:true,
-                ajax: '{!! route('payments.datatables', [STL_PAYBILL]) !!}',
+                ajax: '{!! route('payments.datatables.unrecognized', [STL_PAYBILL]) !!}',
                 "order": [[0,'desc']],
                 "lengthMenu": [[10,25,50], [10,25,50]],
                 columns: [
