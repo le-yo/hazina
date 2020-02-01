@@ -24,3 +24,10 @@
     /*float: right !important;*/
 
 }
+
+.dataTables_filter {
+    margin-bottom: 0.9375rem;
+    color: #354052;
+    float: right !important;
+
+}
