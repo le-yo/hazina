@@ -69,7 +69,7 @@
 @yield ('content')
 </body>
 
-        <script src="{{ asset('plugins/jquery/jquery-2.1.3.min.js') }}"></script>
+<script src="{{ asset('plugins/jquery/jquery-2.1.3.min.js') }}"></script>
 <script href="{{ asset('dashboardui/js/main.min.js') }}"></script>
 <script src="{{ asset('plugins/jquery.dataTables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('plugins/jquery.dataTables/dataTables.bootstrap.min.js') }}"></script>

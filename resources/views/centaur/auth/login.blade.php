@@ -1,4 +1,4 @@
-@extends('Centaur::login-layout')
+@extends('dashboardui.layouts.nosidebar')
 
 @section('title', 'Login')
 

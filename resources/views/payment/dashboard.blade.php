@@ -127,9 +127,89 @@
 
     {{--New content--}}
     <div class="container">
-    <div class="row u-mb-large">
-        <div class="col-md-12 padded>
-            <div class="c-tabs">
+        <div class="row u-mb-large">
+            <div class="col-12">
+                <div class="c-table-responsive@desktop">
+                    <table class="c-table" id="datatable">
+                        <caption class="c-table__title">
+                            Sortable Tables <small>Powered by DataTables</small>
+                        </caption>
+
+                        <thead class="c-table__head c-table__head--slim">
+                        <tr class="c-table__row">
+                            <th class="c-table__cell c-table__cell--head no-sort">Project</th>
+                            <th class="c-table__cell c-table__cell--head">Deadline</th>
+                            <th class="c-table__cell c-table__cell--head no-sort">Leader + Team</th>
+                            <th class="c-table__cell c-table__cell--head">Budget</th>
+                            <th class="c-table__cell c-table__cell--head no-sort">Status</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr class="c-table__row">
+                            <td class="c-table__cell">New Dashboard</td>
+                            <td class="c-table__cell">17th Oct, 17</td>
+                            <td class="c-table__cell">Mahmoud</td>
+                            <td class="c-table__cell">$4,670</td>
+                            <td class="c-table__cell">Finishing</td>
+                        </tr>
+                        <tr class="c-table__row">
+                            <td class="c-table__cell">landing Page</td>
+                            <td class="c-table__cell">23th Dec, 18</td>
+                            <td class="c-table__cell">Norman Hammond</td>
+                            <td class="c-table__cell">$5,740</td>
+                            <td class="c-table__cell">Early Stages</td>
+                        </tr>
+                        <tr class="c-table__row">
+                            <td class="c-table__cell">Customer Care Interface</td>
+                            <td class="c-table__cell">2nd Jan, 18</td>
+                            <td class="c-table__cell">Joseph Mullins</td>
+                            <td class="c-table__cell">$4,000</td>
+                            <td class="c-table__cell">QA</td>
+                        </tr>
+                        <tr class="c-table__row">
+                            <td class="c-table__cell">UX Consulting</td>
+                            <td class="c-table__cell">1st Apr, 18</td>
+                            <td class="c-table__cell">Ina Higgins</td>
+                            <td class="c-table__cell">$2,500</td>
+                            <td class="c-table__cell">Waiting for Client</td>
+                        </tr>
+                        <tr class="c-table__row">
+                            <td class="c-table__cell">Mongo DB Integration</td>
+                            <td class="c-table__cell">23th Dec, 18</td>
+                            <td class="c-table__cell">Stella Munoz</td>
+                            <td class="c-table__cell">$800</td>
+                            <td class="c-table__cell">Finishing</td>
+                        </tr>
+                        <tr class="c-table__row">
+                            <td class="c-table__cell">Small Design Help</td>
+                            <td class="c-table__cell">10th Apr, 17</td>
+                            <td class="c-table__cell">Dylan Shelton</td>
+                            <td class="c-table__cell">$2,180</td>
+                            <td class="c-table__cell">Waiting for Client</td>
+                        </tr>
+                        <tr class="c-table__row">
+                            <td class="c-table__cell">Subpages</td>
+                            <td class="c-table__cell">1st Mar, 18</td>
+                            <td class="c-table__cell">Ellen Santiago</td>
+                            <td class="c-table__cell">$4,670</td>
+                            <td class="c-table__cell">QA</td>
+                        </tr>
+                        <tr class="c-table__row">
+                            <td class="c-table__cell">Analytics</td>
+                            <td class="c-table__cell">1st Jan, 18</td>
+                            <td class="c-table__cell">Maurice Briggs</td>
+                            <td class="c-table__cell">$1350</td>
+                            <td class="c-table__cell">Early Stages</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row u-mb-large">
+        {{--<div class="col-md-12">--}}
+            {{--<div class="c-tabs">--}}
                 <ul class="c-tabs__list nav nav-tabs" id="myTab" role="tablist">
                     <li><a class="c-tabs__link active" id="nav-home-tab" data-toggle="tab" href="#unprocessed" role="tab" aria-controls="nav-home" aria-selected="true">Unprocessed</a></li>
 
@@ -139,7 +219,7 @@
                 </ul>
                 <div class="c-tabs__content tab-content" id="nav-tabContent">
                     <div class="c-tabs__pane active" id="unprocessed" role="tabpanel" aria-labelledby="nav-home-tab">
-                        <div class="c-table-responsive@wide">
+                        <div class="c-table-responsive@desktop">
                             <table class="c-table unprocessed-payments-table" id="unprocessed-payments-table">
                                 <caption class="c-table__title">
                                     Payments
@@ -212,7 +292,8 @@
                             </div>
                         </div>
                 </div>
-        </div>
+    {{--</div>--}}
+    {{--</div>--}}
     </div>
     </div>
 	<!-- Modal -->
@@ -238,7 +319,6 @@
 				destroy: true,
 				processing: true,
 				serverSide: true,
-                footer:true,
 				ajax: '{!! route('payments.datatables', [STL_PAYBILL]) !!}',
 				"order": [[0,'desc']],
 				"lengthMenu": [[10,25,50], [10,25,50]],
@@ -292,20 +372,6 @@
                                     response["reduction"] = 0;
                                     response["fee"] = 0;
                                 }
-
-                                $calc.popover({
-                                    'html': 'true',
-                                    'title': row.client_name,
-                                    'trigger': 'click',
-                                    'placement': 'top',
-                                    'container': 'body',
-                                    'content': function () {
-                                        return '<p class="outstanding"><b>Outstanding Loan: </b>'+response.loan+'</p>'+
-                                            '<p class="amount"><b>Amount Paid: </b>'+response.amount+'</p>'+
-                                            '<p class="reduction"><b>Loan Reduction: </b>'+response.reduction+'</p>'+
-                                            '<p class="extension"><b>Extension Fee: </b>'+response.fee+'</p>';
-                                    }
-                                });
                             }
                         });
 

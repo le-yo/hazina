@@ -1,0 +1,26 @@
+.dataTables_paginate {
+    margin-top: .9375rem;
+    float: right !important;
+    display: inline-block;
+}
+.dataTables_paginate .paginate_button {
+
+    display: inline-block;
+    height: 2.1875rem;
+    padding: 2px 16px;
+    border: 1px solid #e6eaee;
+    /*border-right-color: rgb(179, 89, 238);*/
+    border-right-style: solid;
+    border-right-width: 1px;
+
+    background-color:
+            #fff;
+
+    /*color: rgba(53, 64, 82, 0.5);*/
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 2.1875rem;
+    text-align: right;
+    /*float: right !important;*/
+
+}

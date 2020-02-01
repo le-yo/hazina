@@ -1,4 +1,4 @@
-@extends('centaur.layout')
+@extends('dashboardui.layouts.app')
 
 @section('title', 'Payments')
 @push('styles')

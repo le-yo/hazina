@@ -16,6 +16,7 @@
     <!-- Stylesheet -->
 {{--    <link rel="stylesheet" href="{{ asset('plugins/jquery.dataTables/dataTables.bootstrap.min.css') }}">--}}
     <link rel="stylesheet" href="{{ asset('dashboardui/css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('dashboardui/css/custom.css') }}">
 </head>
 <body>
 
@@ -111,8 +112,12 @@
     {{--@yield('content')--}}
 {{--</div>--}}
 </body>
-<script href="{{ asset('dashboardui/js/main.min.js') }}"></script>
+<script src="{{ asset('plugins/jquery/jquery-2.1.3.min.js') }}"></script>
 <script src="{{ asset('plugins/jquery.dataTables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('plugins/jquery.dataTables/dataTables.bootstrap.min.js') }}"></script>
+<script src="{{ asset('plugins/bootstrap/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/restfulizer.js') }}"></script>
+<script href="{{ asset('dashboardui/js/main.min.js') }}"></script>
+<script src="{{ asset('js/custom-scripts.js') }}"></script>
 @stack('scripts')
 </html>
