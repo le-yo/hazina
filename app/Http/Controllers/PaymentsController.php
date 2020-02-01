@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Hooks;
 use App\Jobs\PaymentReceived;
 use App\Payment;
+use App\TransactionLog;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -33,9 +34,36 @@ class PaymentsController extends Controller
      */
     public function receiver(Request $request) {
         $input = $request->getContent();
+        $xml = new \DOMDocument();
+        $xml->loadXML($input);
+        if (($xml->getElementsByTagName('C2BPaymentValidationRequest')->length) > 0) {
+            //TODO::check if payment is valid
+            $data = ['content' => $input];
+            // Create a transaction log object
+            $transaction = TransactionLog::create($data);
+            $validationResponse = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:c2b="http://cps.huawei.com/cpsinterface/c2bpayment">
+                        <soapenv:Header/>
+                <soapenv:Body>
+                    <c2b:C2BPaymentValidationResult>
+                    <ResultCode>0</ResultCode>
+	                    <ResultDesc>Service processing successful</ResultDesc>
+	                    <ThirdPartyTransID>' . $transaction->id . '</ThirdPartyTransID>
+                </c2b:C2BPaymentValidationResult>
+                </soapenv:Body>
+                </soapenv:Envelope>';
+            header('Content-type: text/xml');
+            echo trim($validationResponse);
+            exit;
+            }else{
+            $payment = (new PaymentReceived($input))->delay(5);
+            $this->dispatch($payment);
+            $data = array();
+            $data['code'] = 0;
+            $data['message'] = "Payment received Successfully";
+            return response()->json($data);
+        }
 
-        $payment = (new PaymentReceived($input))->delay(5);
-        $this->dispatch($payment);
+
     }
 
     public function collectionSheet($id) {
