@@ -1,4 +1,4 @@
-@extends('dashboardui.layouts.app')
+@extends('dashboardui.layouts.nosidebar')
 
 @section('title', 'Payments')
 @push('styles')

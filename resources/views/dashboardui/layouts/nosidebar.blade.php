@@ -16,15 +16,14 @@
     <!-- Stylesheet -->
     <link rel="stylesheet" href="{{ asset('plugins/jquery.dataTables/dataTables.bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('dashboardui/css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('dashboardui/css/custom.css') }}">
 </head>
-<body>
-
 <body class="o-page">
 <!--[if lte IE 9]>
 <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
 <![endif]-->
 
-<header class="c-navbar">
+<header class="c-navbar u-mb-medium">
     <a class="c-navbar__brand" href="#!">
         <img src="{{ asset('dashboardui/img/logo.png') }}" alt="Logo">
     </a>
@@ -66,8 +65,9 @@
         <span class="c-nav-toggle__bar"></span>
     </button><!-- // .c-nav-toggle -->
 </header>
-@yield ('content')
-</body>
+<div class="o-page">
+        @yield ('content')
+</div>
 
 <script src="{{ asset('plugins/jquery/jquery-2.1.3.min.js') }}"></script>
 <script href="{{ asset('dashboardui/js/main.min.js') }}"></script>
@@ -77,4 +77,5 @@
 <script src="{{ asset('js/restfulizer.js') }}"></script>
 <script src="{{ asset('js/custom-scripts.js') }}"></script>
 @stack('scripts')
+</body>
 </html>

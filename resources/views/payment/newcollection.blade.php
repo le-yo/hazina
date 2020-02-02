@@ -5,22 +5,18 @@
 @endpush
 
 @section('content')
-    <div class="col-sm-12 col-lg-12">
-            <div class="panel panel-info c-table-responsive@wide">
 
-                    <caption class="c-table__title">
-                        Collection Sheet
-                    </caption>
-                <br>
-                <br>
-            </div>
-            <div class="c-table-responsive@wide">
-
+        <div class="u-mb-medium" style="padding: 20px;">
+            <div class="c-tabs__content tab-content" id="nav-tabContent">
+                <div class="c-tabs__pane active" id="unprocessed" role="tabpanel" aria-labelledby="nav-home-tab">
+            <div class="panel panel-info c-table-responsive@desktop">
+                <caption class="c-table__title">
+                    Collection Sheet
+                </caption>
                 {{--<a href='{!!url("member")!!}/create' class = 'btn btn-success'><i class="fa fa-plus"></i> New</a>--}}
                 <table id="searchData" class = "c-table">
                     <thead class="c-table__head c-table__head--slim">
                     <tr class="c-table__row">
-
                     </tr>
                     <th class="c-table__cell c-table__cell--head">Borrower Name</th>
                     <th class="c-table__cell c-table__cell--head" colspan="{!! count($collectionSheet->loanProducts) !!}">Due Collections</th>
@@ -28,7 +24,7 @@
                     <th class="c-table__cell c-table__cell--head">Attendance</th>
                     </thead>
                     <thead>
-                    <th class="c-table__cell c-table__cell--head>Groups/Clients</th>
+                    <th class="c-table__cell c-table__cell--head>Groups">Clients</th>
                     @foreach ($collectionSheet->loanProducts as $lp)
                         <th class="c-table__cell c-table__cell--head">{!! $lp->name !!}/Charges</th>
                     @endforeach
@@ -79,7 +75,7 @@
                                 @if(isset($sum[$group->groupId]['loan'][$lp->id]))
                                     <th class="c-table__cell c-table__cell--head {!! 'loan_sum_'.$group->groupId.'_'.$lp->id !!}">{!! number_format($sum[$group->groupId]['loan'][$lp->id],2) !!}</th>
                                 @else
-                                    <th class="{!! 'loan_sum_'.$group->groupId.'_'.$lp->id !!}>0</th>
+                                    <th class="{!! 'loan_sum_'.$group->groupId.'_'.$lp->id !!}">0</th>
                                 @endif
                             @endforeach
                             @foreach ($collectionSheet->savingsProducts as $sp)
@@ -90,8 +86,7 @@
                                 @endif
                             @endforeach
 
-                            <td>
-                            </td>
+                            {{--</td>--}}
                         </tr>
             @endforeach
             <tr>
@@ -126,6 +121,9 @@
                 <div class="panel-body">
                 <button type="button" id="submit_payments" class="btn btn-success">Submit Payments</button>
                 </div>
+                </div>
+            </div>
+    </div>
 	<!-- Modal -->
 	{{--@include('partials.modal')--}}
 	<!-- End of Modal -->
@@ -180,4 +178,7 @@
                                                     document.getElementById('total_due').innerHTML=sum;
                                                 }
                                             </script>
+
+                        </div>
+                        </div>
 @endpush

@@ -31,3 +31,11 @@
     float: right !important;
 
 }
+
+.horizontalscroll{
+    overflow: scroll; /* Scrollbar are always visible */
+    overflow: auto;
+}
+.screenwide{
+    width: 95%;
+}
