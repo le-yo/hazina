@@ -1,7 +1,7 @@
 @extends('dashboardui.layouts.nosidebar')
 @section('title', 'Payments')
 @push('styles')
-    {{--<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>--}}
+    <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
 @endpush
 
 @section('content')
@@ -80,9 +80,9 @@
                             @endforeach
                             @foreach ($collectionSheet->savingsProducts as $sp)
                                 @if(isset($sum[$group->groupId]['savings'][$sp->id]))
-                                    <th class="c-table__cell c-table__cell--head {!! 'savings_sum_'.$group->groupId.'_'.$sp->id !!}>{!! number_format($sum[$group->groupId]['savings'][$sp->id],2) !!}</th>
+                                    <th class="c-table__cell c-table__cell--head {!! 'savings_sum_'.$group->groupId.'_'.$sp->id !!}">{!! number_format($sum[$group->groupId]['savings'][$sp->id],2) !!}</th>
                                 @else
-                                    <th class="c-table__cell c-table__cell--head {!! 'loan_sum_'.$group->groupId.'_'.$lp->id !!}>0</th>
+                                    <th class="c-table__cell c-table__cell--head {!! 'loan_sum_'.$group->groupId.'_'.$lp->id !!}">0</th>
                                 @endif
                             @endforeach
 
@@ -90,37 +90,39 @@
                         </tr>
             @endforeach
             <tr>
-                <td>Total Total</td>
+                <td class="c-table__cell c-table__cell--head">Grand Total</td>
                 @foreach ($collectionSheet->loanProducts as $lp)
                     @if(isset($totals_sum['loan'][$lp->id]))
-                        <td>{!! number_format($totals_sum['loan'][$lp->id],2) !!}</td>
+                        <td class="c-table__cell c-table__cell--head">{!! number_format($totals_sum['loan'][$lp->id],2) !!}</td>
                     @else
-                        <td>0</td>
+                        <td class="c-table__cell c-table__cell--head">0</td>
                     @endif
                 @endforeach
                 @foreach ($collectionSheet->savingsProducts as $sp)
                     @if(isset($totals_sum['savings'][$sp->id]))
-                        <td>{!! $totals_sum['savings'][$sp->id] !!}</td>
+                        <td class="c-table__cell c-table__cell--head">{!! $totals_sum['savings'][$sp->id] !!}</td>
                     @else
-                        <td>0</td>
+                        <td class="c-table__cell c-table__cell--head">0</td>
                     @endif
                 @endforeach
                 <td>
                 </td>
             </tr>
+
+            <div class="panel-body">
+                <h4>Total Due Collections: </h4> <h4 class="panel-title total_due" id="total_due">{!! $total_due !!}</h4>
+            </div>
+            <div class="panel-body">
+                <h4>Total Payment made:</h4> <h4 class="panel-title" id="total_payment">{!! $payment->amount !!}</h4>
+            </div>
+            <div class="panel-body">
+                <button type="button" id="submit_payments" class="btn btn-success">Submit Payments</button>
+            </div>
+            <br>
                     </tbody>
                 </table>
                 </div>
 
-                {{--<div class="panel-body">--}}
-                   <h3>Total Due Collections: </h3> <h3 class="panel-title total_due" id="total_due">{!! $total_due !!}</h3>
-                {{--</div>--}}
-                <div class="panel-body">
-                   <h3>Total Payment made:</h3> <h3 class="panel-title" id="total_payment">{!! $payment->amount !!}</h3>
-                </div>
-                <div class="panel-body">
-                <button type="button" id="submit_payments" class="btn btn-success">Submit Payments</button>
-                </div>
                 </div>
             </div>
     </div>
@@ -129,11 +131,7 @@
 	<!-- End of Modal -->
 @stop
 @push('scripts')
-	<style>
-		.numericCol{
-			text-align: right;
-		}
-	</style>
+
     <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
                                             <script>
                                                 checkPayments();
@@ -179,6 +177,4 @@
                                                 }
                                             </script>
 
-                        </div>
-                        </div>
 @endpush
