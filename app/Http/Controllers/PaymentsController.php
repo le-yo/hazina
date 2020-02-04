@@ -65,7 +65,7 @@ class PaymentsController extends Controller
 
                 self::sendSMS($phone,$eng_message);
                 self::sendSMS($phone,$swa_message);
-                
+
                 $validationResponse = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:c2b="http://cps.huawei.com/cpsinterface/c2bpayment">
                         <soapenv:Header/>
                 <soapenv:Body>
@@ -97,7 +97,8 @@ class PaymentsController extends Controller
         $data = ['slug' => 'send_sms_get', 'content' => $to." ".$message];
         //log request
         Log::create($data);
-        $url = "http://rslr.connectbind.com:8080/bulksms/bulksms?username=itld-hazina&password=H4z1na@5&type=0&dlr=1&destination=".$to."&source=HAZINAGROUP&message=".$message;
+        $url = "http://rslr.connectbind.com:8080/bulksms/bulksms?username=itld-hazina&password=H4z1na@5&type=0&dlr=1&destination=".$to."&source=HAZINAGROUP&message=".urlencode($message);
+
         $ch = curl_init();
         $data = "";
         curl_setopt($ch, CURLOPT_URL, $url);
