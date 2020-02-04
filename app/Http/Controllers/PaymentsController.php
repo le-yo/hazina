@@ -41,7 +41,10 @@ class PaymentsController extends Controller
             $data = ['content' => $input];
             // Create a transaction log object
             $transaction = TransactionLog::create($data);
-            $validationResponse = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:c2b="http://cps.huawei.com/cpsinterface/c2bpayment">
+            $center = $xml->getElementsByTagName('BillRefNumber')->item(0)->nodeValue;
+
+            if(self::checkIfCenterExists($center)){
+                $validationResponse = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:c2b="http://cps.huawei.com/cpsinterface/c2bpayment">
                         <soapenv:Header/>
                 <soapenv:Body>
                     <c2b:C2BPaymentValidationResult>
@@ -51,6 +54,20 @@ class PaymentsController extends Controller
                 </c2b:C2BPaymentValidationResult>
                 </soapenv:Body>
                 </soapenv:Envelope>';
+            }else{
+                $validationResponse = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:c2b="http://cps.huawei.com/cpsinterface/c2bpayment">
+                        <soapenv:Header/>
+                <soapenv:Body>
+                    <c2b:C2BPaymentValidationResult>
+                    <ResultCode>C2B00012</ResultCode>
+	                    <ResultDesc>Invalid Account Number</ResultDesc>
+	                    <ThirdPartyTransID>' . $transaction->id . '</ThirdPartyTransID>
+                </c2b:C2BPaymentValidationResult>
+                </soapenv:Body>
+                </soapenv:Envelope>';
+            }
+            exit;
+
             header('Content-type: text/xml');
             echo trim($validationResponse);
             exit;
@@ -64,6 +81,24 @@ class PaymentsController extends Controller
         }
 
 
+    }
+
+    public function checkIfCenterExists($id){
+        $postURl = MIFOS_URL . "/centers/".$id."?command=generateCollectionSheet&" . MIFOS_tenantIdentifier;
+
+        $data = array();
+        $data['dateFormat'] = 'dd MMMM yyyy';
+        $data['locale'] = 'en_GB';
+        $data['calendarId'] = 7;
+        $data['transactionDate'] = Carbon::now()->format('d M Y');
+
+        // post the encoded application details
+        $collectionSheet = Hooks::MifosPostTransaction($postURl, json_encode($data));
+        if(isset($collectionSheet->dueDate)){
+            return TRUE;
+        }else{
+            return FALSE;
+        }
     }
 
     public function collectionSheet($id) {
