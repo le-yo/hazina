@@ -66,8 +66,6 @@ class PaymentsController extends Controller
                 </soapenv:Body>
                 </soapenv:Envelope>';
             }
-            exit;
-
             header('Content-type: text/xml');
             echo trim($validationResponse);
             exit;
