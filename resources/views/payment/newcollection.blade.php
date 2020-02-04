@@ -163,10 +163,12 @@
                                                 }
                                                 function calculateTotal(){
                                                     var sum = 0;
+                                                    var obj = {
+                                                    };
 
                                                     $(".edittable").each(function() {
                                                         var val = $.trim( $(this).text() );
-
+                                                        // alert(val);
                                                         if ( val ) {
                                                             val = parseFloat( val.replace( /^\$/, "" ) );
 
