@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Hooks;
 use App\Jobs\PaymentReceived;
+use App\Log;
 use App\Payment;
 use App\TransactionLog;
 use Carbon\Carbon;
@@ -55,6 +56,16 @@ class PaymentsController extends Controller
                 </soapenv:Body>
                 </soapenv:Envelope>';
             }else{
+                //get the phone
+
+                $phone = "254".substr(trim($xml->getElementsByTagName('MSISDN')->item(0)->nodeValue), -9);
+                $firstname = $xml->getElementsByTagName('KYCValue')->item(0)->nodeValue;
+                $eng_message = "Dear ".$firstname.", your payment has not been received. Please use your Center ID as Account Number. Please contact your manager to get your Center ID.";
+                $swa_message = $firstname.", pesa uliotuma haijakwenda. Tafadhali tumia nambari ya kikundi chako kama Account Number. Wasiliana na meneja wako kupata nambari ya kikundi.";
+
+                self::sendSMS($phone,$eng_message);
+                self::sendSMS($phone,$swa_message);
+                
                 $validationResponse = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:c2b="http://cps.huawei.com/cpsinterface/c2bpayment">
                         <soapenv:Header/>
                 <soapenv:Body>
@@ -79,6 +90,36 @@ class PaymentsController extends Controller
         }
 
 
+    }
+
+    public function sendSMS($to,$message){
+
+        $data = ['slug' => 'send_sms_get', 'content' => $to." ".$message];
+        //log request
+        Log::create($data);
+        $url = "http://rslr.connectbind.com:8080/bulksms/bulksms?username=itld-hazina&password=H4z1na@5&type=0&dlr=1&destination=".$to."&source=HAZINAGROUP&message=".$message;
+        $ch = curl_init();
+        $data = "";
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+        //curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data))
+        );
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        $data = curl_exec($ch);
+        if ($errno = curl_errno($ch)) {
+            $error_message = curl_strerror($errno);
+            echo "cURL error ({$errno}):\n {$error_message}";
+        }
+        $dt = ['slug' => 'send_sms_response', 'content' => $data];
+        //log response
+        Log::create($dt);
+        curl_close($ch);
+        return $data;
     }
 
     public function checkIfCenterExists($id){
