@@ -39,3 +39,22 @@
 .screenwide{
     width: 95%;
 }
+
+.c-tabs__list {
+    margin-bottom: 20px;
+}
+
+.c-tabs__pane.is-active, .c-tabs__pane.active {
+
+    display: block;
+    min-width: 100%;
+
+}
+
+*, ::before, ::after {
+
+    -webkit-box-sizing: inherit;
+    box-sizing: inherit;
+    min-width: 100px;
+
+}

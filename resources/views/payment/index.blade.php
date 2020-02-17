@@ -36,26 +36,26 @@
 					<h3 class="panel-title">Payments</h3>
 				</div>
 				<div class="panel-body">
-					<div class="tabs">
-						<ul class="nav nav-tabs">
-							<li class="active">
+					<div class="tabs c-tabs">
+						<ul class="nav nav-tabs c-tabs__list">
+							<li class="active c-tabs__link">
 								<a href="#unprocessed" role="tab" data-toggle="tab">
 									<i class="icon-user-follow"></i> Unprocessed Payments
 								</a>
 							</li>
-							<li>
+							<li class="c-tabs__link">
 								<a href="#processed" role="tab" data-toggle="tab" onclick="processedPaymentsDataTables()">
 									<i class="icon-user-following"></i> Processed Payments
 								</a>
 							</li>
-							<li>
+							<li class="c-tabs__link">
 								<a href="#unrecognized" role="tab" data-toggle="tab" onclick="unrecognizedPaymentsDataTables()">
 									<i class="icon-user-unfollow"></i> Unrecognized Payments
 								</a>
 							</li>
 						</ul>
-						<div class="tab-content">
-							<div class="tab-pane fade active in" id="unprocessed">
+						<div class="tab-content c-tabs__content">
+							<div class="c-tabs__pane tab-pane fade active in" id="unprocessed">
 								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 									{{--<div class="table-responsive">--}}
 										<table class="table table-bordered table-condensed unprocessed-payments-table" id="unprocessed-payments-table" cellspacing="0" width="100%">
@@ -76,7 +76,7 @@
 									{{--</div>--}}
 								</div>
 							</div>
-							<div class="tab-pane fade" id="processed">
+							<div class="c-tabs__pane tab-pane fade" id="processed">
 								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 									{{--<div class="table-responsive">--}}
 										<table class="table table-bordered table-condensed processed-payments-table" id="processed-payments-table" cellspacing="0" width="100%">
@@ -97,7 +97,7 @@
 									{{--</div>--}}
 								</div>
 							</div>
-							<div class="tab-pane fade" id="unrecognized">
+							<div class="c-tabs__pane tab-pane fade" id="unrecognized">
 								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 									{{--<div class="table-responsive">--}}
 										<table class="table table-bordered table-condensed unrecognized-payments-table" id="unrecognized-payments-table" cellspacing="0" width="100%">

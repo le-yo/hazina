@@ -135,16 +135,16 @@
         </section> <!-- end hero -->
 
         <!-- Footer -->
-        <footer class="footer">
+        {{--<footer class="footer">--}}
 
-            <div class="footer__bottom top-divider">
-                <div class="container text-center">
-            <span class="copyright">
-              &copy; 2020 Hazina
-            </span>
-                </div>
-            </div> <!-- end footer bottom -->
-        </footer> <!-- end footer -->
+            {{--<div class="footer__bottom top-divider">--}}
+                {{--<div class="container text-center">--}}
+            {{--<span class="copyright">--}}
+              {{--&copy; 2020 Hazina--}}
+            {{--</span>--}}
+                {{--</div>--}}
+            {{--</div> <!-- end footer bottom -->--}}
+        {{--</footer> <!-- end footer -->--}}
 
 
         <div id="back-to-top">

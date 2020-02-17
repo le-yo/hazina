@@ -134,6 +134,43 @@
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
                                             <script>
+                                                $('.edittable').on("shown", function() {
+
+                                                    $(this).data('editable').input.$input.on('keydown', function(e) {
+                                                        // When TAB key is pressed
+                                                        if (e.which == 9) {
+                                                            e.preventDefault();
+                                                            var that = this;
+                                                            checkPayments();
+                                                            calculateTotal();
+                                                            // $(".editable:visible").eq($(".editable:visible").index(that) + 1).editable('show');
+
+                                                            var eq_column = $(this).closest('td').index();
+                                                            var eq_row = $(this).closest('tr').index();
+                                                            var max_eq_row = $(this).closest('table').find('tr:last').index();
+
+                                                            // SHIFT + TAB
+                                                            if (e.shiftKey) {
+                                                                if (eq_row != 0) {
+                                                                    $(this)
+                                                                        .blur()
+                                                                        .closest('tr').prev()
+                                                                        .find('td').eq(eq_column)
+                                                                        .find(".editable").editable('show');
+                                                                }
+                                                                // Just TAB
+                                                            } else {
+                                                                if (eq_row != max_eq_row) {
+                                                                    $(this)
+                                                                        .blur()
+                                                                        .closest('tr').next()
+                                                                        .find('td').eq(eq_column)
+                                                                        .find(".editable").editable('show');
+                                                                }
+                                                            }
+                                                        }
+                                                    });
+                                                });
                                                 checkPayments();
                                                 calculateTotal();
                                                 $('.edittable').editable({
@@ -177,6 +214,7 @@
                                                     });
                                                     document.getElementById('total_due').innerHTML=sum;
                                                 }
+
                                             </script>
 
 @endpush
