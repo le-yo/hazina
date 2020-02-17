@@ -42,12 +42,19 @@ class DatatablesController extends Controller
 
     public function getProcessedPayments()
     {
-        return Datatables::of(Payment::whereStatus(3)->orderBy('transaction_time', 'desc')->get())
-            ->editColumn('transaction_time', function ($payment) {
-                return Carbon::parse($payment->transaction_time)->format('j F Y h:i A');
-            })->editColumn('amount', function ($payment) {
+        return Datatables::of(Payment::whereStatus(1)->orderBy('transaction_time', 'desc')->limit(50)->get())
+            ->editColumn('amount', function ($payment) {
                 return number_format($payment->amount);
-            })->editColumn('action', function($id) {
+            })->editColumn('category', function ($payment) {
+
+//                $category = categories::find($payment->category);
+//                if($category){
+//                    return '<a href="/paymentcategory/'.$category->id.'">'.$category->name.'</a>';
+//                }else{
+                return "Payment not categorized";
+//                }
+//                return number_format($payment->amount);
+            })->editColumn('action', function($payment) {
                 $action = ' <div class="c-dropdown dropdown">
                                                 <button class="c-btn c-btn--info u-mr-xsmall has-dropdown dropdown-toggle" id="dropdownMenuButton'.$payment->id.'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
                                                 
@@ -57,20 +64,25 @@ class DatatablesController extends Controller
                                                 </div>
                                             </div>';
                 return $action;
-            })
-            ->make(true);
+            })->make(true);
     }
 
 
     public function getUnrecognizedPayments()
     {
-
-        return Datatables::of(Payment::whereStatus(2)->orderBy('transaction_time', 'desc')->get())
-            ->editColumn('transaction_time', function ($payment) {
-                return Carbon::parse($payment->transaction_time)->format('j F Y h:i A');
-            })->editColumn('amount', function ($payment) {
+        return Datatables::of(Payment::whereStatus(2)->orderBy('transaction_time', 'desc')->limit(50)->get())
+            ->editColumn('amount', function ($payment) {
                 return number_format($payment->amount);
-            })->editColumn('action', function($id) {
+            })->editColumn('category', function ($payment) {
+
+//                $category = categories::find($payment->category);
+//                if($category){
+//                    return '<a href="/paymentcategory/'.$category->id.'">'.$category->name.'</a>';
+//                }else{
+                return "Payment not categorized";
+//                }
+//                return number_format($payment->amount);
+            })->editColumn('action', function($payment) {
                 $action = ' <div class="c-dropdown dropdown">
                                                 <button class="c-btn c-btn--info u-mr-xsmall has-dropdown dropdown-toggle" id="dropdownMenuButton'.$payment->id.'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
                                                 
@@ -80,7 +92,6 @@ class DatatablesController extends Controller
                                                 </div>
                                             </div>';
                 return $action;
-            })
-            ->make(true);
+            })->make(true);
     }
 }

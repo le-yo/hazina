@@ -143,30 +143,19 @@
                                                             var that = this;
                                                             checkPayments();
                                                             calculateTotal();
-                                                            // $(".editable:visible").eq($(".editable:visible").index(that) + 1).editable('show');
-
-                                                            var eq_column = $(this).closest('td').index();
-                                                            var eq_row = $(this).closest('tr').index();
-                                                            var max_eq_row = $(this).closest('table').find('tr:last').index();
-
-                                                            // SHIFT + TAB
-                                                            if (e.shiftKey) {
-                                                                if (eq_row != 0) {
-                                                                    $(this)
-                                                                        .blur()
-                                                                        .closest('tr').prev()
-                                                                        .find('td').eq(eq_column)
-                                                                        .find(".editable").editable('show');
-                                                                }
-                                                                // Just TAB
+                                                            e.preventDefault();
+                                                            console.log('this', this);
+                                                            // var next = nextField($(this), e.shiftKey);
+                                                            var form = $(this).closest("td").find("form");
+                                                            form.submit();
+                                                            if (form.has("div.has-error").length > 0){
+                                                                console.log("Found error, cancel !");
                                                             } else {
-                                                                if (eq_row != max_eq_row) {
-                                                                    $(this)
-                                                                        .blur()
-                                                                        .closest('tr').next()
-                                                                        .find('td').eq(eq_column)
-                                                                        .find(".editable").editable('show');
-                                                                }
+                                                                $(this)
+                                                                            .blur()
+                                                                            .closest('tr').next()
+                                                                            .find(".editable").editable('show');
+
                                                             }
                                                         }
                                                     });

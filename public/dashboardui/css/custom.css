@@ -50,11 +50,3 @@
     min-width: 100%;
 
 }
-
-*, ::before, ::after {
-
-    -webkit-box-sizing: inherit;
-    box-sizing: inherit;
-    min-width: 100px;
-
-}

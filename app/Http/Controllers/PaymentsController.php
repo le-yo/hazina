@@ -156,7 +156,7 @@ class PaymentsController extends Controller
         $collectionSheet = Hooks::MifosPostTransaction($postURl, json_encode($data));
 
 
-        if(count($collectionSheet) == 0){
+        if(!isset($collectionSheet->loanProducts)){
             session(['error' => 'Invalid account or centre ID']);
             return redirect()->back()->with('Error', 'Invalid account or centre ID');
         }
@@ -193,7 +193,7 @@ class PaymentsController extends Controller
 
                     foreach ($client->loans as $loan) {
 
-                        if(count($loan)>0) {
+                        if($loan) {
 //                            if(!isset($group_sum['loan'][$loan->productId])){
 //                                $group_sum['loan'][$loan->productId] = 0;
 //                            }
