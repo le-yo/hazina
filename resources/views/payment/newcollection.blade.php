@@ -141,7 +141,6 @@
                                                         if (e.which == 9) {
                                                             e.preventDefault();
                                                             var that = this;
-                                                            checkPayments();
                                                             calculateTotal();
                                                             e.preventDefault();
                                                             // console.log('this', this);
@@ -160,7 +159,6 @@
                                                         }
                                                     });
                                                 });
-                                                checkPayments();
                                                 calculateTotal();
                                                 $('.edittable').editable({
                                                     type: 'text',
@@ -176,17 +174,6 @@
                                                         $(".editable:visible").eq($(".editable:visible").index(that) + 1).editable('show');
                                                     }
                                                 });
-                                                function checkPayments(){
-                                                    var payment = document.getElementById("total_payment").innerText;
-                                                    // alert(payment);
-                                                    var total_due = document.getElementById("total_due").innerText;
-                                                    // alert(total_due);
-                                                    if(Number(payment) == Number(total_due)){
-                                                        document.getElementById("submit_payments").disabled = false;
-                                                    }else{
-                                                        document.getElementById("submit_payments").disabled = true;
-                                                    }
-                                                }
                                                 function calculateTotal(){
                                                     var sum = 0;
                                                     var sumArray = {};
@@ -215,13 +202,22 @@
                                                             }
                                                         }
                                                     });
-                                                    console.log(sumArray);
+                                                    // console.log(sumArray);
                                                     document.getElementById('total_due').innerHTML=sum;
                                                     $.each(sumArray, function( index, value) {
                                                         var groupClass = 'sum_'.concat(index);
                                                         document.getElementById(groupClass).innerHTML=value;
                                                     });
 
+                                                    var payment = document.getElementById("total_payment").innerText;
+                                                    console.log(payment);
+                                                    var total_due = document.getElementById("total_due").innerText;
+                                                    console.log(total_due);
+                                                    if(parseInt(sum) <= parseInt(payment)){
+                                                        document.getElementById("submit_payments").disabled = false;
+                                                    }else{
+                                                        document.getElementById("submit_payments").disabled = true;
+                                                    }
                                                 }
 
                                             </script>
