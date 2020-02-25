@@ -213,11 +213,11 @@
                                                     console.log(payment);
                                                     var total_due = document.getElementById("total_due").innerText;
                                                     console.log(total_due);
-                                                    if(parseInt(sum) <= parseInt(payment)){
+                                                    if(parseInt(sum) == parseInt(payment)){
                                                         document.getElementById("submit_payments").disabled = false;
                                                     }else{
                                                         document.getElementById("submit_payments").disabled = true;
-                                                    }
+                                                    } 
                                                 }
 
                                             </script>
