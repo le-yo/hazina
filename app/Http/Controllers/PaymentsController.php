@@ -401,21 +401,13 @@ class PaymentsController extends Controller
 
         $url = MIFOS_URL . "/clients/" . $client_id . "/accounts?fields=loanAccounts&" . MIFOS_tenantIdentifier;
         $loanAccounts = Hooks::MifosGetTransaction($url);
-
         if (!empty($loanAccounts->loanAccounts)) {
             $loanAccounts = $loanAccounts->loanAccounts;
-            print_r(count($loanAccounts));
-            exit;
-            foreach ($loanAccounts as $key=>$la){
-                if ($la->status->id != 300) {
-                    unset($loanAccounts[$key]);
-                }
-            }
         } else {
             $loanAccounts = array();
         }
         return $loanAccounts;
-    }
+    } 
 
 
     public function processUserLoan($payment_data,$payment=null){
@@ -861,7 +853,6 @@ class PaymentsController extends Controller
                 } else {
                     return $savingsPayment;
                 }
-                exit;
             }
 
         }
