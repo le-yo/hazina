@@ -432,8 +432,17 @@ class PaymentsController extends Controller
 //        exit;
         if($user) {
             $loanAccounts = self::getClientLoanAccountsInAscendingOrder($user->client_id);
-            print_r($loanAccounts);
-            exit;
+
+            foreach ($loanAccounts as $key=>$la){
+                $shortname = $la->shortProductName;
+                $externalid_sub_string = strtolower(substr($payment_data['externalId'], 0, strlen($shortname)));
+                if(strtolower($shortname) == $externalid_sub_string){
+                    $tmp = $loanAccounts[$key];
+                    unset($loanAccounts[$key]);
+                    array_unshift($loanAccounts,$tmp);
+                }
+            }
+
             $latest_loan = end($loanAccounts);
             $loan_id = '';
             $loan = '';

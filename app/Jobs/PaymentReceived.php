@@ -279,7 +279,6 @@ class PaymentReceived extends Job implements ShouldQueue
             $payment->save();
         }
         $loanAccounts = self::getClientLoanAccountsInAscendingOrder($user->client_id);
-        $first_loan = array();
         foreach ($loanAccounts as $key=>$la){
             $shortname = $la->shortProductName;
             $externalid_sub_string = strtolower(substr($payment_data['externalId'], 0, strlen($shortname)));
@@ -288,11 +287,6 @@ class PaymentReceived extends Job implements ShouldQueue
                 unset($loanAccounts[$key]);
                 array_unshift($loanAccounts,$tmp);
             }
-        }
-
-        if(count($first_loan)>0){
-
-        array_unshift($loanAccounts,$first_loan);
         }
 
         $latest_loan = end($loanAccounts);
