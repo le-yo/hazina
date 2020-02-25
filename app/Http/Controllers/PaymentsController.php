@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Hooks;
 use App\Jobs\PaymentReceived;
 use App\Payment;
+use App\setting;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -273,8 +274,21 @@ class PaymentsController extends Controller
      * @param $id
      * @return mixed
      */
+    public function checkAccountPrefix($account){
+        $settings = setting::all();
+        foreach ($settings as $setting){
+            $shortname = $setting->short_name;
+            if(strtolower($shortname) == strtolower(substr($account, 0, strlen($shortname)))){
+                $account = substr($account, strlen($shortname));
+
+            }
+        }
+        return $account;
+    }
     public function getTransactionClient($data){
         $user = FALSE;
+        $data['externalId'] = self::checkAccountPrefix($data['externalId']);
+        //check if external id has some prefix
         $externalid = $data['externalId'];
 
         $url = MIFOS_URL . "/clients?sqlSearch=(c.external_id%20like%20%27" . $externalid . "%27)&" . MIFOS_tenantIdentifier;
@@ -390,6 +404,13 @@ class PaymentsController extends Controller
 
         if (!empty($loanAccounts->loanAccounts)) {
             $loanAccounts = $loanAccounts->loanAccounts;
+            print_r(count($loanAccounts));
+            exit;
+            foreach ($loanAccounts as $key=>$la){
+                if ($la->status->id != 300) {
+                    unset($loanAccounts[$key]);
+                }
+            }
         } else {
             $loanAccounts = array();
         }
@@ -411,7 +432,8 @@ class PaymentsController extends Controller
 //        exit;
         if($user) {
             $loanAccounts = self::getClientLoanAccountsInAscendingOrder($user->client_id);
-
+            print_r($loanAccounts);
+            exit;
             $latest_loan = end($loanAccounts);
             $loan_id = '';
             $loan = '';

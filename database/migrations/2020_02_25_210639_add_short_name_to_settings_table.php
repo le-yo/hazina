@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddConfirmPhraseToMenusTable extends Migration
+class AddShortNameToSettingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class AddConfirmPhraseToMenusTable extends Migration
      */
     public function up()
     {
-        Schema::table('menus', function(Blueprint $table)
+        Schema::table('settings', function(Blueprint $table)
         {
-            $table->string('confirmation_title')->after('confirmation_message')->default(null);
+            $table->string('short_name')->after('product_name')->default(null);
         });
     }
 
@@ -26,9 +26,9 @@ class AddConfirmPhraseToMenusTable extends Migration
      */
     public function down()
     {
-        Schema::table('menus', function(Blueprint $table)
+        Schema::table('settings', function(Blueprint $table)
         {
-            $table->dropColumn('confirmation_title');
+            $table->dropColumn('short_name');
         });
     }
 }

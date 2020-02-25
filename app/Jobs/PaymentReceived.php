@@ -272,7 +272,6 @@ class PaymentReceived extends Job implements ShouldQueue
     public function processLoan($payment_data,$payment=null){
 
         //get user
-
         $user = self::getTransactionClient($payment_data);
         if(!$user){
             $payment->comment = "No User found with either the account provided or phone number of the payee";
@@ -280,6 +279,22 @@ class PaymentReceived extends Job implements ShouldQueue
             $payment->save();
         }
         $loanAccounts = self::getClientLoanAccountsInAscendingOrder($user->client_id);
+        $first_loan = array();
+        foreach ($loanAccounts as $key=>$la){
+            $shortname = $la->shortProductName;
+            $externalid_sub_string = strtolower(substr($payment_data['externalId'], 0, strlen($shortname)));
+            if(strtolower($shortname) == $externalid_sub_string){
+                $tmp = $loanAccounts[$key];
+                unset($loanAccounts[$key]);
+                array_unshift($loanAccounts,$tmp);
+            }
+        }
+
+        if(count($first_loan)>0){
+
+        array_unshift($loanAccounts,$first_loan);
+        }
+
         $latest_loan = end($loanAccounts);
         $loan_id = '';
         $loan = '';

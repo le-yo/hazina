@@ -56,6 +56,7 @@ class SettingsTableSeeder extends Seeder
 //            exit;
             $dat = array();
             $dat['product_name'] = $loanproduct->name;
+            $dat['short_name'] = $loanproduct->shortName;
             $dat['productId'] = $loanproduct->id;
             $dat['loanTermFrequency'] = $loanproduct->repaymentFrequencyType->id;
             $dat['loanTermFrequencyType'] = $loanproduct->repaymentFrequencyType->id;
