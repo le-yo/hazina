@@ -328,7 +328,7 @@ class PaymentsController extends Controller
             $repayment_data['locale'] = 'en_GB';
             $repayment_data['transactionDate'] = Carbon::parse($payment->transaction_time)->format('j F Y');
             $repayment_data['transactionAmount'] = $payment->amount;
-            $repayment_data['paymentTypeId'] = 1;
+            $repayment_data['paymentTypeId'] = 6;
             $repayment_data['note'] = $note;
             $repayment_data['accountNumber'] = $payment->phone;
             $repayment_data['receiptNumber'] = $payment->transaction_id;
@@ -429,7 +429,7 @@ class PaymentsController extends Controller
             $repayment_data['locale'] = 'en_GB';
             $repayment_data['transactionDate'] = Carbon::parse($data['transaction_time'])->format('j F Y');
             $repayment_data['transactionAmount'] = $data['amount'];
-            $repayment_data['paymentTypeId'] = 1;
+            $repayment_data['paymentTypeId'] = 6;
             $repayment_data['note'] = 'Payment';
             $repayment_data['accountNumber'] = $data['phone'];
             $repayment_data['receiptNumber'] = $data['transaction_id'];
