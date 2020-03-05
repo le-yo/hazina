@@ -68,7 +68,7 @@ class PaymentReceived extends Job implements ShouldQueue
         $transaction = Payment::whereTransactionId($data['transaction_id'])->first();
 
         if($transaction == null) {
-            $payment = Payment::create($data);
+//            $payment = Payment::create($data);
 
                 if(self::processLoan($data)) {
                     $data['status'] = 1;
@@ -136,17 +136,27 @@ class PaymentReceived extends Job implements ShouldQueue
                 //search by phone
                 $no = substr($data['externalId'], -9);
 
-                $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%270" . $no . "%27)&" . MIFOS_tenantIdentifier;
+                $url = MIFOS_URL . "/search?exactMatch=false&query=" . $no . "&&resource=clients,clientIdentifiers&" . MIFOS_tenantIdentifier;
 
                 // Get all clients
                 $client = Hooks::MifosGetTransaction($url, $post_data = '');
+                if (isset($client[0]->entityId)) {
+                    $usr = array();
+                    $usr['client_id'] = $client[0]->entityId;
+                    if ($client[0]->entityStatus->code == 'clientStatusType.active') {
+                        $usr['active_status'] = 1;
+                    } else {
+                        $usr['active_status'] = 0;
+                    }
+                    $user = (object) $usr;
 
-                if ($client->totalFilteredRecords == 0) {
+                    return $user;
+                }
+                if (!isset($client[0]->entityId)) {
                     $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%27254" . $no . "%27)&" . MIFOS_tenantIdentifier;
 
                     // Get all clients
                     $client = Hooks::MifosGetTransaction($url, $post_data = '');
-
                     if ($client->totalFilteredRecords == 0) {
                         $no = substr($data['phone'], -9);
 
@@ -183,6 +193,7 @@ class PaymentReceived extends Job implements ShouldQueue
         //get user
         $payment_data['externalId'] = $payment_data['account_no'];
         $user = self::getTransactionClient($payment_data);
+       
 //        if(!$user){
 //            $payment->comment = "No User found with either the account provided or phone number of the payee";
 //            $payment->save();
