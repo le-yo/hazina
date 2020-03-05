@@ -55,14 +55,7 @@ class DatatablesController extends Controller
 //                }
 //                return number_format($payment->amount);
             })->editColumn('action', function($payment) {
-                $action = ' <div class="c-dropdown dropdown">
-                                                <button class="c-btn c-btn--info u-mr-xsmall has-dropdown dropdown-toggle" id="dropdownMenuButton'.$payment->id.'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
-                                                
-                                                <div class="c-dropdown__menu dropdown-menu" aria-labelledby="dropdownMenuButton'.$payment->id.'">
-                                                
-                                                    <a href="'.url('collectionSheet/'.$payment->id).'" class="c-dropdown__item dropdown-item">Collection Sheet</a>
-                                                </div>
-                                            </div>';
+                $action = 'No Action';
                 return $action;
             })->make(true);
     }

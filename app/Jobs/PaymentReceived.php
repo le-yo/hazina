@@ -193,7 +193,7 @@ class PaymentReceived extends Job implements ShouldQueue
         //get user
         $payment_data['externalId'] = $payment_data['account_no'];
         $user = self::getTransactionClient($payment_data);
-       
+
 //        if(!$user){
 //            $payment->comment = "No User found with either the account provided or phone number of the payee";
 //            $payment->save();
