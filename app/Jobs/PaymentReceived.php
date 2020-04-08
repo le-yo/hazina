@@ -68,7 +68,7 @@ class PaymentReceived extends Job implements ShouldQueue
         $transaction = Payment::whereTransactionId($data['transaction_id'])->first();
 
         if($transaction == null) {
-//            $payment = Payment::create($data);
+            $payment = Payment::create($data);
 
                 if(self::processLoan($data)) {
                     $data['status'] = 1;
