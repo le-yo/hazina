@@ -21,7 +21,7 @@ class DatatablesController extends Controller
     public function getPayments()
     {
 
-        return Datatables::of(Payment::whereStatus(0)->orderBy('transaction_time', 'desc')->limit(50)->get())
+        return Datatables::of(Payment::whereStatus(0)->orderBy('transaction_time', 'desc')->limit(1000)->get())
             ->editColumn('amount', function ($payment) {
                 return number_format($payment->amount);
             })->editColumn('category', function ($payment) {
@@ -43,7 +43,7 @@ class DatatablesController extends Controller
 
     public function getProcessedPayments()
     {
-        return Datatables::of(Payment::whereStatus(1)->orderBy('transaction_time', 'desc')->limit(50)->get())
+        return Datatables::of(Payment::whereStatus("1")->orderBy('transaction_time', 'desc')->limit(1000)->get())
             ->editColumn('amount', function ($payment) {
                 return number_format($payment->amount);
             })->editColumn('category', function ($payment) {
