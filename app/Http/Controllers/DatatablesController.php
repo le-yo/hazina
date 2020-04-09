@@ -35,7 +35,7 @@ class DatatablesController extends Controller
 //                return number_format($payment->amount);
             })->editColumn('action', function($payment) {
 //                    $action = '<a href="'.url('collectionSheet/'.$payment->id).'"> <button class="c-btn c-btn--info u-mr-xsmall" aria-haspopup="true" aria-expanded="false">Collection Sheet</button></a>
-                    $action = '<a href="'.url('makePayment/manual/'.$payment->id).'"> <button class="c-btn c-btn--info u-mr-xsmall" aria-haspopup="true" aria-expanded="false">Mark has Processed</button></a>
+                    $action = '<a href="'.url('makePayment/manual/'.$payment->id).'"> <button class="c-btn c-btn--info u-mr-xsmall" aria-haspopup="true" aria-expanded="false">Mark as Processed</button></a>
                  ';
                 return $action;
             })->make(true);
