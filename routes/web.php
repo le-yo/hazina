@@ -147,7 +147,7 @@ Route::get('payday-loan/loans', ['as' => 'payday-loan.loans', 'uses' => 'LoansCo
 // Datatables
 // Payments Datatables
 Route::get('payments/datatables/unprocessed/{paybill}', ['as' => 'payments.datatables.unprocessed', 'uses' => 'DatatablesController@getPayments']);
-Route::get('payments/datatables/processed/{paybill}', ['as' => 'payments.datatables.processed', 'uses' => 'DatatablesController@getProcessedPayments']);
+Route::get('payments/datatables/processed', ['as' => 'payments.datatables.processed', 'uses' => 'DatatablesController@getProcessedPayments']);
 Route::get('payments/datatables/unrecognized/{paybill}', ['as' => 'payments.datatables.unrecognized', 'uses' => 'DatatablesController@getUnrecognizedPayments']);
 
 // Loans Datatables
