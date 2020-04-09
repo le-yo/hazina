@@ -8,6 +8,7 @@ use App\Http\Controllers\NotifyController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\UssdController;
 use App\Jobs\Job;
+use App\Paybill;
 use App\Payment;
 use App\TransactionLog;
 use App\Ussduser;
@@ -68,13 +69,21 @@ class PaymentReceived extends Job implements ShouldQueue
 
         if($transaction == null) {
             $payment = Payment::create($data);
-
-                if(self::processLoan($data,$payment)) {
-                    $payment->status = 1;
-                } else {
-                    $payment->status = 0;
-                }
+            $paybill = Paybill::wherePaybill($data['paybill'])->first();
+            if (!$paybill) {
+                $paybill = new Paybill();
+                $paybill->paybill = $data['paybill'];
+                $paybill->status = 1;
+                $paybill->save();
+            }
+            if ($paybill->status == 1) {
+            if (self::processLoan($data, $payment)) {
+                $payment->status = 1;
+            } else {
+                $payment->status = 0;
+            }
             $payment->save();
+            }
         }
     }
 
