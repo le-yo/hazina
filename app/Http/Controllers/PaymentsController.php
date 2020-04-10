@@ -97,7 +97,7 @@ class PaymentsController extends Controller
         $data = ['slug' => 'send_sms_get', 'content' => $to." ".$message];
         //log request
         Log::create($data);
-        $url = "http://rslr.connectbind.com:8080/bulksms/bulksms?username=itld-hazina&password=H4z1na@5&type=0&dlr=1&destination=".$to."&source=HAZINAGROUP&message=".urlencode($message);
+        $url = "http://rslr.connectbind.com:8080/bulksms/bulksms?username=itld-hazina&password=H4z1na5T&type=0&dlr=1&destination=".$to."&source=HAZINAGROUP&message=".urlencode($message);
 
         $ch = curl_init();
         $data = "";
