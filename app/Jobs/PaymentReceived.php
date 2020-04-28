@@ -409,7 +409,16 @@ class PaymentReceived extends Job implements ShouldQueue
     public function depositToDrawDownAccount($client_id,$amount,$data){
 
         $savingsaccounts = self::getClientSavingsAccountsInAscendingOrder($client_id);
-
+        foreach ($savingsaccounts as $key=>$sa){
+            $shortname = $sa->shortProductName;
+            $externalid_sub_string = 'TAC';
+            if(strtolower($shortname) == strtolower($externalid_sub_string) && $sa->status->id==300){
+                $tmp = $savingsaccounts[$key];
+                array_unshift($savingsaccounts,$tmp);
+            }else{
+                unset($savingsaccounts[$key]);
+            }
+        }
         foreach ($savingsaccounts as $sa) {
             if ($sa->status->id == 300) {
                 $deposit_data = [];
