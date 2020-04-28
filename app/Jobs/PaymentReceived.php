@@ -413,40 +413,63 @@ class PaymentReceived extends Job implements ShouldQueue
             $shortname = $sa->shortProductName;
             $externalid_sub_string = 'TAC';
             if(strtolower($shortname) == strtolower($externalid_sub_string) && $sa->status->id==300){
-                $tmp = $savingsaccounts[$key];
-                array_unshift($savingsaccounts,$tmp);
+                if ($sa->status->id == 300) {
+                    $deposit_data = [];
+                    $deposit_data['locale'] = 'en_GB';
+                    $deposit_data['dateFormat'] = 'dd MMMM yyyy';
+                    $deposit_data['transactionDate'] = Carbon::parse($data['transaction_time'])->format('j F Y');
+                    $deposit_data['transactionAmount'] = $amount;
+                    $deposit_data['paymentTypeId'] = 6;
+                    $deposit_data['accountNumber'] = $data['phone'];
+                    $deposit_data['receiptNumber'] = $data['transaction_id'];
+                    $deposit_data = json_encode($deposit_data);
+
+                    // url for posting the repayment details
+                    $postURl = MIFOS_URL . "/savingsaccounts/" . $sa->id . "/transactions?command=deposit&" . MIFOS_tenantIdentifier;
+                    // post the encoded repayment details
+                    $savingsPayment = Hooks::MifosPostTransaction($postURl, $deposit_data);
+
+                    // check if posting was successful
+                    if (array_key_exists('errors', $savingsPayment)) {
+//                        $payment->comment = "Problem processing loan repayment";
+//                        $payment->save();
+                        return false;
+                    } else {
+                        return $savingsPayment;
+                    }
+                }
             }else{
                 unset($savingsaccounts[$key]);
             }
         }
-        foreach ($savingsaccounts as $sa) {
-            if ($sa->status->id == 300) {
-                $deposit_data = [];
-                $deposit_data['locale'] = 'en_GB';
-                $deposit_data['dateFormat'] = 'dd MMMM yyyy';
-                $deposit_data['transactionDate'] = Carbon::parse($data['transaction_time'])->format('j F Y');
-                $deposit_data['transactionAmount'] = $amount;
-                $deposit_data['paymentTypeId'] = 6;
-                $deposit_data['accountNumber'] = $data['phone'];
-                $deposit_data['receiptNumber'] = $data['transaction_id'];
-                $deposit_data = json_encode($deposit_data);
-
-                // url for posting the repayment details
-                $postURl = MIFOS_URL . "/savingsaccounts/" . $sa->id . "/transactions?command=deposit&" . MIFOS_tenantIdentifier;
-                // post the encoded repayment details
-                $savingsPayment = Hooks::MifosPostTransaction($postURl, $deposit_data);
-
-                // check if posting was successful
-                if (array_key_exists('errors', $savingsPayment)) {
-//                        $payment->comment = "Problem processing loan repayment";
-//                        $payment->save();
-                    return false;
-                } else {
-                    return $savingsPayment;
-                }
-            }
-
-        }
+//        foreach ($savingsaccounts as $sa) {
+//            if ($sa->status->id == 300) {
+//                $deposit_data = [];
+//                $deposit_data['locale'] = 'en_GB';
+//                $deposit_data['dateFormat'] = 'dd MMMM yyyy';
+//                $deposit_data['transactionDate'] = Carbon::parse($data['transaction_time'])->format('j F Y');
+//                $deposit_data['transactionAmount'] = $amount;
+//                $deposit_data['paymentTypeId'] = 6;
+//                $deposit_data['accountNumber'] = $data['phone'];
+//                $deposit_data['receiptNumber'] = $data['transaction_id'];
+//                $deposit_data = json_encode($deposit_data);
+//
+//                // url for posting the repayment details
+//                $postURl = MIFOS_URL . "/savingsaccounts/" . $sa->id . "/transactions?command=deposit&" . MIFOS_tenantIdentifier;
+//                // post the encoded repayment details
+//                $savingsPayment = Hooks::MifosPostTransaction($postURl, $deposit_data);
+//
+//                // check if posting was successful
+//                if (array_key_exists('errors', $savingsPayment)) {
+////                        $payment->comment = "Problem processing loan repayment";
+////                        $payment->save();
+//                    return false;
+//                } else {
+//                    return $savingsPayment;
+//                }
+//            }
+//
+//        }
 
     }
     function getClientSavingsAccountsInAscendingOrder($client_id)
