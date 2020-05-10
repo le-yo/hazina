@@ -47,7 +47,7 @@
 
  @endsection
 
-@section('scripts')
+@push('scripts')
     <script>
         $("#error-div").hide();
         $("#success-div").hide();
@@ -90,4 +90,5 @@
             }
         }
     </script>
-    @endsection
+
+    @endpush

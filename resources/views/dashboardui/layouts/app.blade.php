@@ -117,5 +117,5 @@
 <script src="{{ asset('plugins/jquery.dataTables/dataTables.bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/restfulizer.js') }}"></script>
 <script src="{{ asset('js/custom-scripts.js') }}"></script>
-@yield('scripts')
+@stack('scripts')
 </html>
