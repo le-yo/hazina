@@ -1,0 +1,99 @@
+.main-content .navbar-top {
+
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    background-color: hsla(0, 0%, 100%, 0.99);
+
+}
+
+.navbar-dark .navbar-nav .nav-link {
+
+    color: rgb(25, 27, 83);
+
+}
+
+.navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:focus {
+
+    color: rgb(114, 103, 228);
+
+}
+
+
+.navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:focus {
+    color: rgb(0, 188, 212);
+}
+
+.bg-gradient-primary {
+
+    background: linear-gradient(50deg, rgb(25, 27, 83) 0, rgb(25, 27, 83) 100%) !important;
+
+}
+
+/*body {*/
+    /*background-color: #000;*/
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    /*height: 100vh;*/
+/*}*/
+
+svg {
+    width: 100%;
+}
+
+circle {
+    fill: #fd6162;
+}
+
+
+/* circle, */
+
+.banaan {
+    fill: #fff;
+    transition: all 2s ease;
+    box-shadow: 0 0 0 0 rgba(232, 76, 61, 0.7);
+    animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+}
+
+@keyframes pulse {
+    to {
+        r: 5;
+    }
+}
+
+.navbar-horizontal .navbar-brand img {
+
+    height: 50px;
+
+}
+
+
+.bg-default {
+
+    background-color: #eee !important;
+
+}
+
+
+.fill-default {
+    fill: #eee;
+}
+
+div.dataTables_wrapper div.dataTables_paginate {
+
+    margin-top: 40px;
+    white-space: nowrap;
+    text-align: right;
+
+}
+
+div.dataTables_wrapper div.dataTables_paginate ul.pagination.li.a {
+
+    padding: 30px;
+
+}

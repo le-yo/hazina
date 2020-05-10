@@ -5,6 +5,31 @@
 @section('content')
     <div class="container">
         <div class="row u-mb-large">
+                <div class="tab-content" id="nav-tabContent">
+                    <form method="POST" action="payments/upload"  files="true" class="form-inline" enctype="multipart/form-data">
+                        {{--{!! ::open(array('url'=>'payments/upload','method'=>'POST', 'files'=>true, 'class'=>'form-inline')) !!}--}}
+                        <div class="row">
+                            <div class="col-md-8">
+
+                            </div>
+                            <div class="col-md-2">
+                                {{--<div class="col-xs-10">--}}
+                                {{--<span id="filename">Select your file</span>--}}
+                                <input type="file" id="file-upload" name="xls">
+                                <input type="hidden" name="_token" value="{{csrf_token()}}">
+                            </div>
+
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-info pull-right">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+        </div>
+    </div>
+    <div class="container">
+        <div class="row u-mb-large">
         {{--<div class="col-md-12">--}}
             {{--<div class="c-tabs">--}}
                 <ul class="c-tabs__list nav nav-tabs" id="myTab" role="tablist">
@@ -91,7 +116,6 @@
                 </div>
     {{--</div>--}}
     {{--</div>--}}
-    </div>
     </div>
     </div>
 	<!-- Modal -->

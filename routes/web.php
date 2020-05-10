@@ -54,6 +54,7 @@ Route::post('payments/comment/{id}', 'PaymentsController@getComment');
 Route::get('payments/calculator/{id}', 'PaymentsController@getOutstandingLoan');
 
 // Excel payments upload
+Route::get('payments/recon', 'PaymentsController@reconPayments');
 Route::post('payments/upload', 'PaymentsController@uploadPayments');
 /*
 |--------------------------------------------------------------------------
@@ -72,23 +73,6 @@ Route::get('/home', ['as' => 'home', 'uses' => function() {
         return view('landing',['year' => $year]);
     } else {
         return view('payment.dashboard');
-        $now = \Carbon\Carbon::now();
-        //today
-        $today_sum = \App\Payment::where('transaction_time','>=',$now->subDay(1))->sum('amount');
-        $today_count = \App\Payment::where('transaction_time','>=',\Carbon\Carbon::now()->subDay(1))->count();
-        //this week
-        $week_sum = \App\Payment::where('transaction_time','>=',\Carbon\Carbon::now()->subWeek(1))->sum('amount');
-        $week_count = \App\Payment::where('transaction_time','>=',\Carbon\Carbon::now()->subWeek(1))->count();
-
-        //this month
-        $month_sum = \App\Payment::where('transaction_time','>=',\Carbon\Carbon::now()->subMonth(1))->sum('amount');
-        $month_count = \App\Payment::where('transaction_time','>=',\Carbon\Carbon::now()->subMonth(1))->count();
-
-        //to date
-        $to_date_sum = \App\Payment::all()->sum('amount');
-        $to_date_count = \App\Payment::all()->count();
-
-        return view('dashboard', compact('today_sum','today_count','week_sum','week_count','month_count','month_sum','to_date_count','to_date_sum'));
     }
 }]);
 
@@ -97,36 +81,20 @@ Route::get('/', ['as' => '/', 'uses' => function() {
         return view('landing');
     } else {
         return view('payment.dashboard');
-        $now = \Carbon\Carbon::now();
-        //today
-        $today_sum = \App\Payment::where('transaction_time','>=',$now->subDay(1))->sum('amount');
-        $today_count = \App\Payment::where('transaction_time','>=',\Carbon\Carbon::now()->subDay(1))->count();
-        //this week
-        $week_sum = \App\Payment::where('transaction_time','>=',\Carbon\Carbon::now()->subWeek(1))->sum('amount');
-        $week_count = \App\Payment::where('transaction_time','>=',\Carbon\Carbon::now()->subWeek(1))->count();
-
-        //this month
-        $month_sum = \App\Payment::where('transaction_time','>=',\Carbon\Carbon::now()->subMonth(1))->sum('amount');
-        $month_count = \App\Payment::where('transaction_time','>=',\Carbon\Carbon::now()->subMonth(1))->count();
-
-        //to date
-        $to_date_sum = \App\Payment::all()->sum('amount');
-        $to_date_count = \App\Payment::all()->count();
-
-        return view('dashboard', compact('today_sum','today_count','week_sum','week_count','month_count','month_sum','to_date_count','to_date_sum'));
     }
 }]);
 
 
 //Datatables
 Route::get('payments/datatables', ['as' => 'payments.datatables', 'uses' => 'DatatablesController@getPayments']);
-Route::get('payments/datatables/unprocessed', ['as' => 'payments.datatables.processed', 'uses' => 'DatatablesController@getProcessedPayments']);
+Route::get('payments/datatables/processed', ['as' => 'payments.datatables.processed', 'uses' => 'DatatablesController@getProcessedPayments']);
+Route::get('payments/datatables/unprocessed', ['as' => 'payments.datatables.unprocessed', 'uses' => 'DatatablesController@getUnProcessedPayments']);
 Route::get('payments/datatables/unrecognized', ['as' => 'payments.datatables.unrecognized', 'uses' => 'DatatablesController@getUnrecognizedPayments']);
 
 
-Auth::routes();
+//Auth::routes();
 
-
+Auth::routes(['register' => false]);
 //toreview
 
 // Payments
@@ -156,11 +124,14 @@ Route::get('loans/disbursed/datatables/{loanProductId}', ['as' => 'loans.disburs
 
 // Mpesa
 Route::post('payments/receiver', ['as' => 'payments.receiver', 'uses' => 'PaymentsController@receiver']);
+Route::post('payments/getreceiver', ['as' => 'payments.getreceiver', 'uses' => 'PaymentsController@getreceiver']);
 Route::post('collectionSheetPost', ['as' => 'payments.receiver', 'uses' => 'PaymentsController@collectionSheetPost']);
 
 // Process Payments and Payments functions
 Route::get('makePayment/{note}/{id}/', 'PaymentsController@loanRepayment');
 Route::post('payments/comment/{id}', 'PaymentsController@getComment');
+Route::post('payments/editAccount/{id}', 'PaymentsController@editAccount');
+Route::post('payments/editExternalid/{id}', 'PaymentsController@editExternalid');
 Route::get('payments/calculator/{id}', 'PaymentsController@getOutstandingLoan');
 Route::get('payments/extend/{id}', 'PaymentsController@extendLoan');
 
@@ -169,6 +140,8 @@ Route::post('payments/upload', 'PaymentsController@uploadPayments');
 
 //Reminders
 Route::get('reminder/send', 'ReminderController@send');
+Route::get('processold', 'PaymentsController@processOldPayments');
+Route::get('deposit', 'PaymentsController@depositToDrawDownAccount');
 
 
 // Users
@@ -184,4 +157,11 @@ Route::post('preapproved-clients/upload','ClientsController@storeUpload');
 
 //Apps
 Route::get('apps','AppsController@index');
+Route::post('payments/upload', ['as' => 'payments.upload', 'uses' => 'PaymentsController@uploadPayments']);
+Route::group(['middleware' => 'auth'], function () {
+    Route::resource('user', 'UserController', ['except' => ['show']]);
+    Route::get('profile', ['as' => 'profile.edit', 'uses' => 'ProfileController@edit']);
+    Route::put('profile', ['as' => 'profile.update', 'uses' => 'ProfileController@update']);
+    Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'ProfileController@password']);
+});
 

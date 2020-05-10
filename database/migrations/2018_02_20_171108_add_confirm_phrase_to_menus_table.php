@@ -26,7 +26,7 @@ class AddConfirmPhraseToMenusTable extends Migration
      */
     public function down()
     {
-        Schema::table('outbox', function(Blueprint $table)
+        Schema::table('menus', function(Blueprint $table)
         {
             $table->dropColumn('confirmation_title');
         });

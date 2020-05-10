@@ -19,6 +19,45 @@
 </div>
 <div class="row">
     <div class="modal fade" id="modal-comment" role="dialog" tabindex="-1" aria-labelledby="paymentConfirmLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Please confirm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            Please enter Correct External ID
+                            <hr/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="" method="POST" class="form-horizontal" role="form" id="form">
+                                <input name="_token" value="{{ csrf_token() }}" type="hidden">
+                                <div class="modal-footer">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <textarea class="form-control" placeholder="Enter External Id" name="comment" rows="1"></textarea>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-info btn-sm" id="confirm">Submit</button>
+                                    <button type="button" class="btn btn-info btn-sm" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="modal fade" id="modal-externalid" role="dialog" tabindex="-1" aria-labelledby="paymentConfirmLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -28,18 +67,18 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
-                            Please add a comment
+                            Please add the correct external id or phone number
                             <hr/>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <form action="" method="POST" class="form-horizontal" role="form" id="form">
+                            <form action="" method="POST" class="form-horizontal form" role="form" id="form">
                                 <input name="_token" value="{{ csrf_token() }}" type="hidden">
-                                <div class="modal-footer">
+                                <div class="modal-body">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <textarea class="form-control" placeholder="Comment goes here..." name="comment" rows="3"></textarea>
+                                            <textarea class="form-control" placeholder="Enter external id or phone number here..." name="externalid" rows="1"></textarea>
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-info btn-sm" id="confirm">Submit</button>

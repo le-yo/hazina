@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\categories;
-use App\DataTables\PaymentsDataTable;
+//use App\DataTables\PaymentsDataTable;
 use App\Payment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -20,7 +20,6 @@ class DatatablesController extends Controller
 
     public function getPayments()
     {
-
         return Datatables::of(Payment::whereStatus(0)->orderBy('transaction_time', 'desc')->limit(1000)->get())
             ->editColumn('amount', function ($payment) {
                 return number_format($payment->amount);
@@ -60,7 +59,6 @@ class DatatablesController extends Controller
                 return $action;
             })->make(true);
     }
-
 
     public function getUnrecognizedPayments()
     {
