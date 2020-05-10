@@ -14,6 +14,12 @@
             </li>
 
             <li class="c-sidebar__item">
+                <a class="c-sidebar__link" href="/reconciliation">
+                    <i class="fa fa-tachometer u-mr-xsmall"></i>Reconciliation <span class="c-badge c-badge--success c-badge--xsmall u-ml-xsmall">New</span>
+                </a>
+            </li>
+
+            <li class="c-sidebar__item">
                 <a class="c-sidebar__link" href="/apps">
                     <i class="fa fa-tachometer u-mr-xsmall"></i>Marketplace <span class="c-badge c-badge--success c-badge--xsmall u-ml-xsmall">New</span>
                 </a>

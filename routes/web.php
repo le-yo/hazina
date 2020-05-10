@@ -182,6 +182,10 @@ Route::get('collectionSheet/{id}','PaymentsController@collectionSheet');
 Route::get('preapproved-clients/upload','ClientsController@upload');
 Route::post('preapproved-clients/upload','ClientsController@storeUpload');
 
-//Apps
-Route::get('apps','AppsController@index');
 
+Route::group(['middleware' => 'auth'], function () {
+    //Apps
+    Route::get('apps', 'AppsController@index');
+    //reconciliation
+    Route::get('reconciliation', 'ReconciliationController@index');
+});

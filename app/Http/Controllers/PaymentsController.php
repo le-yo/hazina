@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 $success = false;
+$count = 0;
+$failed = 0;
 
 class PaymentsController extends Controller
 {
@@ -406,6 +408,198 @@ class PaymentsController extends Controller
      * @param $data
      * @return bool
      */
+    public function processUserLoan($payment_data,$payment=null){
+        //get user
+        $payment_data['externalId'] = $payment_data['account_no'];
+        $user = self::getTransactionClient($payment_data);
+
+//        if(!$user){
+//            $payment->comment = "No User found with either the account provided or phone number of the payee";
+//            $payment->save();
+//        }
+
+//        print_r($user);
+//        exit;
+        if($user) {
+            $loanAccounts = self::getClientLoanAccountsInAscendingOrder($user->client_id);
+
+            foreach ($loanAccounts as $key=>$la){
+                $shortname = $la->shortProductName;
+                $externalid_sub_string = strtolower(substr($payment_data['externalId'], 0, strlen($shortname)));
+                if(strtolower($shortname) == $externalid_sub_string){
+                    $tmp = $loanAccounts[$key];
+                    unset($loanAccounts[$key]);
+                    array_unshift($loanAccounts,$tmp);
+                }
+            }
+
+            $latest_loan = end($loanAccounts);
+            $loan_id = '';
+            $loan = '';
+            $loan_payment_received = $payment_data['amount'];
+//        print_r(json_encode($loanAccounts));
+//        exit;
+            foreach ($loanAccounts as $la) {
+//            echo $la->status->id.PHP_EOL;
+//            continue;
+                if ($la->status->id == 300) {
+                    if (($la->loanBalance < $loan_payment_received) && ($la->id != $latest_loan->id)) {
+//                        $loan_payment_received = $loan_payment_received - $la->loanBalance;
+                        $amount = $la->loanBalance;
+                    } else {
+                        $amount = $loan_payment_received;
+//                        $loan_payment_received = 0;
+                    }
+                    // get repayment details
+                    $repayment_data = [];
+                    $repayment_data['dateFormat'] = 'dd MMMM yyyy';
+                    $repayment_data['locale'] = 'en_GB';
+                    $repayment_data['transactionDate'] = Carbon::parse($payment_data['transaction_time'])->format('j F Y');
+                    $repayment_data['transactionAmount'] = $amount;
+                    $repayment_data['paymentTypeId'] = 6;
+                    $repayment_data['note'] = 'Payment';
+                    $repayment_data['accountNumber'] = $payment_data['phone'];
+                    $repayment_data['receiptNumber'] = $payment_data['transaction_id'];
+
+                    // json encode repayment details
+                    $loan_data = json_encode($repayment_data);
+
+                    // url for posting the repayment details
+                    $postURl = MIFOS_URL . "/loans/" . $la->id . "/transactions?command=repayment&" . MIFOS_tenantIdentifier;
+
+                    // post the encoded repayment details
+                    $loanPayment = Hooks::MifosPostTransaction($postURl, $loan_data);
+
+                    // check if posting was successful
+                    if (array_key_exists('errors', $loanPayment)) {
+                        foreach ($loanPayment->errors as $error) {
+                            if ($error->userMessageGlobalisationCode == 'error.msg.loan.transaction.cannot.be.before.disbursement.date') {
+                                //send the payment to savings
+                                if(self::depositToDrawDownAccount($user->client_id,$loan_payment_received,$payment_data)){
+                                    $loan_payment_received = 0;
+                                    $payment = Payment::whereId($payment_data['id'])->first();
+                                    $payment->status = 1;
+                                    $payment->update();
+                                    return redirect('/')->with('error', 'We had a problem processing repayment for '.$payment->client_name.' but have pushed the payment to draw down account');
+                                    break;
+                                }
+                            }
+                        }
+//                        $payment->comment = "Problem processing loan repayment";
+//                        $payment->save();
+                        return false;
+                    } else {
+                        if (($la->loanBalance < $loan_payment_received) && ($la->id != $latest_loan->id)) {
+                            $loan_payment_received = $loan_payment_received - $la->loanBalance;
+                        } else {
+                            $loan_payment_received = 0;
+                        }
+                        echo "processed successfully";
+                        if ($loan_payment_received == 0) {
+                            return true;
+                        }
+                    }
+                }
+
+                if ($loan_payment_received == 0) {
+                    break;
+                }
+            }
+
+            if($loan_payment_received >0){
+                //send to savings
+                self::depositToDrawDownAccount($user->client_id,$loan_payment_received,$payment_data);
+                $payment = Payment::whereTransactionId($payment_data['transaction_id'])->first();
+                $payment->status = 1;
+                $payment->save();
+            }
+//                $ussd = new UssdController();
+//                $balance = $ussd->getLoanBalance($user->client_id);
+//
+//                if($balance['amount']>0){
+//                    $hooks = new MifosXController();
+//
+//                    $next_payment = $hooks->checkNextInstallment($latest_loan->id);
+//                    //$loan_balance['next_payment'] = $next_payment;
+//                    $msg = "Dear ".self::getClientName($user->client_id).", thank you we have received your payment of Kshs. ".number_format($payment_data['amount'],2).". Please clear the outstanding balance Kshs. ".number_format($balance['installment_amount'],2)." due on ".$next_payment['next_date'].". To repay your total outstanding balance, please send Kshs. ".number_format($balance['amount'],2)." to our M-pesa paybill number 963334. For any assistance please call our customer care line 0704 000 999";
+//                }else {
+//                    $limit = self::getLoanLimit($user->client_id);
+//                    $msg = "Dear ".self::getClientName($user->client_id).", your Salary Advance Loan has been fully repaid. You can apply for another Salary Advance Loan immediately within your limit of Kshs ".number_format($limit,2).". Thank you for choosing Uni Ltd.";
+//                }
+//                $notify = new NotifyController();
+//                $notify->sendSms($payment_data['phone'],$msg);
+            return true;
+        }
+    }
+
+    public function getTransactionClient($data){
+        $user = FALSE;
+        $data['externalId'] = self::checkAccountPrefix($data['externalId']);
+        //check if external id has some prefix
+        $externalid = $data['externalId'];
+
+        $url = MIFOS_URL . "/clients?sqlSearch=(c.external_id%20like%20%27" . $externalid . "%27)&" . MIFOS_tenantIdentifier;
+        // Get all clients
+        $client = Hooks::MifosGetTransaction($url, $post_data = '');
+
+        if (isset($client->totalFilteredRecords)) {
+            if ($client->totalFilteredRecords == 0) {
+                //search by phone
+                $no = substr($data['externalId'], -9);
+
+                $url = MIFOS_URL . "/search?exactMatch=false&query=" . $no . "&&resource=clients,clientIdentifiers&" . MIFOS_tenantIdentifier;
+
+                // Get all clients
+                $client = Hooks::MifosGetTransaction($url, $post_data = '');
+                if (isset($client[0]->entityId)) {
+                    $usr = array();
+                    $usr['client_id'] = $client[0]->entityId;
+                    if ($client[0]->entityStatus->code == 'clientStatusType.active') {
+                        $usr['active_status'] = 1;
+                    } else {
+                        $usr['active_status'] = 0;
+                    }
+                    $user = (object) $usr;
+
+                    return $user;
+                }
+                if (!isset($client[0]->entityId)) {
+                    $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%27254" . $no . "%27)&" . MIFOS_tenantIdentifier;
+
+                    // Get all clients
+                    $client = Hooks::MifosGetTransaction($url, $post_data = '');
+                    if ($client->totalFilteredRecords == 0) {
+                        $no = substr($data['phone'], -9);
+
+                        $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%270" . $no . "%27)&" . MIFOS_tenantIdentifier;
+
+                        // Get all clients
+                        $client = Hooks::MifosGetTransaction($url, $post_data = '');
+                        if ($client->totalFilteredRecords == 0) {
+                            $url = MIFOS_URL . "/clients?sqlSearch=(c.mobile_no%20like%20%27254" . $no . "%27)&" . MIFOS_tenantIdentifier;
+
+                            // Get all clients
+                            $client = Hooks::MifosGetTransaction($url, $post_data = '');
+                        }
+                    }
+                }
+            }
+            if ($client->totalFilteredRecords > 0) {
+                $client = $client->pageItems[0];
+                $usr = array();
+                $usr['client_id'] = $client->id;
+                if ($client->status->code == 'clientStatusType.active') {
+                    $usr['active_status'] = 1;
+                } else {
+                    $usr['active_status'] = 0;
+                }
+                $user = (object) $usr;
+            }
+        }
+        return $user;
+    }
+
+
     public function processLoan($data){
         // match the phone no from the payments table with loan details for Mifos from url
         if($data['paybill'] == 650880) {
@@ -464,7 +658,7 @@ class PaymentsController extends Controller
     public function uploadPayments(Request $request){
 
         $validator = Validator::make($request->all(), [
-            'xls' => 'required',
+            'file' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -473,42 +667,60 @@ class PaymentsController extends Controller
         }
 
         // getting the file extension
-        $extension = $request->file('xls')->getClientOriginalExtension();
+        $extension = $request->file('file')->getClientOriginalExtension();
 
         // validate if it is a valid excel sheet
         if ($extension != 'xls') {
-            return Redirect::back()
-                ->with('error', 'Please upload a valid EXCEL file!');
+            $data = [
+              'error'=>  "Please upload a valid EXCEL file"
+            ];
+            return json_encode($data);
+//            return Redirect::back()
+//                ->with('error', 'Please upload a valid EXCEL file!');
         }
 
         // get the original name
-        $originalName = $request->file('xls')->getClientOriginalName();
-        $exploaded_name = explode(".", $originalName);
-        $paybill = $exploaded_name[0];
-
-        // check if the excel has been named accordingly
-        if($paybill !== STL_PAYBILL && $paybill !== BLP_PAYBILL && $paybill !== PCL_PAYBILL) {
-            return Redirect::back()->with('error', 'Please rename the excel to the respective paybill number and make sure all transactions are of that number!');
-        }
+//        $originalName = $request->file('file')->getClientOriginalName();
+//        $exploaded_name = explode(".", $originalName);
+//        $paybill = $exploaded_name[0];
+//
+//        // check if the excel has been named accordingly
+//        if($paybill !== STL_PAYBILL && $paybill !== BLP_PAYBILL && $paybill !== PCL_PAYBILL) {
+//            $data = [
+//                'error'=>  "Please rename the excel to the respective paybill number and make sure all transactions are of that number"
+//            ];
+//            return json_encode($data);
+//        }
 
         // renaming the file
         $fileName = rand(11111,99999).'.'.$extension;
 
         // move it to the storage folder in the public assets
-        $request->file('xls')->move('storage',$fileName);
+        $request->file('file')->move('storage',$fileName);
 
+        global $count;
+        $count = 0;
+        global $failed;
+        $failed = 0;
         // Load the excel
-        Excel::load('storage/'.$fileName, function($reader) use ($paybill) {
+        Excel::load('storage/'.$fileName, function($reader) use ($count) {
+
             $results = $reader->get();
 
             // Loop through each row in the sheet
-            $results -> each(function($sheet) use ($paybill) {
+            $results -> each(function($sheet) use ($count) {
                 // Check if the excel loaded has the required format
+
+                $paybill = $sheet->paybill;
                 if(!isset($sheet->receipt_no)){
-                    return Redirect::back()->with('error', 'Please upload the right excel file!');
+                    $data = [
+                        'error'=>  "Excel is not in the right format. Kindly check the file"
+                    ];
+                    return json_encode($data);
                 }
 
                 $transaction_id = $sheet->receipt_no;
+
                 $payments = Payment::where('transaction_id', '=',$transaction_id)->first();
 
                 // Check if the payment transaction exists
@@ -518,23 +730,28 @@ class PaymentsController extends Controller
                     $phone = '+'.trim($exploded_other_party_info[0]);
                     $client_name = $exploded_other_party_info[1];
                     $amount = $sheet->paid_in;
-                    if ($paybill == BLP_PAYBILL || $paybill == PCL_PAYBILL) {
                         $data = [];
                         $data['phone'] = $phone;
                         $data['paybill'] = $paybill;
-                        if(self::processLoan($data) == true){
+                        if(self::processUserLoan($data) == true){
+                            global $count;
+                            $count = $count+1;
                             $status = 1;
                         } else {
+                            global $failed;
+                            $failed = $failed+1;
                             $status = 2;
                         }
-                    } else {
-                        $status = null;
-                    }
                     $account_no = $sheet->ac_no;
                     if(!isset($account_no)){
                        $account_no = 'NULL';
                     }
                     $transaction_time = $sheet->completion_time;
+                    if(strpos("/",$transaction_time) !==false){
+                       $transaction_time = Carbon::createFromFormat('d/m/Y H:i:s', $transaction_time)->format('Y-m-d H:i:s');
+                    }else{
+                       $transaction_time = Carbon::createFromFormat('d-m-Y H:i:s', $transaction_time)->format('Y-m-d H:i:s');
+                    }
 
                     // Add the payment object to the payments table
                     DB::table('payments')->insert([
@@ -545,7 +762,7 @@ class PaymentsController extends Controller
                         'amount' => $amount,
                         'paybill' => $paybill,
                         'account_no' => $account_no,
-                        'transaction_time' => Carbon::createFromFormat('d/m/Y H:i:s', $transaction_time)->format('Y-m-d H:i:s'),
+                        'transaction_time' => $transaction_time,
                         'created_at' => Carbon::now(),
                         'updated_at' => Carbon::now()
                     ]);
@@ -560,10 +777,19 @@ class PaymentsController extends Controller
         File::delete('public/storage/'.$fileName);
 
         global $success;
+        global $count;
+        global $failed;
         if($success){
-            return Redirect::back()->with('success', 'Transactions successfully uploaded!');
+            $data = [
+              'success'=>  $count.' transactions successfully uploaded. '.$failed.' transactions failed'
+            ];
+            return json_encode($data);
+//            return Redirect::back()->with('success', $count.' transactions successfully uploaded!');
         } else {
-            return Redirect::back()->with('error', 'Some transactions already exist!');
+            $data = [
+                'success'=>  $count.' transactions successfully uploaded. '.$failed.' transactions failed'
+            ];
+            return json_encode($data);
 
         }
     }
@@ -586,5 +812,109 @@ class PaymentsController extends Controller
     public function paydayLoanPaymentsIndex()
     {
         return view('payments.payday_loan');
+    }
+
+    public function depositToDrawDownAccount($client_id,$amount,$data){
+
+        $savingsaccounts = self::getClientSavingsAccountsInAscendingOrder($client_id);
+        foreach ($savingsaccounts as $key=>$sa){
+            $shortname = $sa->shortProductName;
+            $externalid_sub_string = 'TAC';
+            if(strtolower($shortname) == strtolower($externalid_sub_string) && $sa->status->id==300){
+                if ($sa->status->id == 300) {
+                    $deposit_data = [];
+                    $deposit_data['locale'] = 'en_GB';
+                    $deposit_data['dateFormat'] = 'dd MMMM yyyy';
+                    $deposit_data['transactionDate'] = Carbon::parse($data['transaction_time'])->format('j F Y');
+                    $deposit_data['transactionAmount'] = $amount;
+                    $deposit_data['paymentTypeId'] = 6;
+                    $deposit_data['accountNumber'] = $data['phone'];
+                    $deposit_data['receiptNumber'] = $data['transaction_id'];
+                    $deposit_data = json_encode($deposit_data);
+
+                    // url for posting the repayment details
+                    $postURl = MIFOS_URL . "/savingsaccounts/" . $sa->id . "/transactions?command=deposit&" . MIFOS_tenantIdentifier;
+                    // post the encoded repayment details
+                    $savingsPayment = Hooks::MifosPostTransaction($postURl, $deposit_data);
+
+                    // check if posting was successful
+                    if (array_key_exists('errors', $savingsPayment)) {
+//                        $payment->comment = "Problem processing loan repayment";
+//                        $payment->save();
+                        return false;
+                    } else {
+                        return $savingsPayment;
+                    }
+                }
+            }else{
+                unset($savingsaccounts[$key]);
+            }
+        }
+//        foreach ($savingsaccounts as $sa) {
+//            if ($sa->status->id == 300) {
+//                $deposit_data = [];
+//                $deposit_data['locale'] = 'en_GB';
+//                $deposit_data['dateFormat'] = 'dd MMMM yyyy';
+//                $deposit_data['transactionDate'] = Carbon::parse($data['transaction_time'])->format('j F Y');
+//                $deposit_data['transactionAmount'] = $amount;
+//                $deposit_data['paymentTypeId'] = 6;
+//                $deposit_data['accountNumber'] = $data['phone'];
+//                $deposit_data['receiptNumber'] = $data['transaction_id'];
+//                $deposit_data = json_encode($deposit_data);
+//
+//                // url for posting the repayment details
+//                $postURl = MIFOS_URL . "/savingsaccounts/" . $sa->id . "/transactions?command=deposit&" . MIFOS_tenantIdentifier;
+//                // post the encoded repayment details
+//                $savingsPayment = Hooks::MifosPostTransaction($postURl, $deposit_data);
+//
+//                // check if posting was successful
+//                if (array_key_exists('errors', $savingsPayment)) {
+////                        $payment->comment = "Problem processing loan repayment";
+////                        $payment->save();
+//                    return false;
+//                } else {
+//                    return $savingsPayment;
+//                }
+//            }
+//
+//        }
+
+    }
+    function getClientSavingsAccountsInAscendingOrder($client_id)
+    {
+
+        $url = MIFOS_URL . "/clients/" . $client_id . "/accounts?fields=savingsAccounts&" . MIFOS_tenantIdentifier;
+        $savingsAccounts = Hooks::MifosGetTransaction($url);
+
+        if (!empty($savingsAccounts->savingsAccounts)) {
+            $savingsAccounts = $savingsAccounts->savingsAccounts;
+        } else {
+            $savingsAccounts = array();
+        }
+        return $savingsAccounts;
+    }
+
+    function getClientLoanAccountsInAscendingOrder($client_id)
+    {
+        $url = MIFOS_URL . "/clients/" . $client_id . "/accounts?fields=loanAccounts&" . MIFOS_tenantIdentifier;
+        $loanAccounts = Hooks::MifosGetTransaction($url);
+        if (!empty($loanAccounts->loanAccounts)) {
+            $loanAccounts = $loanAccounts->loanAccounts;
+        } else {
+            $loanAccounts = array();
+        }
+        return $loanAccounts;
+    }
+
+    public function getLoanLimit($id)
+    {
+//        return 0;
+        $url = MIFOS_URL . "/datatables/user_loan_limit/" . $id . "?" . MIFOS_tenantIdentifier;
+        $limit = Hooks::MifosGetTransaction($url);
+        if (count($limit) > 0) {
+            return $limit[0]->user_loan_limit;
+        } else {
+            return 0;
+        }
     }
 }

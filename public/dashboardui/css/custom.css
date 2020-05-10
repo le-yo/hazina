@@ -1,3 +1,8 @@
+.dZUpload{
+    margin: 20px;
+    padding: 20px;
+}
+
 .dataTables_paginate {
     margin-top: .9375rem;
     float: right !important;
@@ -49,4 +54,51 @@
     display: block;
     min-width: 100%;
 
+}
+
+.dropzone {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    background-color: #fff;
+    color: #7f8fa4;
+    border: 1px solid #e6eaee;
+    border-top-color: rgb(230, 234, 238);
+    border-top-style: solid;
+    border-top-width: 1px;
+    border-right-color: rgb(230, 234, 238);
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-bottom-color: rgb(230, 234, 238);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-left-color: rgb(230, 234, 238);
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-image-outset: 0;
+    border-image-repeat: stretch;
+    border-image-slice: 100%;
+    border-image-source: none;
+    border-image-width: 1;
+    border-radius: 4px;
+    padding: 5px;
+    -webkit-transition: border-color 0.3s;
+    transition: border-color 0.3s;
+}
+
+.dropzone .dz-preview .dz-image {
+    border-radius: 20px;
+    overflow: hidden;
+    width: 240px;
+    /*height: 152px;*/
+    position: relative;
+    display: block;
+    z-index: 10;
 }
