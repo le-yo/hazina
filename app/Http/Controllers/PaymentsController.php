@@ -744,12 +744,21 @@ class PaymentsController extends Controller
                     $phone = '+'.trim($exploded_other_party_info[0]);
                     $client_name = $exploded_other_party_info[1];
                     $amount = $sheet->paid_in;
-                        $data = [];
+                        $account_no = $sheet->ac_no;
+                        $data = [
+                                'phone' => $phone,
+                                'client_name' => $client_name,
+                                'transaction_id' => $transaction_id,
+                                'amount' => $amount,
+                                'paybill' => $paybill,
+                                'account_no' => $account_no,
+                                'created_at' => Carbon::now(),
+                                'updated_at' => Carbon::now()
+                            ]; 
                         $data['phone'] = $phone;
                         $data['paybill'] = $paybill;
                         $data['account_no'] = $sheet->ac_no;
-                        $data['amount'] =$amount; 
-                        $account_no = $sheet->ac_no;
+                        $data['amount'] =$amount;
                         if(self::processUserLoan($data) == true){
                             global $count;
                             $count = $count+1;
