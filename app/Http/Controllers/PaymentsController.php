@@ -748,6 +748,7 @@ class PaymentsController extends Controller
                         $data['phone'] = $phone;
                         $data['paybill'] = $paybill;
                         $data['account_no'] = $sheet->ac_no;
+                        $data['amount'] =$amount; 
                         $account_no = $sheet->ac_no;
                         if(self::processUserLoan($data) == true){
                             global $count;
