@@ -478,10 +478,10 @@ class PaymentsController extends Controller
                                 //send the payment to savings
                                 if(self::depositToDrawDownAccount($user->client_id,$loan_payment_received,$payment_data)){
                                     $loan_payment_received = 0;
-                                    $payment = Payment::whereId($payment_data['id'])->first();
-                                    $payment->status = 1;
-                                    $payment->update();
-                                    return redirect('/')->with('error', 'We had a problem processing repayment for '.$payment->client_name.' but have pushed the payment to draw down account');
+//                                    $payment = Payment::whereId($payment_data['id'])->first();
+//                                    $payment->status = 1;
+//                                    $payment->update();
+//                                    return redirect('/')->with('error', 'We had a problem processing repayment for '.$payment->client_name.' but have pushed the payment to draw down account');
                                     break;
                                 }
                             }
@@ -510,9 +510,9 @@ class PaymentsController extends Controller
             if($loan_payment_received >0){
                 //send to savings
                 self::depositToDrawDownAccount($user->client_id,$loan_payment_received,$payment_data);
-                $payment = Payment::whereTransactionId($payment_data['transaction_id'])->first();
-                $payment->status = 1;
-                $payment->save();
+//                $payment = Payment::whereTransactionId($payment_data['transaction_id'])->first();
+//                $payment->status = 1;
+//                $payment->save();
             }
 //                $ussd = new UssdController();
 //                $balance = $ussd->getLoanBalance($user->client_id);
@@ -754,7 +754,7 @@ class PaymentsController extends Controller
                                 'account_no' => $account_no,
                                 'created_at' => Carbon::now(),
                                 'updated_at' => Carbon::now()
-                            ]; 
+                            ];
                         $data['phone'] = $phone;
                         $data['paybill'] = $paybill;
                         $data['account_no'] = $sheet->ac_no;
