@@ -532,6 +532,18 @@ class PaymentsController extends Controller
         }
     }
 
+    public function checkAccountPrefix($account){
+        $settings = setting::all();
+        foreach ($settings as $setting){
+            $shortname = $setting->short_name;
+            if(strtolower($shortname) == strtolower(substr($account, 0, strlen($shortname)))){
+                $account = substr($account, strlen($shortname));
+
+            }
+        }
+        return $account;
+    }
+
     public function getTransactionClient($data){
         $user = FALSE;
         $data['externalId'] = self::checkAccountPrefix($data['externalId']);
