@@ -7,6 +7,7 @@ use App\Hooks;
 use App\Jobs\PaymentReceived;
 use App\Log;
 use App\Payment;
+use App\setting;
 use App\TransactionLog;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
