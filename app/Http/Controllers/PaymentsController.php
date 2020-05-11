@@ -759,15 +759,20 @@ class PaymentsController extends Controller
                         $data['paybill'] = $paybill;
                         $data['account_no'] = $sheet->ac_no;
                         $data['amount'] =$amount;
-                        if(self::processUserLoan($data) == true){
+                    if($paybill == 4017901) {
+
+                        if (self::processUserLoan($data) == true) {
                             global $count;
-                            $count = $count+1;
+                            $count = $count + 1;
                             $status = 1;
                         } else {
                             global $failed;
-                            $failed = $failed+1;
+                            $failed = $failed + 1;
                             $status = 2;
                         }
+                    }else{
+                        $status = 0;
+                    }
                     if(!isset($account_no)){
                        $account_no = 'NULL';
                     }
