@@ -725,6 +725,7 @@ class PaymentsController extends Controller
 
                 // Check if the payment transaction exists
                 if(is_null($payments)){
+
                     $exploded_other_party_info = explode("-",$sheet->other_party_info);
 
                     $phone = '+'.trim($exploded_other_party_info[0]);
@@ -733,6 +734,8 @@ class PaymentsController extends Controller
                         $data = [];
                         $data['phone'] = $phone;
                         $data['paybill'] = $paybill;
+                        $data['account_no'] = $sheet->ac_no;
+                        $account_no = $sheet->ac_no;
                         if(self::processUserLoan($data) == true){
                             global $count;
                             $count = $count+1;
@@ -742,7 +745,6 @@ class PaymentsController extends Controller
                             $failed = $failed+1;
                             $status = 2;
                         }
-                    $account_no = $sheet->ac_no;
                     if(!isset($account_no)){
                        $account_no = 'NULL';
                     }
