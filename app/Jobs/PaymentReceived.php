@@ -296,12 +296,21 @@ class PaymentReceived extends Job implements ShouldQueue
                 }
             }
 
-            if($loan_payment_received >0){
+            if($loan_payment_received >0){ 
                 //send to savings
-                self::depositToDrawDownAccount($user->client_id,$loan_payment_received,$payment_data);
-                $payment = Payment::whereTransactionId($payment_data['transaction_id'])->first();
-                $payment->status = 1;
-                $payment->save();
+                if(self::depositToDrawDownAccount($user->client_id,$loan_payment_received,$payment_data)){
+                    $loan_payment_received = 0;
+                    $payment = Payment::find($payment_data['id']);
+                    $payment->status = 1;
+                    $payment->update();
+                }else{
+                    if(self::depositToCCFAccount($user->client_id,$loan_payment_received,$payment_data)){
+                        $loan_payment_received = 0;
+                        $payment = Payment::find($payment_data['id']);
+                        $payment->status = 1;
+                        $payment->update();
+                    }
+                }
             }
 //                $ussd = new UssdController();
 //                $balance = $ussd->getLoanBalance($user->client_id);
