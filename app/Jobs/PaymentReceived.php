@@ -271,6 +271,13 @@ class PaymentReceived extends Job implements ShouldQueue
                                         $payment->update();
                                         return redirect('/')->with('error', 'We had a problem processing repayment for '.$payment->client_name.' but have pushed the payment to CCF account');
                                         break;
+                                    }elseif(self::depositToAnyOtherSavingsccount($user->client_id,$loan_payment_received,$payment_data)){
+                                        $loan_payment_received = 0;
+                                        $payment = Payment::find($payment_data['id']);
+                                        $payment->status = 1;
+                                        $payment->update();
+                                        return redirect('/')->with('error', 'We had a problem processing repayment for '.$payment->client_name.' but have pushed the payment a savings account');
+                                        break;
                                     }
                                 }
                             }
@@ -296,7 +303,7 @@ class PaymentReceived extends Job implements ShouldQueue
                 }
             }
 
-            if($loan_payment_received >0){ 
+            if($loan_payment_received >0){
                 //send to savings
                 if(self::depositToDrawDownAccount($user->client_id,$loan_payment_received,$payment_data)){
                     $loan_payment_received = 0;
@@ -305,6 +312,11 @@ class PaymentReceived extends Job implements ShouldQueue
                     $payment->update();
                 }else{
                     if(self::depositToCCFAccount($user->client_id,$loan_payment_received,$payment_data)){
+                        $loan_payment_received = 0;
+                        $payment = Payment::find($payment_data['id']);
+                        $payment->status = 1;
+                        $payment->update();
+                    }elseif(self::depositToAnyOtherSavingsccount($user->client_id,$loan_payment_received,$payment_data)){
                         $loan_payment_received = 0;
                         $payment = Payment::find($payment_data['id']);
                         $payment->status = 1;
@@ -496,6 +508,42 @@ class PaymentReceived extends Job implements ShouldQueue
                         return $savingsPayment;
                     }
                 }
+            }else{
+                unset($savingsaccounts[$key]);
+            }
+        }
+
+    }
+    public function depositToAnyOtherSavingsccount($client_id,$amount,$data){
+
+        $savingsaccounts = self::getClientSavingsAccountsInAscendingOrder($client_id);
+        $processed = 0;
+        foreach ($savingsaccounts as $key=>$sa){
+            $shortname = $sa->shortProductName;
+            if($sa->status->id==300){
+                    $deposit_data = [];
+                    $deposit_data['locale'] = 'en_GB';
+                    $deposit_data['dateFormat'] = 'dd MMMM yyyy';
+                    $deposit_data['transactionDate'] = Carbon::parse($data['transaction_time'])->format('j F Y');
+                    $deposit_data['transactionAmount'] = $amount;
+                    $deposit_data['paymentTypeId'] = 6;
+                    $deposit_data['accountNumber'] = $data['phone'];
+                    $deposit_data['receiptNumber'] = $data['transaction_id'];
+                    $deposit_data = json_encode($deposit_data);
+
+                    // url for posting the repayment details
+                    $postURl = MIFOS_URL . "/savingsaccounts/" . $sa->id . "/transactions?command=deposit&" . MIFOS_tenantIdentifier;
+                    // post the encoded repayment details
+                    $savingsPayment = Hooks::MifosPostTransaction($postURl, $deposit_data);
+
+                    // check if posting was successful
+                    if (array_key_exists('errors', $savingsPayment)) {
+//                        $payment->comment = "Problem processing loan repayment";
+//                        $payment->save();
+                        return false;
+                    } else {
+                        return $savingsPayment;
+                    }
             }else{
                 unset($savingsaccounts[$key]);
             }
