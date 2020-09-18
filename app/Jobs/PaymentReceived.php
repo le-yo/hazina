@@ -263,6 +263,15 @@ class PaymentReceived extends Job implements ShouldQueue
                                     $payment->update();
                                     return redirect('/')->with('error', 'We had a problem processing repayment for '.$payment->client_name.' but have pushed the payment to draw down account');
                                     break;
+                                }else{
+                                    if(self::depositToCCFAccount($user->client_id,$loan_payment_received,$payment_data)){
+                                        $loan_payment_received = 0;
+                                        $payment = Payment::find($payment_data['id']);
+                                        $payment->status = 1;
+                                        $payment->update();
+                                        return redirect('/')->with('error', 'We had a problem processing repayment for '.$payment->client_name.' but have pushed the payment to CCF account');
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -409,6 +418,7 @@ class PaymentReceived extends Job implements ShouldQueue
     public function depositToDrawDownAccount($client_id,$amount,$data){
 
         $savingsaccounts = self::getClientSavingsAccountsInAscendingOrder($client_id);
+        $processed = 0;
         foreach ($savingsaccounts as $key=>$sa){
             $shortname = $sa->shortProductName;
             $externalid_sub_string = 'TAC';
@@ -442,34 +452,45 @@ class PaymentReceived extends Job implements ShouldQueue
                 unset($savingsaccounts[$key]);
             }
         }
-//        foreach ($savingsaccounts as $sa) {
-//            if ($sa->status->id == 300) {
-//                $deposit_data = [];
-//                $deposit_data['locale'] = 'en_GB';
-//                $deposit_data['dateFormat'] = 'dd MMMM yyyy';
-//                $deposit_data['transactionDate'] = Carbon::parse($data['transaction_time'])->format('j F Y');
-//                $deposit_data['transactionAmount'] = $amount;
-//                $deposit_data['paymentTypeId'] = 6;
-//                $deposit_data['accountNumber'] = $data['phone'];
-//                $deposit_data['receiptNumber'] = $data['transaction_id'];
-//                $deposit_data = json_encode($deposit_data);
-//
-//                // url for posting the repayment details
-//                $postURl = MIFOS_URL . "/savingsaccounts/" . $sa->id . "/transactions?command=deposit&" . MIFOS_tenantIdentifier;
-//                // post the encoded repayment details
-//                $savingsPayment = Hooks::MifosPostTransaction($postURl, $deposit_data);
-//
-//                // check if posting was successful
-//                if (array_key_exists('errors', $savingsPayment)) {
-////                        $payment->comment = "Problem processing loan repayment";
-////                        $payment->save();
-//                    return false;
-//                } else {
-//                    return $savingsPayment;
-//                }
-//            }
-//
-//        }
+
+    }
+    public function depositToCCFAccount($client_id,$amount,$data){
+
+        $savingsaccounts = self::getClientSavingsAccountsInAscendingOrder($client_id);
+        $processed = 0;
+        foreach ($savingsaccounts as $key=>$sa){
+            $shortname = $sa->shortProductName;
+            $externalid_sub_string = 'CCF';
+            if(strtolower($shortname) == strtolower($externalid_sub_string) && $sa->status->id==300){
+                if ($sa->status->id == 300) {
+                    $deposit_data = [];
+                    $deposit_data['locale'] = 'en_GB';
+                    $deposit_data['dateFormat'] = 'dd MMMM yyyy';
+                    $deposit_data['transactionDate'] = Carbon::parse($data['transaction_time'])->format('j F Y');
+                    $deposit_data['transactionAmount'] = $amount;
+                    $deposit_data['paymentTypeId'] = 6;
+                    $deposit_data['accountNumber'] = $data['phone'];
+                    $deposit_data['receiptNumber'] = $data['transaction_id'];
+                    $deposit_data = json_encode($deposit_data);
+
+                    // url for posting the repayment details
+                    $postURl = MIFOS_URL . "/savingsaccounts/" . $sa->id . "/transactions?command=deposit&" . MIFOS_tenantIdentifier;
+                    // post the encoded repayment details
+                    $savingsPayment = Hooks::MifosPostTransaction($postURl, $deposit_data);
+
+                    // check if posting was successful
+                    if (array_key_exists('errors', $savingsPayment)) {
+//                        $payment->comment = "Problem processing loan repayment";
+//                        $payment->save();
+                        return false;
+                    } else {
+                        return $savingsPayment;
+                    }
+                }
+            }else{
+                unset($savingsaccounts[$key]);
+            }
+        }
 
     }
     function getClientSavingsAccountsInAscendingOrder($client_id)
